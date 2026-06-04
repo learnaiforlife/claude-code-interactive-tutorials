@@ -13,7 +13,14 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" className={`${inter.variable} ${fira.variable}`}>
+    <html lang="en" suppressHydrationWarning className={`${inter.variable} ${fira.variable}`}>
+      <head>
+        <script
+          dangerouslySetInnerHTML={{
+            __html: "try{if(localStorage.getItem('cct.theme')==='dark')document.documentElement.classList.add('dark');}catch(e){}",
+          }}
+        />
+      </head>
       <body className="min-h-screen">
         <a
           href="#main-content"

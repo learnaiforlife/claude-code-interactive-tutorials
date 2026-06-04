@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import CommandPalette from './CommandPalette';
+import ThemeToggle from './ThemeToggle';
 
 /**
  * Terminal-native house chrome (DESIGN.md §3). Wraps every screen.
@@ -17,6 +18,7 @@ export default function Chrome({ breadcrumb }: { breadcrumb?: string }) {
         claude-code · learn
       </Link>
       <span className="min-w-0 flex-1 truncate text-fg-mute">{breadcrumb ?? ''}</span>
+      <ThemeToggle />
       <CommandPalette />
     </header>
   );

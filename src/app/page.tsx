@@ -12,16 +12,16 @@ export default function Home() {
 
   return (
     <main id="main-content" tabIndex={-1} className="min-h-[calc(100vh-2.6rem)] bg-paper text-ink">
-      <section className="bg-canvas px-6 py-12 text-fg">
+      <section className="bg-paper px-6 py-12 text-ink">
         <div className="mx-auto grid max-w-5xl gap-8 lg:grid-cols-[1.05fr_0.95fr] lg:items-end">
           <div className="min-w-0">
-            <p className="font-mono text-xs font-semibold uppercase tracking-wide text-success-bright">
+            <p className="font-mono text-xs font-semibold uppercase tracking-wide text-success">
               Claude Code Interactive Tutorials
             </p>
-            <h1 className="mt-4 max-w-[12ch] text-4xl font-bold leading-[1.05] tracking-tight text-fg md:text-5xl">
+            <h1 className="mt-4 max-w-[12ch] text-4xl font-bold leading-[1.05] tracking-tight text-ink md:text-5xl">
               Learn Claude Code by doing it
             </h1>
-            <p className="mt-5 max-w-[64ch] text-base leading-relaxed text-fg-mute">
+            <p className="mt-5 max-w-[64ch] text-base leading-relaxed text-ink-soft">
               Start with pure command fluency, then move into feature modules, live terminal sessions,
               checks, and token-efficient habits. The point is not only to save tokens. It is to know what
               Claude Code can do, when to use each command, and when a simpler tool is enough.
@@ -29,22 +29,22 @@ export default function Home() {
             <div className="mt-7 flex flex-wrap gap-3">
               <a
                 href="#commands-lab-heading"
-                className="inline-flex items-center justify-center rounded-lg bg-success-bright px-4 py-2 font-mono text-sm font-semibold text-terminal transition-colors hover:bg-success-bright/90"
+                className="inline-flex items-center justify-center rounded-lg bg-success px-4 py-2 font-mono text-sm font-semibold text-paper transition-opacity hover:opacity-90"
               >
                 Explore commands
               </a>
               <a
                 href="#tracks-heading"
-                className="inline-flex items-center justify-center rounded-lg border border-line px-4 py-2 font-mono text-sm font-semibold text-fg transition-colors hover:border-info-bright hover:text-info-bright"
+                className="inline-flex items-center justify-center rounded-lg border border-line-soft px-4 py-2 font-mono text-sm font-semibold text-ink transition-colors hover:border-info hover:text-info"
               >
                 View modules
               </a>
             </div>
-            <nav aria-label="Jump to a section" className="mt-5 flex flex-wrap gap-x-5 gap-y-2 font-mono text-xs text-fg-mute">
-              <Link href="/commands" className="hover:text-success-bright">Commands</Link>
-              <a href="#tracks-heading" className="hover:text-info-bright">Feature modules</a>
-              <a href="#tracks-heading" className="hover:text-info-bright">Terminal challenges</a>
-              <a href="#forest-heading" className="hover:text-info-bright">Impact Forest</a>
+            <nav aria-label="Jump to a section" className="mt-5 flex flex-wrap gap-x-5 gap-y-2 font-mono text-xs text-ink-soft">
+              <Link href="/commands" className="hover:text-success">Commands</Link>
+              <a href="#tracks-heading" className="hover:text-info">Feature modules</a>
+              <a href="#tracks-heading" className="hover:text-info">Terminal challenges</a>
+              <a href="#forest-heading" className="hover:text-info">Impact Forest</a>
             </nav>
           </div>
 
