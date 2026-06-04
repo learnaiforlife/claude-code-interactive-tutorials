@@ -37,8 +37,11 @@ export default function CommandPalette() {
       const haystack = [
         lesson.title,
         lesson.format,
+        lesson.featureFamily,
+        lesson.efficiencyHabit,
         lesson.concept,
         lesson.slug,
+        ...lesson.docsRefs.flatMap((ref) => [ref.title, ref.href]),
         ...lesson.tips.flatMap((tip) => [tip.title, tip.detail]),
       ].join(' ').toLowerCase();
       return haystack.includes(needle);

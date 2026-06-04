@@ -5,6 +5,12 @@ const LESSONS: Lesson[] = [
     slug: 'what-is-claude-code', order: 1, track: 'beginner',
     title: 'What Claude Code is and how to think about it',
     estimatedMinutes: 5, format: 'Concept + quiz',
+    featureFamily: 'Foundations',
+    docsRefs: [
+      { title: 'Overview', href: 'https://code.claude.com/docs/en/overview.md' },
+      { title: 'How Claude Code works', href: 'https://code.claude.com/docs/en/how-claude-code-works.md' },
+    ],
+    efficiencyHabit: 'Choose the cheapest deterministic tool before spending model context.',
     context: 'Claude Code is a terminal-native AI agent: it reads your files, runs commands, and edits code.',
     concept: 'The skill is not using it for everything. It is knowing what to hand to the agent and what to just do yourself. Reach for the cheapest tool that gets the result, and the agent earns its keep on the hard parts.',
     session: [
@@ -34,6 +40,12 @@ const LESSONS: Lesson[] = [
     slug: 'effective-prompting', order: 2, track: 'beginner',
     title: 'How to prompt Claude Code effectively',
     estimatedMinutes: 8, format: 'Interactive exercise',
+    featureFamily: 'Core Session Workflow',
+    docsRefs: [
+      { title: 'Best practices for Claude Code', href: 'https://code.claude.com/docs/en/best-practices.md' },
+      { title: 'Prompt library', href: 'https://code.claude.com/docs/en/prompt-library.md' },
+    ],
+    efficiencyHabit: 'Name the file, symptom, expected behavior, and output shape in one prompt.',
     context: 'Every clarifying round re-sends the entire conversation. A precise prompt up front skips the loop.',
     concept: 'Vague prompts feel faster but cost more: each back-and-forth re-sends all the prior context. Name the file, the symptom, and the expected behavior in one shot.',
     session: [
@@ -64,6 +76,12 @@ const LESSONS: Lesson[] = [
     slug: 'bash-commands', order: 3, track: 'beginner',
     title: 'How to run bash commands from Claude Code',
     estimatedMinutes: 10, format: 'Terminal sim + challenge',
+    featureFamily: 'Tools, Permissions, And Safety',
+    docsRefs: [
+      { title: 'Tools reference', href: 'https://code.claude.com/docs/en/tools-reference.md' },
+      { title: 'Common workflows', href: 'https://code.claude.com/docs/en/common-workflows.md' },
+    ],
+    efficiencyHabit: 'Search and compute with shell tools before reading large files into context.',
     context: 'Claude can run shell commands for you. Reading whole files to find a few lines is the classic token sink.',
     concept: 'Searching first and reading only what matches is dramatically cheaper than loading entire files into context. Let grep and glob find the lines; read just those.',
     session: [
@@ -114,6 +132,12 @@ const LESSONS: Lesson[] = [
     slug: 'creating-skills', order: 4, track: 'beginner',
     title: 'How to create and use skills',
     estimatedMinutes: 12, format: 'Build-along exercise',
+    featureFamily: 'Extensions',
+    docsRefs: [
+      { title: 'Extend Claude with skills', href: 'https://code.claude.com/docs/en/skills.md' },
+      { title: 'Commands', href: 'https://code.claude.com/docs/en/commands.md' },
+    ],
+    efficiencyHabit: 'Store repeated workflows once and load them on demand.',
     context: 'A skill captures a repeated workflow once, so you stop re-explaining it every session.',
     concept: 'If you paste the same multi-paragraph instructions every time, you pay for them every time. A skill stores the workflow and loads it on demand.',
     session: [
@@ -156,6 +180,12 @@ const LESSONS: Lesson[] = [
     slug: 'creating-subagents', order: 5, track: 'beginner',
     title: 'How to create and use subagents',
     estimatedMinutes: 12, format: 'Build-along exercise',
+    featureFamily: 'Extensions',
+    docsRefs: [
+      { title: 'Create custom subagents', href: 'https://code.claude.com/docs/en/sub-agents.md' },
+      { title: 'Run agents in parallel', href: 'https://code.claude.com/docs/en/agents.md' },
+    ],
+    efficiencyHabit: 'Isolate heavy reading in a subagent and return only the conclusion.',
     context: 'A subagent can read a huge surface and hand back only the answer. Your main context never pays for the raw files.',
     concept: 'Heavy reading pollutes your main context and gets re-sent every turn. Dispatch a subagent to do the reading and return just the conclusion.',
     session: [
@@ -202,6 +232,12 @@ const LESSONS: Lesson[] = [
     slug: 'mcp-overview', order: 6, track: 'beginner',
     title: 'How to view MCP servers and tools',
     estimatedMinutes: 8, format: 'Guided walkthrough',
+    featureFamily: 'Extensions',
+    docsRefs: [
+      { title: 'Connect Claude Code to tools via MCP', href: 'https://code.claude.com/docs/en/mcp.md' },
+      { title: 'Debug your configuration', href: 'https://code.claude.com/docs/en/debug-your-config.md' },
+    ],
+    efficiencyHabit: 'Inspect loaded MCP schemas before adding more tool context.',
     context: "Every enabled MCP tool's schema is loaded into context on every turn. Knowing what's loaded is step one.",
     concept: 'MCP servers add tools, and every tool definition rides along in your context each turn. Viewing them shows you the bill you are paying before you type a word.',
     session: [
@@ -230,6 +266,12 @@ const LESSONS: Lesson[] = [
     slug: 'mcp-management', order: 7, track: 'beginner',
     title: 'How to enable, disable, and manage MCP connections',
     estimatedMinutes: 10, format: 'Interactive config sim',
+    featureFamily: 'Extensions',
+    docsRefs: [
+      { title: 'Connect to MCP servers', href: 'https://code.claude.com/docs/en/mcp-quickstart.md' },
+      { title: 'Control MCP server access for your organization', href: 'https://code.claude.com/docs/en/managed-mcp.md' },
+    ],
+    efficiencyHabit: 'Enable MCP servers per project and disable what the project does not use.',
     context: 'Disable the servers a project does not use. Their schemas stop riding along on every turn.',
     concept: 'Trimming MCP to what a project actually needs is the biggest context win in the toolset. Enable per project, not globally.',
     session: [
@@ -257,6 +299,13 @@ const LESSONS: Lesson[] = [
     slug: 'common-mistakes', order: 8, track: 'beginner',
     title: 'Common beginner mistakes and best practices',
     estimatedMinutes: 8, format: 'Review + self-check',
+    featureFamily: 'Codebase Context',
+    docsRefs: [
+      { title: 'Explore the context window', href: 'https://code.claude.com/docs/en/context-window.md' },
+      { title: 'How Claude Code uses prompt caching', href: 'https://code.claude.com/docs/en/prompt-caching.md' },
+      { title: 'Manage costs effectively', href: 'https://code.claude.com/docs/en/costs.md' },
+    ],
+    efficiencyHabit: 'Clear unrelated history and preserve stable context for cacheable turns.',
     context: 'A few cheap habits eliminate most wasted tokens. Bank them and the beginner track is done.',
     concept: 'Stale conversation history is re-sent on every turn. Clearing between unrelated tasks drops that tax instantly, and editing beats rewriting whole files.',
     session: [

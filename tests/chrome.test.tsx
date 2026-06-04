@@ -28,6 +28,14 @@ test('opens the command palette and searches lessons', async () => {
   expect(screen.getByText('Locked')).toBeInTheDocument();
 });
 
+test('command palette searches feature metadata and docs references', async () => {
+  const user = userEvent.setup();
+  render(<Chrome />);
+  await user.click(screen.getByRole('button', { name: /open command palette/i }));
+  await user.type(screen.getByRole('textbox', { name: /search lessons/i }), 'prompt caching');
+  expect(screen.getByText(/Common beginner mistakes/i)).toBeInTheDocument();
+});
+
 test('unlocked palette results are navigable links', async () => {
   const user = userEvent.setup();
   bankTip('what-is-claude-code', 'l1-litmus');

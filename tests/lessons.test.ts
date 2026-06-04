@@ -18,6 +18,12 @@ test('every lesson has exactly 3 tips and exactly one signature tip', () => {
     expect(lesson.tips.filter((t) => t.kind === 'signature')).toHaveLength(1);
     expect(signatureTip(lesson).kind).toBe('signature');
     expect(lesson.check.options.filter((option) => option.correct)).toHaveLength(1);
+    expect(lesson.featureFamily.length).toBeGreaterThan(0);
+    expect(lesson.efficiencyHabit.length).toBeGreaterThan(0);
+    expect(lesson.docsRefs.length).toBeGreaterThan(0);
+    for (const ref of lesson.docsRefs) {
+      expect(ref.href).toMatch(/^https:\/\/code\.claude\.com\/docs\/en\/.+\.md$/);
+    }
   }
 });
 

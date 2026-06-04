@@ -47,6 +47,11 @@ export interface LessonCheck {
   }>;
 }
 
+export interface DocsReference {
+  title: string;
+  href: string;
+}
+
 export interface Lesson {
   slug: string;
   order: number;
@@ -54,6 +59,9 @@ export interface Lesson {
   title: string;
   estimatedMinutes: number;
   format: string;
+  featureFamily: string;      // curriculum family from the feature-module plan
+  docsRefs: DocsReference[];  // official Claude Code docs backing this module
+  efficiencyHabit: string;    // explicit token-saving behavior taught by the module
   context: string;        // 1–2 sentence lead-in
   concept: string;        // the core teaching, a few sentences
   session: SessionLine[]; // the animated Claude Code session for this lesson

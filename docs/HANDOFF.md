@@ -85,7 +85,7 @@ src/
     progress.ts         # localStorage progress: bankTip + pure *In(progress,...) derivations + wrappers
     use-progress.ts     # useProgress() store (useSyncExternalStore) + bankTipNow()
     use-reduced-motion.ts # usePrefersReducedMotion() (useSyncExternalStore)
-tests/                  # 12 suites, 39 tests (setup.ts mocks next/font, next/link, localStorage, matchMedia)
+tests/                  # 12 suites, 40 tests (setup.ts mocks next/font, next/link, localStorage, matchMedia)
 ```
 
 Data model: each `Lesson` has `tips: Tip[]` (exactly 3, one `kind:'signature'`) and `session: SessionLine[]`.
@@ -99,18 +99,18 @@ Lessons 3, 4, and 5 also have `challenge?: TerminalChallenge` for type-it-yourse
 
 - **Scaffold + test harness** (commit `87c1919`).
 - **Dual-tone design system**: OKLCH tokens, Inter/Fira fonts, terminal-native house chrome (`aadb43d`).
-- **Lesson model + 24-tip registry + localStorage progress** (`8236f29`).
+- **Lesson model + 24-tip registry + localStorage progress** (`8236f29`), now extended with feature-family metadata, official docs references, and explicit efficiency habits for future module expansion.
 - **Editorial dashboard** (progress meter, Done/Now/Locked; locked lessons are non-navigable so banking a tip unlocks the next) and **split-screen lesson page** (`7f17e54`).
 - **Live animated terminal sessions + real per-lesson content** (`8c6e3e3`): `TerminalSession` plays each lesson's scripted Claude Code session (prompts type out, tool/output lines stream, ends on a tokens-saved tally; autoplay + Replay; reduced-motion renders the full transcript instantly). Every lesson has a `concept` + a `session`.
 - **Impact System foundations** (`ad96ab1`): `impact.ts`, exact Sonnet input-token cost math, honest eco ranges, cascade controls, methodology page, Plant reward, and Forest dashboard.
 - **24-tip banking pass**: inline tips are visible and bankable in each lesson, the Forest tracks 24 trees, signature tips still drive lesson completion/unlock.
-- **Feature-module curriculum plan**: `docs/plans/2026-06-04-claude-code-feature-curriculum.md` maps Claude Code features to module tracks and efficiency hooks.
+- **Feature-module curriculum plan**: `docs/plans/2026-06-04-claude-code-feature-curriculum.md` maps Claude Code features to module tracks and efficiency hooks, with an official-index coverage audit and build sequence.
 - **Type-it-yourself terminal core**: lessons 3, 4, and 5 now include terminal challenges with `?` hints, `reset`, incorrect feedback, and scripted success output.
-- **Command palette**: real `⌘K` palette searches lessons/features/tips, shows Done/Now/Locked states, and only exposes navigable links for unlocked lessons.
+- **Command palette**: real `⌘K` palette searches lessons/features/docs refs/tips, shows Done/Now/Locked states, and only exposes navigable links for unlocked lessons.
 - **Lesson checks + branded 404**: each lesson has a low-stakes check with explain-on-wrong feedback, and `/not-found` uses the dual-tone house style.
 - **Release hardening pass**: axe-core structural a11y coverage for chrome, Forest, lesson, terminal, and 404; semantic Forest markers; mobile overflow fixes; reduced-motion terminal remounts into the full transcript.
 
-**Verified:** 39/39 tests, lint clean, production build passes (`/`, `/how-we-calculate`, all 8 lessons prerender static). Browser QA used isolated headless Chrome DevTools Protocol because the MCP Playwright profile was locked: desktop home, mobile home, desktop/mobile lesson, reduced-motion lesson, and branded 404 rendered without horizontal overflow.
+**Verified:** 40/40 tests, lint clean, production build passes (`/`, `/how-we-calculate`, all 8 lessons prerender static). Browser QA used isolated headless Chrome DevTools Protocol because the MCP Playwright profile was locked: desktop home, mobile home, desktop/mobile lesson, reduced-motion lesson, and branded 404 rendered without horizontal overflow.
 
 ---
 
