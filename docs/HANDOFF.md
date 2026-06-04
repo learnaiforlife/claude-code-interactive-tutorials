@@ -73,16 +73,18 @@ src/
   components/
     chrome/Chrome.tsx           # sticky terminal bar (dots, wordmark, breadcrumb slot, ⌘K hint)
     dashboard/LessonList.tsx    # progress meter + numbered rows + Done/Now/Locked; locked = non-navigable
-    lesson/LessonPane.tsx       # editorial left pane: numeral+title, context, "The idea" concept, signature-tip card + bank button, prev/next
+    impact/                     # Impact math UI: Forest dashboard, Plant reward, cascade controls, metric formatting
+    lesson/LessonPane.tsx       # editorial left pane: concept, signature + inline tip banking, Plant reward, prev/next
     lesson/TerminalSession.tsx  # THE animated session player (autoplay + Replay, reduced-motion safe)
     ui/icons.tsx                # in-house Check/Lock/ArrowLeft/ArrowRight (no icon dep)
   lib/
     types.ts            # Lesson, Tip, SessionLine, Progress, Track
     lessons.ts          # 8 lessons: context + concept + scripted session + 3 tips each (1 signature)
+    impact.ts           # exact cost, eco ranges, cascade factors, banked-tip totals
     progress.ts         # localStorage progress: bankTip + pure *In(progress,...) derivations + wrappers
     use-progress.ts     # useProgress() store (useSyncExternalStore) + bankTipNow()
     use-reduced-motion.ts # usePrefersReducedMotion() (useSyncExternalStore)
-tests/                  # 8 suites, 20 tests (setup.ts mocks next/font, next/link, localStorage, matchMedia)
+tests/                  # 10 suites, 27 tests (setup.ts mocks next/font, next/link, localStorage, matchMedia)
 ```
 
 Data model: each `Lesson` has `tips: Tip[]` (exactly 3, one `kind:'signature'`) and `session: SessionLine[]`.
@@ -98,30 +100,32 @@ Data model: each `Lesson` has `tips: Tip[]` (exactly 3, one `kind:'signature'`) 
 - **Lesson model + 24-tip registry + localStorage progress** (`8236f29`).
 - **Editorial dashboard** (progress meter, Done/Now/Locked; locked lessons are non-navigable so banking a tip unlocks the next) and **split-screen lesson page** (`7f17e54`).
 - **Live animated terminal sessions + real per-lesson content** (`8c6e3e3`): `TerminalSession` plays each lesson's scripted Claude Code session (prompts type out, tool/output lines stream, ends on a tokens-saved tally; autoplay + Replay; reduced-motion renders the full transcript instantly). Every lesson has a `concept` + a `session`.
+- **Impact System foundations** (`ad96ab1`): `impact.ts`, exact Sonnet input-token cost math, honest eco ranges, cascade controls, methodology page, Plant reward, and Forest dashboard.
+- **24-tip banking pass**: inline tips are visible and bankable in each lesson, the Forest tracks 24 trees, signature tips still drive lesson completion/unlock.
 
-**Verified:** 20/20 tests, lint clean, production build passes (all 8 lessons prerender static), animation confirmed in-browser (desktop + mobile stack, bank→unlock flow, 404, clean console / no hydration errors).
+**Verified:** 27/27 tests, lint clean, production build passes (`/`, `/how-we-calculate`, all 8 lessons prerender static). Browser screenshot tooling was blocked by an occupied Playwright profile during the latest pass; route HTML was verified via the running dev server on `:3001`.
 
 ---
 
 ## 6. NEXT STEPS (prioritized)
 
-### P1 — Phase 2: The Impact System (the other half of the "wow"; the user is most excited about this)
-Per `DESIGN.md` §6. Token efficiency → visible impact.
-1. **`src/lib/impact.ts`** — pure functions: `tokensToCost(tokens)` (exact, from a model-pricing constant; document the assumed $/Mtok), and `tokensToEco(tokens)` returning **ranges** `{ whLo, whHi, mlLo, mlHi, co2Lo, co2Hi }` from published per-token estimates. Keep ranges honest (`~`, low–high). Unit-test it.
-2. **`/how-we-calculate` methodology page** — states the pricing constant + cites the eco sources + assumptions. Link to it from every impact figure. (Credibility is a hard requirement, `DESIGN.md` §6c.)
-3. **Plant reward** — replace `LessonPane`'s static "Tip banked" confirmation with a coded-vector **growing-plant SVG animation** (stem draws, leaves pop), the tokens-saved hero number counting up, and the four impact metrics (cost exact; energy/water/CO₂ as sourced ranges). Reduced-motion: final state instantly. Reference mock built during design lives at `.superpowers/brainstorm/*/content/impact-reward.html`.
-4. **Cascade toggle** (core, `DESIGN.md` §6a) — `Per use → Daily habit (×2,500/yr) → Team of 20 (×50,000)` rescales every figure. Present on the Plant reward and the Forest dashboard.
-5. **Forest dashboard** — on `/` (above or replacing the bare meter): each banked tip = a tree (sprout→sapling→forest), a cumulative ledger of totals (cost/water/energy/CO₂). Reference mock: same brainstorm dir (`reward-options.html`, option 4).
-   - **Acceptance:** banking a tip shows the animated Plant with honest numbers + cascade; the home Forest grows and tallies; methodology page exists and is linked; reduced-motion clean; tests for `impact.ts`; lint+build green.
+### P1 polish — Impact System QA and craft
+The Impact System is implemented, but still needs a real browser screenshot pass once the Playwright profile lock is cleared.
+1. Visual QA desktop + mobile: home Forest, lesson inline-tip banking, Plant reward, cascade toggle states.
+2. Reduced-motion browser QA: Plant final state, no count-up movement, terminal transcript still instant.
+3. Craft pass: newest-tree glow, Forest density, mobile wrapping, empty-state language, metric legibility.
 
 ### P2 — Interactive terminal (type-it-yourself)
 Extend `TerminalSession` (or add a sibling) so lessons 3/4/5 let the user **type a command and get scripted output**, with `?`-for-hint and `reset`, plus correct/incorrect detection. Today it only autoplays/replays. Keep the same line-rendering + reduced-motion model.
+
+### P2.5 — Feature-module expansion
+The master plan now has a **Feature-module curriculum expansion** section. Use the official Claude Code docs index (`https://code.claude.com/docs/llms.txt`) as the source map. Each new module must teach what the feature is, how it works, how to use it, and the token-efficiency habit attached to that feature.
 
 ### P3 — Command palette (⌘K)
 Wire the `Chrome` ⌘K hint to a real palette: fuzzy search all lessons, show Done/Now/Locked inline, keyboard-first, navigate on select. Use native `<dialog>`/portal (avoid clipping). Replace the `<kbd>` hint with the real trigger.
 
 ### P4 — Content & polish
-- **Lesson "Check"** (lesson anatomy step 4): a small MCQ / fill-in-the-blank per lesson with explain-on-wrong (not graded). Surface the two **inline (non-signature) tips** in each lesson.
+- **Lesson "Check"** (lesson anatomy step 4): a small MCQ / fill-in-the-blank per lesson with explain-on-wrong (not graded).
 - Branded **404**, Lighthouse/perf pass, full a11y audit on both surfaces, then **Vercel deploy**.
 
 ### Backlog / Phase 3+ (from the master plan)
@@ -130,15 +134,14 @@ Intermediate/advanced tracks, accounts/cloud sync, real shell integration, shari
 ---
 
 ## 7. Honest current gaps (don't represent these as done)
-- Banking a tip shows a clean **static** confirmation, not the animated Plant yet (P1).
+- Latest Impact UI has not had a screenshot-based browser QA pass because the Playwright profile was locked.
 - The terminal **autoplays/replays**; you cannot type into it yet (P2).
 - ⌘K is a visual hint only (P3).
-- No methodology page yet, so impact eco numbers are not yet shown anywhere user-facing except illustrative session tallies (P1 formalizes them).
 - 404 is Next's default (P4).
 
 ---
 
 ## 8. Start here
 1. `npm install && npm test && npm run dev` — confirm green and click through `/` → a lesson → bank a tip → watch it unlock.
-2. Begin **P1 step 1** (`src/lib/impact.ts`, test-first).
+2. Continue with **P1 polish** or start **P2** interactive terminal.
 3. Keep commits small; keep test/lint/build green; follow §3 conventions.

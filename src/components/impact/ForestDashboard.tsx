@@ -2,20 +2,25 @@
 
 import { useState } from 'react';
 import { getAllLessons } from '@/lib/lessons';
-import { bankedSavedTokensIn, calculateImpact, type CascadeMode } from '@/lib/impact';
+import { bankedSavedTokensIn, bankedTipsIn, calculateImpact, type CascadeMode } from '@/lib/impact';
 import { tipBankedIn, trackCompletionIn } from '@/lib/progress';
 import { useProgress } from '@/lib/use-progress';
 import CascadeControl from './CascadeControl';
 import { formatTokens, ImpactMetricGrid, MethodologyLink } from './ImpactFigures';
 
 const lessons = getAllLessons();
+const tipMarkers = lessons.flatMap((lesson) => lesson.tips.map((tip) => ({ lesson, tip })));
 
 export default function ForestDashboard() {
   const progress = useProgress();
   const [mode, setMode] = useState<CascadeMode>('per-use');
   const { done, total } = trackCompletionIn(progress, 'beginner');
+  const bankedTipCount = bankedTipsIn(progress).length;
   const savedTokens = bankedSavedTokensIn(progress);
   const impact = calculateImpact(savedTokens, mode);
+  const newestIndex = tipMarkers.reduce((latest, marker, index) => (
+    tipBankedIn(progress, marker.lesson.slug, marker.tip.id) ? index : latest
+  ), -1);
 
   return (
     <section className="border-b border-line-soft bg-paper px-6 py-10 text-ink">
@@ -37,21 +42,27 @@ export default function ForestDashboard() {
           </div>
 
           <p className="mt-4 font-mono text-xs tabular-nums text-ink-soft">
-            {done} / {total} signature tips banked · {formatTokens(impact.tokens)} scaled tokens saved
+            {bankedTipCount} / {tipMarkers.length} tips banked · {done} / {total} lessons complete · {formatTokens(impact.tokens)} scaled tokens saved
           </p>
         </div>
 
         <div className="rounded-xl border border-line-soft bg-black/[0.025] p-5">
-          <div className="grid grid-cols-8 gap-2" aria-label={`${done} of ${total} trees planted`}>
-            {lessons.map((lesson) => {
-              const signature = lesson.tips.find((tip) => tip.kind === 'signature')!;
-              const planted = tipBankedIn(progress, lesson.slug, signature.id);
-              return <Tree key={lesson.slug} planted={planted} newest={planted && lesson.order === done} order={lesson.order} />;
+          <div className="grid grid-cols-8 gap-1.5 sm:grid-cols-12" aria-label={`${bankedTipCount} of ${tipMarkers.length} trees planted`}>
+            {tipMarkers.map(({ lesson, tip }, index) => {
+              const planted = tipBankedIn(progress, lesson.slug, tip.id);
+              return (
+                <Tree
+                  key={tip.id}
+                  planted={planted}
+                  newest={planted && index === newestIndex}
+                  label={`Lesson ${lesson.order}: ${tip.title}`}
+                />
+              );
             })}
           </div>
           <div className="mt-5 h-px border-t border-dashed border-line-soft" />
           <div className="mt-4 flex items-center justify-between gap-4 font-mono text-xs text-ink-soft">
-            <span>{forestStage(done)}</span>
+            <span>{forestStage(bankedTipCount)}</span>
             <span>{savedTokens ? `${formatTokens(savedTokens)} raw tokens` : 'Plant the first habit'}</span>
           </div>
         </div>
@@ -60,12 +71,12 @@ export default function ForestDashboard() {
   );
 }
 
-function Tree({ planted, newest, order }: { planted: boolean; newest: boolean; order: number }) {
+function Tree({ planted, newest, label }: { planted: boolean; newest: boolean; label: string }) {
   return (
-    <div className="flex h-24 items-end justify-center" aria-label={`Lesson ${order} ${planted ? 'planted' : 'locked'}`}>
+    <div className="flex h-14 items-end justify-center" aria-label={`${label} ${planted ? 'planted' : 'locked'}`}>
       <svg
         viewBox="0 0 48 72"
-        className={`h-20 w-12 transition-transform duration-300 ${newest ? 'scale-105' : ''} ${planted ? 'text-success' : 'text-ink-soft/25'}`}
+        className={`h-12 w-8 transition-transform duration-300 ${newest ? 'scale-110' : ''} ${planted ? 'text-success' : 'text-ink-soft/25'}`}
         aria-hidden="true"
       >
         <path d="M24 64 V38" fill="none" stroke="currentColor" strokeWidth="4" strokeLinecap="round" opacity={planted ? 0.9 : 0.45} />
@@ -78,10 +89,9 @@ function Tree({ planted, newest, order }: { planted: boolean; newest: boolean; o
   );
 }
 
-function forestStage(done: number): string {
-  if (done === 0) return 'Forest waiting';
-  if (done < 3) return 'Sprout stage';
-  if (done < 7) return 'Sapling stage';
+function forestStage(bankedTips: number): string {
+  if (bankedTips === 0) return 'Forest waiting';
+  if (bankedTips < 8) return 'Sprout stage';
+  if (bankedTips < 18) return 'Sapling stage';
   return 'Forest stage';
 }
-

@@ -140,6 +140,31 @@ Each lesson has these sections:
 4. **Check** — A checkpoint question or mini-challenge
 5. **Next** — One clear next step (the next lesson, or a specific thing to try in real Claude Code)
 
+### Feature-module curriculum expansion
+
+The long-term curriculum should cover Claude Code as a set of feature modules. Each module teaches:
+1. **What it is** — the feature's job in Claude Code.
+2. **How it works** — what gets loaded into context, what tools or files it touches, and what Claude can do with it.
+3. **How to use it** — one realistic guided session or build-along.
+4. **How to use it efficiently** — the token habit that makes the feature cheaper, safer, or more precise.
+5. **Impact reward** — the saved-token estimate, cost, energy, water, and CO2e attached to that habit.
+
+Authoritative source map: use the official Claude Code docs index (`https://code.claude.com/docs/llms.txt`) before adding or renaming modules. As of June 4, 2026, the feature families to cover are:
+
+| Track | Feature modules | Efficiency hook |
+|-------|-----------------|-----------------|
+| Foundations | Install, authenticate, update, `claude doctor`, CLI vs IDE vs desktop vs web | Keep setup prompts diagnostic and short. Do not paste environment dumps when a command can report the state. |
+| Core CLI workflow | Interactive sessions, prompt input, edit/run/approve loop, continuing and resuming sessions, slash commands, keyboard shortcuts | Start from the narrowest task, resume only related work, and clear or compact when context changes. |
+| Codebase context | File reads, search, `CLAUDE.md`, auto memory, context window, prompt caching, status line, usage/cost views | Search before reading, store durable facts once, and watch what is consuming context. |
+| Tools and permissions | Built-in tools, Bash/PowerShell, permission modes, sandboxing, auto mode, approvals | Let deterministic tools do deterministic work, allow only needed tools, and avoid carrying broad permissions into small tasks. |
+| Extension system | Custom slash commands, skills, subagents, hooks, MCP, plugins, plugin marketplaces | Encode repeated workflows once, isolate heavy context in subagents, and lazy-load external tools instead of carrying every schema. |
+| Parallel and large work | Worktrees, agent view, agent teams, dynamic workflows, checkpointing, goals, scheduled tasks, routines | Split independent work, return conclusions instead of dumps, and checkpoint before broad edits. |
+| Integrations | VS Code, JetBrains, Desktop, Chrome, GitHub Actions, GitLab CI/CD, Slack, Remote Control, web/cloud sessions | Put Claude where the context already is, but avoid duplicating the same context across tools and sessions. |
+| Programmatic use | Agent SDK, headless mode, streaming, structured output, custom tools, SDK sessions, cost tracking | Use structured output and tool allowlists, stream only what the host needs, and track token spend per workflow. |
+| Team and enterprise | Organization setup, managed settings, Bedrock, Vertex AI, Microsoft Foundry, LLM gateways, analytics, monitoring, security, data usage | Scope defaults centrally, measure usage by feature, and keep high-cost capabilities opt-in. |
+
+Each new module must have at least one concrete token-efficiency tip in the lesson data before it ships.
+
 ---
 
 ## 7. Interactive Elements
