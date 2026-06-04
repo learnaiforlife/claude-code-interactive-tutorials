@@ -20,9 +20,10 @@ npm run audit:docs   # live Claude Code docs coverage audit
 
 - 91 lessons across Beginner, Feature Modules, Power User Modules, and Team Modules.
 - 273 bankable token-saving tips.
+- Dashboard feature maps summarize each track by Claude Code feature family, module count, and token-habit count.
 - Curriculum audit checks the lesson contract: feature metadata, docs refs, guided sessions, checks, challenges, impact lines, and token-saving tips.
 - Live docs audit checks the official Claude Code docs index against lesson `docsRefs`.
-- Rendered QA covers module brief visibility, official docs links, efficiency habits, multiple terminal challenge flows, Replay, multi-tip Forest state, Plant and Forest cascade scaling, newest-tree marker/count, command palette locked/unlocked behavior, desktop/mobile overflow, and browser console/runtime errors.
+- Rendered QA covers dashboard feature maps, module brief visibility, official docs links, efficiency habits, multiple terminal challenge flows, Replay, multi-tip Forest state, Plant and Forest cascade scaling, newest-tree marker/count, command palette locked/unlocked behavior, desktop/mobile overflow, and browser console/runtime errors.
 
 ## Development Notes
 

@@ -40,6 +40,8 @@ function TrackSection({
         <p className="mt-1 max-w-[62ch] text-sm leading-relaxed text-ink-soft">{track.description}</p>
       </div>
 
+      <FeatureFamilyMap track={track} />
+
       <div className="mb-6 flex items-center gap-3">
         <div className="h-1 flex-1 overflow-hidden rounded-full bg-line-soft">
           <div
@@ -98,6 +100,59 @@ function TrackSection({
       </ol>
     </section>
   );
+}
+
+function FeatureFamilyMap({ track }: { track: TrackInfo & { lessons: Lesson[] } }) {
+  const families = summarizeFamilies(track.lessons);
+
+  return (
+    <div
+      aria-label={`${track.title} feature map`}
+      className="mb-6 border-y border-line-soft py-4"
+    >
+      <div className="mb-3 flex flex-col gap-1 sm:flex-row sm:items-baseline sm:justify-between">
+        <div className="font-mono text-xs font-semibold uppercase tracking-wide text-ink-soft">Feature map</div>
+        <div className="font-mono text-xs text-ink-soft">{track.lessons.length} modules · {track.lessons.length * 3} token habits</div>
+      </div>
+      <ul className="grid gap-2 sm:grid-cols-2">
+        {families.map((family) => (
+          <li
+            key={family.name}
+            aria-label={`${family.name}: ${family.moduleCount} ${family.moduleCount === 1 ? 'module' : 'modules'}, ${family.tokenHabits} token habits`}
+            className="flex items-baseline justify-between gap-3 rounded-lg bg-black/[0.018] px-3 py-2"
+          >
+            <span className="min-w-0 truncate text-sm font-medium text-ink">{family.name}</span>
+            <span className="shrink-0 font-mono text-xs text-ink-soft">
+              {family.moduleCount} {family.moduleCount === 1 ? 'module' : 'modules'} · {family.tokenHabits} token habits
+            </span>
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
+}
+
+function summarizeFamilies(lessons: Lesson[]): Array<{ name: string; moduleCount: number; tokenHabits: number }> {
+  const summaries = new Map<string, { name: string; moduleCount: number; tokenHabits: number; firstOrder: number }>();
+
+  for (const lesson of lessons) {
+    const existing = summaries.get(lesson.featureFamily);
+    if (existing) {
+      existing.moduleCount += 1;
+      existing.tokenHabits += lesson.tips.length;
+      continue;
+    }
+    summaries.set(lesson.featureFamily, {
+      name: lesson.featureFamily,
+      moduleCount: 1,
+      tokenHabits: lesson.tips.length,
+      firstOrder: lesson.order,
+    });
+  }
+
+  return [...summaries.values()]
+    .sort((a, b) => a.firstOrder - b.firstOrder)
+    .map(({ name, moduleCount, tokenHabits }) => ({ name, moduleCount, tokenHabits }));
 }
 
 function StatusBadge({ status }: { status: LessonStatus }) {

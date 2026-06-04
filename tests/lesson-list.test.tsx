@@ -47,6 +47,21 @@ test('renders beginner, feature-module, power-user, and team rows grouped by tra
   }
 });
 
+test('summarizes each track by feature family and bankable token habits', () => {
+  render(<LessonList />);
+  expect(screen.getAllByText('Feature map')).toHaveLength(4);
+
+  const featureTrack = screen.getByLabelText('Feature Modules feature map');
+  expect(within(featureTrack).getByText('Runtime Setup')).toBeInTheDocument();
+  expect(within(featureTrack).getByLabelText('Runtime Setup: 13 modules, 39 token habits')).toBeInTheDocument();
+  expect(within(featureTrack).getByText('Core Session Workflow')).toBeInTheDocument();
+  expect(within(featureTrack).getByLabelText('Core Session Workflow: 4 modules, 12 token habits')).toBeInTheDocument();
+
+  const teamTrack = screen.getByLabelText('Team Modules feature map');
+  expect(within(teamTrack).getByText('Agent SDK Internals')).toBeInTheDocument();
+  expect(within(teamTrack).getByLabelText('Agent SDK Internals: 8 modules, 24 token habits')).toBeInTheDocument();
+});
+
 test('first lesson is "Now" (a link); later lessons are "Locked" (not links)', async () => {
   render(<LessonList />);
   const l1 = await screen.findByTestId('lesson-row-what-is-claude-code');

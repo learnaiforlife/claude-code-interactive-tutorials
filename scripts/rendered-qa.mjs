@@ -30,7 +30,7 @@ async function main() {
 
   console.log('Rendered QA passed');
   console.log(`- Production app: ${appUrl}`);
-  console.log('- Covered: module briefs, multiple terminal challenges, Replay, multi-tip Forest state, Plant and Forest cascade scaling, newest-tree marker, palette locked/unlocked flows, desktop/mobile overflow, console/runtime errors');
+  console.log('- Covered: feature maps, module briefs, multiple terminal challenges, Replay, multi-tip Forest state, Plant and Forest cascade scaling, newest-tree marker, palette locked/unlocked flows, desktop/mobile overflow, console/runtime errors');
 }
 
 async function runDesktopLearningFlow(browser) {
@@ -114,6 +114,21 @@ async function runDesktopLearningFlow(browser) {
   await page.waitForText('1 / 273 tips banked');
   await page.waitForText('3,200 raw tokens banked');
   await page.waitForText('Sprout stage');
+  await page.waitForText('Feature map');
+  const featureMapState = await page.evaluate(() => {
+    const featureMap = document.querySelector('[aria-label="Feature Modules feature map"]');
+    const teamMap = document.querySelector('[aria-label="Team Modules feature map"]');
+    return {
+      runtimeSetup: Boolean(featureMap?.querySelector('[aria-label="Runtime Setup: 13 modules, 39 token habits"]')),
+      coreWorkflow: Boolean(featureMap?.querySelector('[aria-label="Core Session Workflow: 4 modules, 12 token habits"]')),
+      sdkInternals: Boolean(teamMap?.querySelector('[aria-label="Agent SDK Internals: 8 modules, 24 token habits"]')),
+      noOverflow: document.documentElement.scrollWidth <= document.documentElement.clientWidth,
+    };
+  });
+  assert(featureMapState.runtimeSetup, 'dashboard feature map should summarize Runtime Setup modules and habits');
+  assert(featureMapState.coreWorkflow, 'dashboard feature map should summarize Core Session Workflow modules and habits');
+  assert(featureMapState.sdkInternals, 'dashboard feature map should summarize Agent SDK Internals modules and habits');
+  assert(featureMapState.noOverflow, 'desktop feature maps introduced horizontal overflow');
   const forestTreeState = await page.evaluate(() => {
     const forest = document.querySelector('ol[aria-label="1 of 273 trees planted"]');
     const newestTree = Array.from(document.querySelectorAll('li[aria-label$=" planted"]')).find((element) =>
@@ -261,6 +276,21 @@ async function runMobileLayoutFlow(browser) {
   assert(mobileState.moduleBriefWithinViewport, 'module brief leaves mobile viewport');
   assert(mobileState.cardWithinViewport, 'challenge brief leaves mobile viewport');
   assert(mobileState.terminalWithinViewport, 'terminal input leaves mobile viewport');
+
+  await page.navigate(appUrl);
+  await page.waitForText('Feature map');
+  const mobileDashboardState = await page.evaluate(() => {
+    const featureMap = document.querySelector('[aria-label="Feature Modules feature map"]');
+    const featureMapBox = featureMap?.getBoundingClientRect();
+    return {
+      runtimeSetup: Boolean(featureMap?.querySelector('[aria-label="Runtime Setup: 13 modules, 39 token habits"]')),
+      noOverflow: document.documentElement.scrollWidth <= document.documentElement.clientWidth,
+      featureMapWithinViewport: featureMapBox ? featureMapBox.left >= 0 && featureMapBox.right <= window.innerWidth : false,
+    };
+  });
+  assert(mobileDashboardState.runtimeSetup, 'mobile dashboard should render feature-family summaries');
+  assert(mobileDashboardState.noOverflow, 'mobile dashboard feature maps introduced horizontal overflow');
+  assert(mobileDashboardState.featureMapWithinViewport, 'feature map leaves mobile viewport');
   assertNoPageErrors(page);
   await page.close();
 }
