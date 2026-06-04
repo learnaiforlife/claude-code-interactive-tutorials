@@ -30,7 +30,7 @@ async function main() {
 
   console.log('Rendered QA passed');
   console.log(`- Production app: ${appUrl}`);
-  console.log('- Covered: feature maps and jump links, module briefs, module paths, ranked palette search, multiple terminal challenges, Replay, multi-tip Forest state, Plant and Forest cascade scaling, newest-tree marker, palette locked/unlocked flows, desktop/mobile overflow, console/runtime errors');
+  console.log('- Covered: command learning landing panel, feature maps and jump links, module briefs, module paths, ranked palette search, multiple terminal challenges, Replay, multi-tip Forest state, Plant and Forest cascade scaling, newest-tree marker, palette locked/unlocked flows, desktop/mobile overflow, console/runtime errors');
 }
 
 async function runDesktopLearningFlow(browser) {
@@ -123,6 +123,25 @@ async function runDesktopLearningFlow(browser) {
   assert(signatureProgress?.bankedTips?.['bash-commands']?.includes('l3-grep'), 'banking did not persist the signature tip');
 
   await page.navigate(appUrl);
+  await page.waitForText('Learn the slash commands as commands first');
+  await page.waitForText('Command fluency first, efficiency second.');
+  await page.waitForText('91 modules, 20 highlighted commands, 75 typed terminal challenges, and 273 bankable habits');
+  const commandLandingState = await page.evaluate(() => {
+    const panel = document.querySelector('[aria-labelledby="commands-lab-heading"]');
+    const tracks = document.querySelector('#tracks-heading');
+    return {
+      hasReferenceLink: Boolean(panel?.querySelector('a[href="https://code.claude.com/docs/en/commands.md"]')),
+      hasContextCommand: panel?.textContent.includes('/context') ?? false,
+      hasCodeReviewCommand: panel?.textContent.includes('/code-review') ?? false,
+      tracksHeading: tracks?.textContent ?? '',
+      noOverflow: document.documentElement.scrollWidth <= document.documentElement.clientWidth,
+    };
+  });
+  assert(commandLandingState.hasReferenceLink, 'command learning panel should link to the official commands reference');
+  assert(commandLandingState.hasContextCommand, 'command learning panel should teach /context');
+  assert(commandLandingState.hasCodeReviewCommand, 'command learning panel should teach /code-review');
+  assertIncludes(commandLandingState.tracksHeading, 'Feature modules with efficient-use hooks', 'tracks heading');
+  assert(commandLandingState.noOverflow, 'desktop landing command panel introduced horizontal overflow');
   await page.waitForText('1 / 273 tips banked');
   await page.waitForText('3,200 raw tokens banked');
   await page.waitForText('Sprout stage');

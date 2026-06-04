@@ -28,9 +28,9 @@ Authoritative specs (already written — follow them, don't redo):
 
 - **Next.js 16.2.7** (App Router, Turbopack) · **React 19** · **TypeScript** · **Tailwind CSS v4** (CSS-first `@theme`).
 - **Vitest 4 + @testing-library/react + jsdom** for unit/component tests.
-- Path alias `@/*` → `src/*`. Deploy target: Vercel (not yet wired). On June 4, 2026,
-  `npx -y vercel@latest whoami` reported an invalid token, so deploy needs a valid Vercel login/token
-  and project link before it can proceed.
+- Path alias `@/*` → `src/*`. Deploy target: Vercel. Production is live at
+  `https://claude-code-interactive-tutorials.vercel.app`. Manual Vercel deploys work from this machine.
+  Automatic GitHub-linked deploys still need the Vercel account to add a GitHub login connection.
 
 **Environment gotchas (already handled — keep handling them this way):**
 - **Node 25 exposes a global `localStorage`** during SSR/prerender (you'll see a `--localstorage-file` warning). So **never read `localStorage` during a component's initial render / render-time `useState` initializer** — it causes hydration mismatches. Read browser state via the `useSyncExternalStore` hooks (`src/lib/use-progress.ts`, `src/lib/use-reduced-motion.ts`). This pattern is mandatory for any new browser-backed state.
@@ -41,7 +41,7 @@ Authoritative specs (already written — follow them, don't redo):
 **Commands:**
 ```bash
 npm run dev      # local dev (Turbopack)
-npm test         # vitest run  (currently 61 passing, 13 files)
+npm test         # vitest run  (currently 65 passing, 15 files)
 npm run lint     # eslint      (currently clean)
 npm run build    # next build  (currently passes; 91 lessons prerender static)
 npm run qa:rendered # production build + headless Chrome rendered QA
@@ -73,11 +73,12 @@ src/
   app/
     layout.tsx              # Inter+Fira fonts, renders global <Chrome/>
     globals.css             # Tailwind v4 @theme OKLCH tokens, z-scale, focus, reduced-motion
-    page.tsx                # Home: editorial Beginner Track + <LessonList/>
+    page.tsx                # Home: command-first landing, Commands Lab, Forest, and <LessonList/>
     lessons/[slug]/page.tsx # Split-screen: <LessonPane/> + <TerminalSession/>; notFound() on bad slug; generateStaticParams
   components/
     chrome/Chrome.tsx           # sticky terminal bar (dots, wordmark, breadcrumb slot, real ⌘K trigger)
     chrome/CommandPalette.tsx   # searchable lesson palette with Done/Now/Locked states
+    dashboard/CommandLearningPanel.tsx # Commands Lab: pure slash-command learning sessions
     dashboard/LessonList.tsx    # progress meter + numbered rows + Done/Now/Locked; locked = non-navigable
     impact/                     # Impact math UI: Forest dashboard, Plant reward, cascade controls, metric formatting
     lesson/LessonPane.tsx       # editorial left pane: concept, signature + inline tip banking, Plant reward, prev/next
@@ -86,11 +87,12 @@ src/
   lib/
     types.ts            # TrackInfo, Lesson, Tip, SessionLine, TerminalChallenge, Progress, Track
     lessons.ts          # 91 lessons across Beginner, Feature Modules, Power User Modules, and Team Modules
+    command-learning.ts # 5 pure command learning sessions covering 20 highlighted slash commands
     impact.ts           # exact cost, eco ranges, cascade factors, banked-tip totals
     progress.ts         # localStorage progress: bankTip + pure *In(progress,...) derivations + wrappers
     use-progress.ts     # useProgress() store (useSyncExternalStore) + bankTipNow()
     use-reduced-motion.ts # usePrefersReducedMotion() (useSyncExternalStore)
-tests/                  # 13 suites, 61 tests (setup.ts mocks next/font, next/link, localStorage, matchMedia)
+tests/                  # 15 suites, 65 tests (setup.ts mocks next/font, next/link, localStorage, matchMedia)
 ```
 
 Data model: each `Lesson` has `tips: Tip[]` (exactly 3, one `kind:'signature'`) and `session: SessionLine[]`.
@@ -114,6 +116,7 @@ Lessons 3, 4, and 5 plus all Power User and Team lessons also have `challenge?: 
 - **Dashboard feature maps**: each track summarizes feature families with module counts and bankable token-habit counts, then jumps to the matching module rows without bypassing locked lessons.
 - **Learner-facing module brief**: every lesson pane now surfaces the feature family, estimated format/time, explicit efficient habit, and official docs links before the concept and terminal session.
 - **Learner-facing module path**: every lesson names the teaching sequence: what it is, how it works, how to use it, and how to use it efficiently.
+- **Command-first landing layer**: the home page now starts with a pure Commands Lab covering 5 workflow sessions and 20 highlighted slash commands, then connects learners to impact and the full module tracks.
 - **Feature Modules track**: 24 shipped modules covering Agent loop, Prompt input, Continue/resume, Slash commands, Search/read, CLAUDE.md, Context window, Built-in tools, Bash/PowerShell, Permission modes, Checkpointing, quickstart/install/login, install troubleshooting, terminal configuration, keybindings, status line, fullscreen rendering, voice dictation, output styles, fast mode, sandbox environments, dev containers, runtime troubleshooting, and environment variables. Each teaches what it is, how it works, how to use it, and how to use it efficiently with a bankable token-saving habit.
 - **Power User Modules track**: 26 shipped modules covering Custom slash commands, Skills, Subagents, Hooks, MCP, Plugins, Plugin distribution, Worktrees, Agent view, Agent teams, Dynamic workflows, Goals, Scheduled tasks/routines, VS Code, JetBrains, Desktop, Chrome/computer use, GitHub Actions, GitLab CI/CD, Code Review, Slack/Remote Control, web/cloud sessions, channels, deep links, security guidance plugin, and ultrareview. Each includes official docs refs, a typed terminal challenge, and a token-efficiency habit.
 - **Team Modules track**: 33 shipped modules covering Agent SDK, headless automation, SDK sessions, SDK permissions/user input, SDK streaming, structured outputs, custom tools, tool search, cost tracking, observability, hosting/session storage, secure deployment, organization setup, analytics/monitoring, managed settings, managed MCP, security/data usage, network gateways, GitHub Enterprise Server, Bedrock, Vertex AI, Microsoft Foundry, Claude Platform on AWS, rollout kits, SDK agent loop, SDK migration, SDK plugins, SDK skills, SDK slash commands, SDK subagents, SDK todo lists, Python SDK reference orientation, and release awareness through changelog/What's new. Each includes official docs refs, a typed terminal challenge, and a token-efficiency habit.
@@ -122,7 +125,7 @@ Lessons 3, 4, and 5 plus all Power User and Team lessons also have `challenge?: 
 - **Lesson checks + branded 404**: each lesson has a low-stakes check with explain-on-wrong feedback, and `/not-found` uses the dual-tone house style.
 - **Release hardening pass**: axe-core structural a11y coverage for chrome, Forest, lesson, terminal, and 404; semantic Forest markers; skip link to main content; command-palette focus trap; mobile overflow fixes; reduced-motion terminal remounts into the full transcript.
 
-**Verified:** 61/61 tests, lint clean, production build passes (`/`, `/how-we-calculate`, all 91 lessons prerender static; 96 static pages total). `npm run audit:curriculum` reports 91 lessons, 273 tips, 75 challenges, 145 unique docs refs, 91/91 four-part teaching paths, and 0 contract errors. `npm run audit:docs` fetches the live official Claude Code docs index and currently reports 145 live pages, 145 unique lesson refs, 0 missing, and 0 stale. `npm run qa:rendered` starts production `next start` on a free port and drives local headless Chrome through DevTools Protocol: dashboard feature maps and jump links, module brief visibility, module paths, official docs links, efficiency habits, ranked command palette search, bash and skills terminal challenges, Replay clearing challenge output, multi-tip Forest state, Plant and Forest Team-of-20 cascade scaling, newest-tree marker/count, command palette locked-result non-navigation, unlocked Enter navigation, desktop/mobile overflow, and browser console/runtime errors. Rendered browser QA used isolated headless Chrome DevTools Protocol because the MCP Playwright profile was locked: banked `bash-commands`, confirmed Plant reward, cascade scaling, Forest newest-tree glow/count, reduced-motion final token state, no console/runtime errors, and no horizontal overflow. Forest craft QA now covers the denser 273-tree field, empty-state guidance, next-tree prompt, metric legibility, team cascade scaling, desktop/mobile layouts, no console/runtime errors, and no horizontal overflow. Terminal interaction QA also covered reduced-motion typed challenges on `bash-commands`: hint, incorrect feedback, reset, success output, Replay clearing challenge output, mobile success, no console/runtime errors, and no horizontal overflow. Terminal instruction QA now covers the left-pane type-it-yourself brief on `bash-commands` at desktop and mobile widths: challenge heading, terminal prompt, `?`/`reset` affordances, no console/runtime errors, no horizontal overflow, and no overlap with the signature tip. Command palette QA covered mouse open, focused search, multi-term feature/habit ranking, locked search results, Escape close/reset, keyboard shortcut open, unlocked Enter navigation, mobile search/close, no console/runtime errors, and no horizontal overflow. P4 keyboard/perf smoke covers skip link, palette focus trap, lesson bank/check/terminal/replay tab reachability, reduced-motion terminal input reachability, 91 ms home DOMContentLoaded / 124 ms load, 70 ms lesson DOMContentLoaded / 85 ms load, no console/runtime errors. Formal Lighthouse on production `next start` covers `/` and `/lessons/bash-commands`: 97 performance, 100 accessibility, 100 best practices, 100 SEO, 100 agentic browsing on both routes; label/content-name passes; FCP 0.8-0.9 s, LCP 2.6 s, TBT 0 ms, CLS 0.
+**Verified:** 65/65 tests, lint clean, production build passes (`/`, `/how-we-calculate`, all 91 lessons prerender static; 96 static pages total). `npm run audit:curriculum` reports 91 lessons, 273 tips, 75 challenges, 145 unique docs refs, 91/91 four-part teaching paths, and 0 contract errors. `npm run audit:docs` fetches the live official Claude Code docs index and currently reports 145 live pages, 145 unique lesson refs, 0 missing, and 0 stale. `npm run qa:rendered` starts production `next start` on a free port and drives local headless Chrome through DevTools Protocol: command learning landing panel, dashboard feature maps and jump links, module brief visibility, module paths, official docs links, efficiency habits, ranked command palette search, bash and skills terminal challenges, Replay clearing challenge output, multi-tip Forest state, Plant and Forest Team-of-20 cascade scaling, newest-tree marker/count, command palette locked-result non-navigation, unlocked Enter navigation, desktop/mobile overflow, and browser console/runtime errors. Rendered browser QA used isolated headless Chrome DevTools Protocol because the MCP Playwright profile was locked: banked `bash-commands`, confirmed Plant reward, cascade scaling, Forest newest-tree glow/count, reduced-motion final token state, no console/runtime errors, and no horizontal overflow. Forest craft QA now covers the denser 273-tree field, empty-state guidance, next-tree prompt, metric legibility, team cascade scaling, desktop/mobile layouts, no console/runtime errors, and no horizontal overflow. Terminal interaction QA also covered reduced-motion typed challenges on `bash-commands`: hint, incorrect feedback, reset, success output, Replay clearing challenge output, mobile success, no console/runtime errors, and no horizontal overflow. Terminal instruction QA now covers the left-pane type-it-yourself brief on `bash-commands` at desktop and mobile widths: challenge heading, terminal prompt, `?`/`reset` affordances, no console/runtime errors, no horizontal overflow, and no overlap with the signature tip. Command palette QA covered mouse open, focused search, multi-term feature/habit ranking, locked search results, Escape close/reset, keyboard shortcut open, unlocked Enter navigation, mobile search/close, no console/runtime errors, and no horizontal overflow. P4 keyboard/perf smoke covers skip link, palette focus trap, lesson bank/check/terminal/replay tab reachability, reduced-motion terminal input reachability, 91 ms home DOMContentLoaded / 124 ms load, 70 ms lesson DOMContentLoaded / 85 ms load, no console/runtime errors. Formal Lighthouse on production `next start` covers `/` and `/lessons/bash-commands`: 97 performance, 100 accessibility, 100 best practices, 100 SEO, 100 agentic browsing on both routes; label/content-name passes; FCP 0.8-0.9 s, LCP 2.6 s, TBT 0 ms, CLS 0.
 
 ---
 
@@ -150,8 +153,8 @@ Core `⌘K` palette is implemented and rendered QA covers mouse open, focused se
 3. Optional follow-up: expand `npm run qa:rendered` if new palette result states are added.
 
 ### P4 — Content & polish
-Manual keyboard smoke, basic rendered load timing, and formal Lighthouse/perf reporting are complete. Remaining:
-1. Vercel deploy after a valid Vercel login/token and project link are available.
+Manual keyboard smoke, basic rendered load timing, formal Lighthouse/perf reporting, and manual Vercel production deploy are complete. Remaining:
+1. Add the GitHub login connection in Vercel if automatic deploys from `origin/main` are desired.
 
 ### Backlog / Phase 3+ (from the master plan)
 Intermediate/advanced tracks, accounts/cloud sync, real shell integration, sharing. Out of MVP.
@@ -163,11 +166,11 @@ Intermediate/advanced tracks, accounts/cloud sync, real shell integration, shari
 - The terminal rendered QA covers desktop/mobile/reduced-motion screenshots plus guided hint, incorrect, reset, success, Replay flows, and left-pane challenge instruction placement. Remaining terminal work is future-module expansion.
 - The command palette has unit, axe, build, and rendered desktop/mobile interaction coverage. Remaining palette work is future expansion and optional fuzzy ranking.
 - The branded 404 has test, axe, build, and desktop screenshot coverage.
-- P4 has rendered keyboard/perf smoke and a formal Lighthouse report, but no Vercel deployment yet. The current Vercel CLI token is invalid in this environment.
+- P4 has rendered keyboard/perf smoke, a formal Lighthouse report, and a manual production Vercel deployment. Automatic GitHub-linked deploys are not connected yet.
 
 ---
 
 ## 8. Start here
 1. `npm install && npm test && npm run dev` — confirm green and click through `/` → a lesson → bank a tip → watch it unlock.
-2. Continue with **P4** Vercel deploy once credentials are fixed, or add rendered coverage for any new feature-module/challenge pattern.
+2. Continue with the Vercel GitHub connection if automatic deploys are needed, or add rendered coverage for any new feature-module/challenge pattern.
 3. Keep commits small; keep test/lint/build green; follow §3 conventions.

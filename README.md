@@ -2,6 +2,8 @@
 
 An interactive tutorial platform for learning Claude Code by doing. Each module teaches what a feature is, how it works, how to use it, and how to use it efficiently with a bankable token-saving habit.
 
+Production: https://claude-code-interactive-tutorials.vercel.app
+
 ## Commands
 
 ```bash
@@ -20,12 +22,13 @@ npm run audit:docs   # live Claude Code docs coverage audit
 
 - 91 lessons across Beginner, Feature Modules, Power User Modules, and Team Modules.
 - 273 bankable token-saving tips.
+- Landing page now starts with command fluency: 5 command learning sessions covering 20 highlighted slash commands, plus the official commands reference.
 - Dashboard feature maps summarize each track by Claude Code feature family, module count, and token-habit count, then jump to the matching module rows.
 - Lesson module paths make the teaching sequence explicit: what it is, how it works, how to use it, and how to use it efficiently.
 - Command palette search ranks multi-term matches across lesson titles, feature families, docs references, tips, and efficiency habits.
 - Curriculum audit checks the lesson contract: feature metadata, docs refs, guided sessions, checks, challenges, impact lines, token-saving tips, and the four-part teaching path.
 - Live docs audit checks the official Claude Code docs index against lesson `docsRefs`.
-- Rendered QA covers dashboard feature maps and jump links, module brief visibility, module paths, official docs links, efficiency habits, ranked command palette search, multiple terminal challenge flows, Replay, multi-tip Forest state, Plant and Forest cascade scaling, newest-tree marker/count, command palette locked/unlocked behavior, desktop/mobile overflow, and browser console/runtime errors.
+- Rendered QA covers the command learning landing panel, dashboard feature maps and jump links, module brief visibility, module paths, official docs links, efficiency habits, ranked command palette search, multiple terminal challenge flows, Replay, multi-tip Forest state, Plant and Forest cascade scaling, newest-tree marker/count, command palette locked/unlocked behavior, desktop/mobile overflow, and browser console/runtime errors.
 
 ## Development Notes
 

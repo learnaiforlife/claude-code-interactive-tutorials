@@ -2,6 +2,7 @@ import { render, screen } from '@testing-library/react';
 import axe from 'axe-core';
 import { test, expect, beforeEach } from 'vitest';
 import Chrome from '@/components/chrome/Chrome';
+import CommandLearningPanel from '@/components/dashboard/CommandLearningPanel';
 import ForestDashboard from '@/components/impact/ForestDashboard';
 import LessonPane from '@/components/lesson/LessonPane';
 import TerminalSession from '@/components/lesson/TerminalSession';
@@ -31,6 +32,11 @@ test('chrome command palette has no structural accessibility violations', async 
 test('forest dashboard has no structural accessibility violations', async () => {
   const { container } = render(<ForestDashboard />);
   await screen.findByLabelText('0 of 273 trees planted');
+  await expectNoA11yViolations(container);
+});
+
+test('command learning panel has no structural accessibility violations', async () => {
+  const { container } = render(<CommandLearningPanel />);
   await expectNoA11yViolations(container);
 });
 
