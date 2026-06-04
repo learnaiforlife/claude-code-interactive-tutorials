@@ -114,7 +114,7 @@ Lessons 3, 4, and 5 plus all Power User and Team lessons also have `challenge?: 
 - **Lesson checks + branded 404**: each lesson has a low-stakes check with explain-on-wrong feedback, and `/not-found` uses the dual-tone house style.
 - **Release hardening pass**: axe-core structural a11y coverage for chrome, Forest, lesson, terminal, and 404; semantic Forest markers; mobile overflow fixes; reduced-motion terminal remounts into the full transcript.
 
-**Verified:** 55/55 tests, lint clean, production build passes (`/`, `/how-we-calculate`, all 91 lessons prerender static; 96 static pages total). Rendered browser QA used isolated headless Chrome DevTools Protocol because the MCP Playwright profile was locked: banked `bash-commands`, confirmed Plant reward, cascade scaling, Forest newest-tree glow/count, reduced-motion final token state, no console/runtime errors, and no horizontal overflow.
+**Verified:** 55/55 tests, lint clean, production build passes (`/`, `/how-we-calculate`, all 91 lessons prerender static; 96 static pages total). Rendered browser QA used isolated headless Chrome DevTools Protocol because the MCP Playwright profile was locked: banked `bash-commands`, confirmed Plant reward, cascade scaling, Forest newest-tree glow/count, reduced-motion final token state, no console/runtime errors, and no horizontal overflow. Terminal interaction QA also covered reduced-motion typed challenges on `bash-commands`: hint, incorrect feedback, reset, success output, Replay clearing challenge output, mobile success, no console/runtime errors, and no horizontal overflow.
 
 ---
 
@@ -126,10 +126,10 @@ The Impact System is implemented and rendered interaction QA now covers Plant re
 2. Optional follow-up: turn the rendered Impact interaction script into a committed e2e harness once the project has an official browser-test runner.
 
 ### P2 polish — Interactive terminal QA and expansion
-Core type-it-yourself challenges are implemented for lessons 3, 4, and 5. Remaining work:
-1. Browser QA: Replay after challenge and typed success/incorrect flows in a rendered browser.
-2. Consider moving the challenge intro from terminal-only into the left lesson pane for stronger instruction.
-3. Add type challenges to future feature modules as they are created.
+Core type-it-yourself challenges are implemented and rendered QA covers hint, incorrect, reset, success, Replay, mobile success, reduced-motion behavior, and overflow checks on `bash-commands`. Remaining work:
+1. Consider moving the challenge intro from terminal-only into the left lesson pane for stronger instruction.
+2. Add type challenges to future feature modules as they are created.
+3. Optional follow-up: turn the rendered terminal interaction script into a committed e2e harness once the project has an official browser-test runner.
 
 ### P2.5 — Feature-module expansion
 The master plan now has a **Feature-module curriculum expansion** section and detailed plan file. Use the official Claude Code docs index (`https://code.claude.com/docs/llms.txt`) as the source map. Each new module must teach what the feature is, how it works, how to use it, and the token-efficiency habit attached to that feature.
@@ -153,7 +153,7 @@ Intermediate/advanced tracks, accounts/cloud sync, real shell integration, shari
 
 ## 7. Honest current gaps (don't represent these as done)
 - Impact rendered QA now covers the 273-tree Forest, bank-tip Plant reward, cascade toggles, newest-tree glow, and reduced-motion final state. Only craft polish remains.
-- The terminal has desktop/mobile/reduced-motion screenshot coverage, but guided typing success/incorrect flows still need rendered interaction QA.
+- The terminal rendered QA covers desktop/mobile/reduced-motion screenshots plus guided hint, incorrect, reset, success, and Replay flows. Remaining terminal work is instruction placement and future-module expansion.
 - The command palette has unit, axe, and build coverage, but not rendered screenshot QA for open/search/close states.
 - The branded 404 has test, axe, build, and desktop screenshot coverage.
 
@@ -161,5 +161,5 @@ Intermediate/advanced tracks, accounts/cloud sync, real shell integration, shari
 
 ## 8. Start here
 1. `npm install && npm test && npm run dev` — confirm green and click through `/` → a lesson → bank a tip → watch it unlock.
-2. Continue with **P1 craft polish** or start **P2** interactive terminal.
+2. Continue with **P1 craft polish**, **P2** terminal instruction polish, or **P3** command palette rendered QA.
 3. Keep commits small; keep test/lint/build green; follow §3 conventions.
