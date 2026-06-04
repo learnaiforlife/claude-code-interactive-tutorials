@@ -30,7 +30,7 @@ export default function ForestDashboard() {
     <section className="border-b border-line-soft bg-paper px-6 py-10 text-ink">
       <div className="mx-auto grid max-w-5xl gap-8 lg:grid-cols-[1.05fr_1fr] lg:items-end">
         <div className="min-w-0">
-          <h1 className="text-balance text-3xl font-bold tracking-tight">Impact Forest</h1>
+          <h1 id="forest-heading" className="text-balance text-3xl font-bold tracking-tight">Impact Forest</h1>
           <p className="mt-3 max-w-[62ch] leading-relaxed text-ink-soft">
             Learn Claude Code the efficient way. Every banked habit saves tokens, money, and energy.
             <span className="ml-2 font-mono text-sm text-success">{'// AI is not for everything.'}</span>

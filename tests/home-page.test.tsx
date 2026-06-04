@@ -14,5 +14,7 @@ test('landing page leads with command learning and the full curriculum', () => {
   expect(screen.getByRole('heading', { name: /learn the slash commands as commands first/i })).toBeInTheDocument();
   expect(screen.getByText(/Command fluency first, efficiency second/i)).toBeInTheDocument();
   expect(screen.getByRole('heading', { name: /feature modules with efficient-use hooks/i })).toBeInTheDocument();
-  expect(screen.getByText(/91 modules, 20 highlighted commands, 75 typed terminal challenges, and 273 bankable habits/i)).toBeInTheDocument();
+  expect(screen.getByText(/91 modules, 26 highlighted commands, 75 typed terminal challenges, and 273 bankable habits/i)).toBeInTheDocument();
+  expect(screen.getByRole('link', { name: 'Commands' })).toHaveAttribute('href', '/commands');
+  expect(screen.getByRole('link', { name: /Impact Forest/i })).toHaveAttribute('href', '#forest-heading');
 });

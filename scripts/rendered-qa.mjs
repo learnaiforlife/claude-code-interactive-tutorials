@@ -27,10 +27,11 @@ async function main() {
 
   await runDesktopLearningFlow(browser);
   await runMobileLayoutFlow(browser);
+  await runCommandsFlow(browser);
 
   console.log('Rendered QA passed');
   console.log(`- Production app: ${appUrl}`);
-  console.log('- Covered: command learning landing panel, feature maps and jump links, module briefs, module paths, ranked palette search, multiple terminal challenges, Replay, multi-tip Forest state, Plant and Forest cascade scaling, newest-tree marker, palette locked/unlocked flows, desktop/mobile overflow, console/runtime errors');
+  console.log('- Covered: command learning landing panel, landing section nav, commands route index + group challenge, feature maps and jump links, module briefs, module paths, ranked palette search, multiple terminal challenges, Replay, multi-tip Forest state, Plant and Forest cascade scaling, newest-tree marker, palette locked/unlocked flows, desktop/mobile overflow, console/runtime errors');
 }
 
 async function runDesktopLearningFlow(browser) {
@@ -125,21 +126,28 @@ async function runDesktopLearningFlow(browser) {
   await page.navigate(appUrl);
   await page.waitForText('Learn the slash commands as commands first');
   await page.waitForText('Command fluency first, efficiency second.');
-  await page.waitForText('91 modules, 20 highlighted commands, 75 typed terminal challenges, and 273 bankable habits');
+  await page.waitForText('91 modules, 26 highlighted commands, 75 typed terminal challenges, and 273 bankable habits');
   const commandLandingState = await page.evaluate(() => {
     const panel = document.querySelector('[aria-labelledby="commands-lab-heading"]');
     const tracks = document.querySelector('#tracks-heading');
+    const nav = document.querySelector('nav[aria-label="Jump to a section"]');
     return {
       hasReferenceLink: Boolean(panel?.querySelector('a[href="https://code.claude.com/docs/en/commands.md"]')),
+      hasCommandsLabLink: Boolean(panel?.querySelector('a[href="/commands"]')),
       hasContextCommand: panel?.textContent.includes('/context') ?? false,
       hasCodeReviewCommand: panel?.textContent.includes('/code-review') ?? false,
+      navToCommands: Boolean(nav?.querySelector('a[href="/commands"]')),
+      navToForest: Boolean(nav?.querySelector('a[href="#forest-heading"]')),
       tracksHeading: tracks?.textContent ?? '',
       noOverflow: document.documentElement.scrollWidth <= document.documentElement.clientWidth,
     };
   });
   assert(commandLandingState.hasReferenceLink, 'command learning panel should link to the official commands reference');
+  assert(commandLandingState.hasCommandsLabLink, 'command learning panel should link into /commands');
   assert(commandLandingState.hasContextCommand, 'command learning panel should teach /context');
   assert(commandLandingState.hasCodeReviewCommand, 'command learning panel should teach /code-review');
+  assert(commandLandingState.navToCommands, 'landing nav should link to the commands route');
+  assert(commandLandingState.navToForest, 'landing nav should link to the impact forest');
   assertIncludes(commandLandingState.tracksHeading, 'Feature modules with efficient-use hooks', 'tracks heading');
   assert(commandLandingState.noOverflow, 'desktop landing command panel introduced horizontal overflow');
   await page.waitForText('1 / 273 tips banked');
@@ -356,6 +364,57 @@ async function runMobileLayoutFlow(browser) {
   });
   assert(mobileFeatureJumpState.targetVisible, 'mobile feature-family jump should reveal the target row');
   assert(mobileFeatureJumpState.noOverflow, 'mobile feature-family jump introduced horizontal overflow');
+  assertNoPageErrors(page);
+  await page.close();
+}
+
+async function runCommandsFlow(browser) {
+  const page = await browser.open();
+  await page.setViewport(1440, 900);
+  await page.setReducedMotion(true);
+
+  await page.navigate(`${appUrl}/commands`);
+  await page.waitForText('Learn the slash commands as commands');
+  const indexState = await page.evaluate(() => {
+    const cards = Array.from(document.querySelectorAll('a[href^="/commands/"]'));
+    return {
+      cardCount: cards.length,
+      hasSetup: cards.some((card) => card.getAttribute('href') === '/commands/setup-config'),
+      noOverflow: document.documentElement.scrollWidth <= document.documentElement.clientWidth,
+    };
+  });
+  assert(indexState.cardCount >= 5, 'commands index should list the five group cards');
+  assert(indexState.hasSetup, 'commands index should link to /commands/setup-config');
+  assert(indexState.noOverflow, 'commands index introduced horizontal overflow');
+
+  await page.navigate(`${appUrl}/commands/context-session`);
+  await page.waitFor(() => Boolean(document.querySelector('#terminal-challenge-input')));
+  const groupState = await page.evaluate(() => {
+    const table = document.querySelector('[aria-labelledby="commands-table-heading"]');
+    return {
+      hasBrief: Boolean(document.querySelector('#command-brief-heading')),
+      challengeHeading: document.querySelector('#challenge-brief-heading')?.textContent ?? '',
+      hasContextCommand: table?.textContent.includes('/context') ?? false,
+      hasHabit: document.body.textContent.includes('Compact a continuing task'),
+      hasDocs: Boolean(document.querySelector('a[href="https://code.claude.com/docs/en/context-window.md"]')),
+      challengeReady: !document.querySelector('#terminal-challenge-input')?.disabled,
+      noOverflow: document.documentElement.scrollWidth <= document.documentElement.clientWidth,
+    };
+  });
+  assert(groupState.hasBrief, 'command group should render the command brief');
+  assert(groupState.hasContextCommand, 'command group table should list /context');
+  assert(groupState.hasHabit, 'command group should show the efficiency habit');
+  assert(groupState.hasDocs, 'command group should link an official doc');
+  assertIncludes(groupState.challengeHeading, 'unrelated task', 'command challenge heading');
+  assert(groupState.challengeReady, 'command challenge input should be ready under reduced motion');
+  assert(groupState.noOverflow, 'command group page introduced horizontal overflow');
+
+  await submitTerminalCommand(page, '?');
+  await page.waitForText('Hint: It starts a new conversation with empty context.');
+  await submitTerminalCommand(page, '/clear');
+  await page.waitForText('Fresh context. The next turn is small again.');
+  await page.waitForText('21,000 tokens saved');
+
   assertNoPageErrors(page);
   await page.close();
 }

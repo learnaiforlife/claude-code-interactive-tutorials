@@ -1,14 +1,14 @@
 import LessonList from '@/components/dashboard/LessonList';
 import CommandLearningPanel from '@/components/dashboard/CommandLearningPanel';
 import ForestDashboard from '@/components/impact/ForestDashboard';
-import { COMMAND_SESSIONS } from '@/lib/command-learning';
+import Link from 'next/link';
+import { commandCount } from '@/lib/commands';
 import { getAllLessons } from '@/lib/lessons';
 
 export default function Home() {
   const lessons = getAllLessons();
   const tips = lessons.reduce((sum, lesson) => sum + lesson.tips.length, 0);
   const challenges = lessons.filter((lesson) => lesson.challenge).length;
-  const commandCount = COMMAND_SESSIONS.reduce((sum, session) => sum + session.commands.length, 0);
 
   return (
     <main id="main-content" tabIndex={-1} className="min-h-[calc(100vh-2.6rem)] bg-paper text-ink">
@@ -40,6 +40,12 @@ export default function Home() {
                 View modules
               </a>
             </div>
+            <nav aria-label="Jump to a section" className="mt-5 flex flex-wrap gap-x-5 gap-y-2 font-mono text-xs text-fg-mute">
+              <Link href="/commands" className="hover:text-success-bright">Commands</Link>
+              <a href="#tracks-heading" className="hover:text-info-bright">Feature modules</a>
+              <a href="#tracks-heading" className="hover:text-info-bright">Terminal challenges</a>
+              <a href="#forest-heading" className="hover:text-info-bright">Impact Forest</a>
+            </nav>
           </div>
 
           <div className="min-w-0 rounded-xl border border-line bg-terminal p-4 font-mono text-sm text-fg">
@@ -71,7 +77,7 @@ export default function Home() {
             Feature modules with efficient-use hooks
           </h2>
           <p className="mt-3 max-w-[70ch] text-sm leading-relaxed text-ink-soft">
-            {lessons.length} modules, {commandCount} highlighted commands, {challenges} typed terminal challenges,
+            {lessons.length} modules, {commandCount()} highlighted commands, {challenges} typed terminal challenges,
             and {tips} bankable habits. Each module teaches the feature, how it works, how to use it, and the
             efficient habit attached to it.
           </p>
