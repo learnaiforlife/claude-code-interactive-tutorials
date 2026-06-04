@@ -33,7 +33,7 @@ const SLUGS = [
   'microsoft-foundry-provider', 'claude-platform-on-aws', 'rollout-kits',
   'sdk-agent-loop', 'sdk-migration-guide', 'sdk-plugins', 'sdk-skills',
   'sdk-slash-commands', 'sdk-subagents', 'sdk-todo-lists',
-  'sdk-python-reference',
+  'sdk-python-reference', 'whats-new-changelog',
 ];
 
 test('renders beginner, feature-module, power-user, and team rows grouped by track', () => {

@@ -27,6 +27,7 @@ Coverage that is already represented in the tracks below:
 - Integrations: VS Code, JetBrains, Desktop, Chrome, computer use, web/cloud sessions, remote control, deep links, channels, GitHub Actions, GitLab CI/CD, Slack.
 - Programmatic and SDK: Agent SDK overview, agent loop, Claude Code features in SDK, migration guide, permissions, sessions, slash commands, skills, plugins, subagents, todo tracking, hooks, MCP, tool search, custom tools, streaming, structured output, Python/TypeScript references, cost tracking, observability, session storage, hosting, secure deployment.
 - Team and enterprise: admin setup, analytics, monitoring, managed settings, managed MCP, Bedrock, Vertex AI, Microsoft Foundry, LLM gateways, legal/compliance, data usage, security, champion kit, communications kit, rollout kits.
+- Release awareness: changelog plus weekly What's new digests, taught as scoped workflow/version review rather than release-note summarization.
 
 Coverage gaps to keep explicit during implementation:
 
@@ -34,7 +35,7 @@ Coverage gaps to keep explicit during implementation:
 - **Model and response behavior**: model config, fast mode, output styles, fullscreen rendering, status line, and terminal config belong together as "session ergonomics", not scattered as trivia.
 - **Evented workflows**: channels and deep links are distinct from chat integrations because they push external state into a running session or launch a correctly scoped one.
 - **Production SDK use**: hosting, session storage, observability, secure deployment, user input, and file checkpointing should not be hidden under a generic Agent SDK module.
-- **Release notes**: changelog and `whats-new` pages should only become a module if the lesson teaches a durable habit for tracking changed Claude Code behavior.
+- **Live docs drift**: the June 4, 2026 live index is fully referenced by lessons, but future docs additions should be audited before claiming complete feature coverage.
 
 ## Track 1: Foundations
 
@@ -156,6 +157,7 @@ Coverage gaps to keep explicit during implementation:
 | Security and data usage | Data handling, security guidance, ZDR | Keep sensitive context out of prompts | Do not send what tools can avoid |
 | Network and gateways | Proxies, LLM gateways, enterprise providers | Route consistently to preserve policy and caching | Avoid provider drift |
 | Rollout kits | Champion kit, communications kit, internal enablement | Teach scoped workflows instead of generic adoption hype | Standardize the good prompt |
+| Release awareness | Changelog and What's new digests | Scope release-note review to one workflow and version window | Ask about changed behavior only |
 
 ## Build Sequence For Feature Expansion
 
@@ -172,7 +174,7 @@ For each slice, update the command palette search index, dashboard grouping, For
 1. **MVP complete**: current beginner track, Impact System, command palette, type-it-yourself terminal for lessons 3, 4, and 5, checks, branded 404.
 2. **Feature modules**: Foundations, Core Session Workflow, Codebase Context, Tools and Permissions, Runtime Setup.
 3. **Power user modules**: Extensions, Parallel and Large Work, Integrations.
-4. **Team modules**: Programmatic Use, Team and Enterprise. Shipped as 32 Team modules.
+4. **Team modules**: Programmatic Use, Team and Enterprise. Shipped as 33 Team modules.
 
 ## Acceptance For New Modules
 

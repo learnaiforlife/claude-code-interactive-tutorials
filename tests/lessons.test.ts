@@ -1,9 +1,9 @@
 import { test, expect } from 'vitest';
 import { getAllLessons, getLesson, getLessonsByTrack, getAdjacent, signatureTip } from '@/lib/lessons';
 
-test('there are 8 beginner lessons, 24 feature modules, 26 power-user modules, and 32 team modules in track order', () => {
+test('there are 8 beginner lessons, 24 feature modules, 26 power-user modules, and 33 team modules in track order', () => {
   const all = getAllLessons();
-  expect(all).toHaveLength(90);
+  expect(all).toHaveLength(91);
   expect(getLessonsByTrack('beginner').map((l) => l.order)).toEqual([1, 2, 3, 4, 5, 6, 7, 8]);
   expect(getLessonsByTrack('feature-modules').map((l) => l.slug)).toEqual([
     'agent-loop',
@@ -92,6 +92,7 @@ test('there are 8 beginner lessons, 24 feature modules, 26 power-user modules, a
     'sdk-subagents',
     'sdk-todo-lists',
     'sdk-python-reference',
+    'whats-new-changelog',
   ]);
 });
 
@@ -118,7 +119,7 @@ test('every lesson has exactly 3 tips and exactly one signature tip', () => {
 test('tip ids are globally unique across all lessons', () => {
   const ids = getAllLessons().flatMap((l) => l.tips.map((t) => t.id));
   expect(new Set(ids).size).toBe(ids.length);
-  expect(ids).toHaveLength(270);
+  expect(ids).toHaveLength(273);
 });
 
 test('beginner challenge lessons and advanced modules have type-it-yourself terminal challenges', () => {
@@ -155,5 +156,7 @@ test('getAdjacent gives prev/next by order', () => {
   expect(getAdjacent('organization-setup').prev?.slug).toBe('secure-deployment-sdk');
   expect(getAdjacent('rollout-kits').next?.slug).toBe('sdk-agent-loop');
   expect(getAdjacent('sdk-agent-loop').prev?.slug).toBe('rollout-kits');
-  expect(getAdjacent('sdk-python-reference').next).toBeNull();
+  expect(getAdjacent('sdk-python-reference').next?.slug).toBe('whats-new-changelog');
+  expect(getAdjacent('whats-new-changelog').prev?.slug).toBe('sdk-python-reference');
+  expect(getAdjacent('whats-new-changelog').next).toBeNull();
 });

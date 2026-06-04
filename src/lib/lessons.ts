@@ -4229,6 +4229,67 @@ const LESSONS: Lesson[] = [
       { id: 'tm32-keep-reference-near-code', kind: 'inline', savedTokens: 1700, title: 'Keep reference near code', detail: 'Link the API reference from agent-host modules so fixes start from the contract.' },
     ],
   },
+  {
+    slug: 'whats-new-changelog', order: 33, track: 'team',
+    title: "What's new: track changed Claude Code behavior",
+    estimatedMinutes: 12, format: 'Release awareness',
+    featureFamily: 'Release Awareness',
+    docsRefs: [
+      { title: 'Changelog', href: 'https://code.claude.com/docs/en/changelog.md' },
+      { title: "What's new", href: 'https://code.claude.com/docs/en/whats-new/index.md' },
+      { title: 'Week 13', href: 'https://code.claude.com/docs/en/whats-new/2026-w13.md' },
+      { title: 'Week 14', href: 'https://code.claude.com/docs/en/whats-new/2026-w14.md' },
+      { title: 'Week 15', href: 'https://code.claude.com/docs/en/whats-new/2026-w15.md' },
+      { title: 'Week 16', href: 'https://code.claude.com/docs/en/whats-new/2026-w16.md' },
+      { title: 'Week 17', href: 'https://code.claude.com/docs/en/whats-new/2026-w17.md' },
+      { title: 'Week 18', href: 'https://code.claude.com/docs/en/whats-new/2026-w18.md' },
+      { title: 'Week 19', href: 'https://code.claude.com/docs/en/whats-new/2026-w19.md' },
+      { title: 'Week 20', href: 'https://code.claude.com/docs/en/whats-new/2026-w20.md' },
+      { title: 'Week 21', href: 'https://code.claude.com/docs/en/whats-new/2026-w21.md' },
+      { title: 'Week 22', href: 'https://code.claude.com/docs/en/whats-new/2026-w22.md' },
+    ],
+    efficiencyHabit: 'Check the relevant release window and map changed behavior to one workflow before asking Claude to explain the entire changelog.',
+    context: "The Claude Code changelog records every release note, while What's new highlights the feature changes most likely to alter daily workflows.",
+    concept: 'Release notes are useful when they answer a concrete behavior question. Use the weekly digest for new workflows, then use the changelog for exact version details. Do not paste weeks of notes into a prompt. Ask for the one change that affects your installed version, account plan, provider, or workflow.',
+    session: [
+      { kind: 'prompt', text: 'Read every changelog entry and tell the team everything important about Claude Code.' },
+      { kind: 'warn', text: 'A broad release sweep spends context on fixes and features that do not affect this team.' },
+      { kind: 'rule', text: 'start from the workflow and version window' },
+      { kind: 'prompt', text: 'For v2.1.143 to v2.1.157, list only changes that affect auto mode, /usage, and code review rollout.' },
+      { kind: 'out', text: 'Relevant changes: Pro auto mode, /usage breakdown by skills and MCP, /code-review command, Opus 4.8 defaults.' },
+      { kind: 'good', text: 'The rollout note covers changed behavior without summarizing unrelated release history.' },
+      { kind: 'impact', savedTokens: 8800, note: 'Release notes need a scope.' },
+    ],
+    challenge: {
+      intro: 'Your turn: write the scoped release-note question for a team adopting auto mode.',
+      prompt: 'Type the question',
+      accepted: [
+        'For v2.1.143 to v2.1.157, list only auto mode changes that affect rollout.',
+        'List only auto mode rollout changes from v2.1.143 to v2.1.157.',
+        'What changed for auto mode between v2.1.143 and v2.1.157?',
+      ],
+      hint: 'Name the version window and the single workflow.',
+      incorrect: 'That is still too broad. Name a release window and one changed workflow.',
+      success: [
+        { kind: 'prompt', text: 'For v2.1.143 to v2.1.157, list only auto mode changes that affect rollout.' },
+        { kind: 'good', text: 'The answer can ignore unrelated model, plugin, and UI notes.' },
+        { kind: 'impact', savedTokens: 2100, note: 'A scoped changelog question skips release-note noise.' },
+      ],
+    },
+    check: {
+      question: 'What is the efficient way to use the changelog?',
+      options: [
+        { id: 'scoped', text: 'Ask about one workflow and one release window, then map the changed behavior to your team.', correct: true, explanation: 'Correct. Release notes are most useful when tied to a specific behavior change.' },
+        { id: 'all-notes', text: 'Paste every weekly digest and ask for a complete summary.', correct: false, explanation: 'That spends context on unrelated fixes and features.' },
+        { id: 'ignore', text: 'Ignore release notes because features never change after a lesson is written.', correct: false, explanation: 'Claude Code changes quickly, so durable learning needs a release-check habit.' },
+      ],
+    },
+    tips: [
+      { id: 'tm33-scope-release-window', kind: 'signature', savedTokens: 3000, title: 'Scope the release window', detail: 'Ask about the versions you run, not the entire changelog.' },
+      { id: 'tm33-map-to-workflow', kind: 'inline', savedTokens: 2300, title: 'Map notes to one workflow', detail: 'Auto mode, /usage, plugins, and model changes matter only where your team uses them.' },
+      { id: 'tm33-update-durable-docs', kind: 'inline', savedTokens: 1800, title: 'Update durable docs', detail: 'Put changed rollout guidance in team docs so users do not ask the same release question again.' },
+    ],
+  },
 ];
 
 export function getAllLessons(): Lesson[] {
