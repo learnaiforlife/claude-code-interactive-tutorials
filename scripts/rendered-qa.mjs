@@ -30,7 +30,7 @@ async function main() {
 
   console.log('Rendered QA passed');
   console.log(`- Production app: ${appUrl}`);
-  console.log('- Covered: feature maps, module briefs, multiple terminal challenges, Replay, multi-tip Forest state, Plant and Forest cascade scaling, newest-tree marker, palette locked/unlocked flows, desktop/mobile overflow, console/runtime errors');
+  console.log('- Covered: feature maps and jump links, module briefs, multiple terminal challenges, Replay, multi-tip Forest state, Plant and Forest cascade scaling, newest-tree marker, palette locked/unlocked flows, desktop/mobile overflow, console/runtime errors');
 }
 
 async function runDesktopLearningFlow(browser) {
@@ -129,6 +129,19 @@ async function runDesktopLearningFlow(browser) {
   assert(featureMapState.coreWorkflow, 'dashboard feature map should summarize Core Session Workflow modules and habits');
   assert(featureMapState.sdkInternals, 'dashboard feature map should summarize Agent SDK Internals modules and habits');
   assert(featureMapState.noOverflow, 'desktop feature maps introduced horizontal overflow');
+  await page.clickByLabel('Jump to Runtime Setup modules');
+  await page.waitFor(() => window.location.hash === '#feature-modules-runtime-setup');
+  const featureJumpState = await page.evaluate(() => {
+    const target = document.querySelector('#feature-modules-runtime-setup');
+    return {
+      targetTitle: target?.textContent ?? '',
+      stillLocked: Boolean(target?.querySelector('[aria-disabled="true"]')),
+      noOverflow: document.documentElement.scrollWidth <= document.documentElement.clientWidth,
+    };
+  });
+  assertIncludes(featureJumpState.targetTitle, 'Quickstart: install, log in, and start in the right repo', 'feature-family jump target');
+  assert(featureJumpState.stillLocked, 'feature-family jump should not bypass lesson locking');
+  assert(featureJumpState.noOverflow, 'desktop feature-family jump introduced horizontal overflow');
   const forestTreeState = await page.evaluate(() => {
     const forest = document.querySelector('ol[aria-label="1 of 273 trees planted"]');
     const newestTree = Array.from(document.querySelectorAll('li[aria-label$=" planted"]')).find((element) =>
@@ -291,6 +304,18 @@ async function runMobileLayoutFlow(browser) {
   assert(mobileDashboardState.runtimeSetup, 'mobile dashboard should render feature-family summaries');
   assert(mobileDashboardState.noOverflow, 'mobile dashboard feature maps introduced horizontal overflow');
   assert(mobileDashboardState.featureMapWithinViewport, 'feature map leaves mobile viewport');
+  await page.clickByLabel('Jump to Runtime Setup modules');
+  await page.waitFor(() => window.location.hash === '#feature-modules-runtime-setup');
+  const mobileFeatureJumpState = await page.evaluate(() => {
+    const target = document.querySelector('#feature-modules-runtime-setup');
+    const targetBox = target?.getBoundingClientRect();
+    return {
+      targetVisible: targetBox ? targetBox.top < window.innerHeight && targetBox.bottom > 0 : false,
+      noOverflow: document.documentElement.scrollWidth <= document.documentElement.clientWidth,
+    };
+  });
+  assert(mobileFeatureJumpState.targetVisible, 'mobile feature-family jump should reveal the target row');
+  assert(mobileFeatureJumpState.noOverflow, 'mobile feature-family jump introduced horizontal overflow');
   assertNoPageErrors(page);
   await page.close();
 }

@@ -54,12 +54,22 @@ test('summarizes each track by feature family and bankable token habits', () => 
   const featureTrack = screen.getByLabelText('Feature Modules feature map');
   expect(within(featureTrack).getByText('Runtime Setup')).toBeInTheDocument();
   expect(within(featureTrack).getByLabelText('Runtime Setup: 13 modules, 39 token habits')).toBeInTheDocument();
+  expect(within(featureTrack).getByRole('link', { name: 'Jump to Runtime Setup modules' })).toHaveAttribute(
+    'href',
+    '#feature-modules-runtime-setup',
+  );
+  expect(screen.getByTestId('lesson-row-quickstart-install-login')).toHaveAttribute('id', 'feature-modules-runtime-setup');
   expect(within(featureTrack).getByText('Core Session Workflow')).toBeInTheDocument();
   expect(within(featureTrack).getByLabelText('Core Session Workflow: 4 modules, 12 token habits')).toBeInTheDocument();
 
   const teamTrack = screen.getByLabelText('Team Modules feature map');
   expect(within(teamTrack).getByText('Agent SDK Internals')).toBeInTheDocument();
   expect(within(teamTrack).getByLabelText('Agent SDK Internals: 8 modules, 24 token habits')).toBeInTheDocument();
+  expect(within(teamTrack).getByRole('link', { name: 'Jump to Agent SDK Internals modules' })).toHaveAttribute(
+    'href',
+    '#team-agent-sdk-internals',
+  );
+  expect(screen.getByTestId('lesson-row-sdk-agent-loop')).toHaveAttribute('id', 'team-agent-sdk-internals');
 });
 
 test('first lesson is "Now" (a link); later lessons are "Locked" (not links)', async () => {

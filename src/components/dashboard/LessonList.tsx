@@ -30,6 +30,7 @@ function TrackSection({
 }) {
   const { done, total } = trackCompletionIn(progress, track.id);
   const pct = total ? Math.round((done / total) * 100) : 0;
+  const familyTargets = getFamilyTargets(track.id, track.lessons);
 
   return (
     <section aria-labelledby={`${track.id}-heading`}>
@@ -56,6 +57,8 @@ function TrackSection({
         {track.lessons.map((lesson) => {
           const status = lessonStatusIn(progress, lesson.slug);
           const locked = status === 'locked';
+          const familyTarget = familyTargets.get(lesson.featureFamily);
+          const familyTargetId = familyTarget?.firstSlug === lesson.slug ? familyTarget.id : undefined;
           const inner = (
             <div className="flex items-center gap-4 py-4">
               <span
@@ -81,8 +84,9 @@ function TrackSection({
           return (
             <li
               key={lesson.slug}
+              id={familyTargetId}
               data-testid={`lesson-row-${lesson.slug}`}
-              className="border-b border-line-soft last:border-b-0"
+              className="scroll-mt-24 border-b border-line-soft last:border-b-0"
             >
               {locked ? (
                 <div aria-disabled="true" className="cursor-default px-3 opacity-55">{inner}</div>
@@ -103,7 +107,7 @@ function TrackSection({
 }
 
 function FeatureFamilyMap({ track }: { track: TrackInfo & { lessons: Lesson[] } }) {
-  const families = summarizeFamilies(track.lessons);
+  const families = summarizeFamilies(track.id, track.lessons);
 
   return (
     <div
@@ -119,12 +123,18 @@ function FeatureFamilyMap({ track }: { track: TrackInfo & { lessons: Lesson[] } 
           <li
             key={family.name}
             aria-label={`${family.name}: ${family.moduleCount} ${family.moduleCount === 1 ? 'module' : 'modules'}, ${family.tokenHabits} token habits`}
-            className="flex items-baseline justify-between gap-3 rounded-lg bg-black/[0.018] px-3 py-2"
+            className="rounded-lg bg-black/[0.018]"
           >
-            <span className="min-w-0 truncate text-sm font-medium text-ink">{family.name}</span>
-            <span className="shrink-0 font-mono text-xs text-ink-soft">
-              {family.moduleCount} {family.moduleCount === 1 ? 'module' : 'modules'} · {family.tokenHabits} token habits
-            </span>
+            <a
+              href={`#${family.targetId}`}
+              aria-label={`Jump to ${family.name} modules`}
+              className="group flex items-baseline justify-between gap-3 rounded-lg px-3 py-2 transition-colors hover:bg-info/5"
+            >
+              <span className="min-w-0 truncate text-sm font-medium text-ink transition-colors group-hover:text-info">{family.name}</span>
+              <span className="shrink-0 font-mono text-xs text-ink-soft">
+                {family.moduleCount} {family.moduleCount === 1 ? 'module' : 'modules'} · {family.tokenHabits} token habits
+              </span>
+            </a>
           </li>
         ))}
       </ul>
@@ -132,8 +142,11 @@ function FeatureFamilyMap({ track }: { track: TrackInfo & { lessons: Lesson[] } 
   );
 }
 
-function summarizeFamilies(lessons: Lesson[]): Array<{ name: string; moduleCount: number; tokenHabits: number }> {
-  const summaries = new Map<string, { name: string; moduleCount: number; tokenHabits: number; firstOrder: number }>();
+function summarizeFamilies(
+  trackId: TrackInfo['id'],
+  lessons: Lesson[],
+): Array<{ name: string; moduleCount: number; tokenHabits: number; targetId: string }> {
+  const summaries = new Map<string, { name: string; moduleCount: number; tokenHabits: number; firstOrder: number; targetId: string }>();
 
   for (const lesson of lessons) {
     const existing = summaries.get(lesson.featureFamily);
@@ -147,12 +160,29 @@ function summarizeFamilies(lessons: Lesson[]): Array<{ name: string; moduleCount
       moduleCount: 1,
       tokenHabits: lesson.tips.length,
       firstOrder: lesson.order,
+      targetId: familyTargetId(trackId, lesson.featureFamily),
     });
   }
 
   return [...summaries.values()]
     .sort((a, b) => a.firstOrder - b.firstOrder)
-    .map(({ name, moduleCount, tokenHabits }) => ({ name, moduleCount, tokenHabits }));
+    .map(({ name, moduleCount, tokenHabits, targetId }) => ({ name, moduleCount, tokenHabits, targetId }));
+}
+
+function getFamilyTargets(trackId: TrackInfo['id'], lessons: Lesson[]): Map<string, { id: string; firstSlug: string }> {
+  const targets = new Map<string, { id: string; firstSlug: string }>();
+  for (const lesson of lessons) {
+    if (targets.has(lesson.featureFamily)) continue;
+    targets.set(lesson.featureFamily, {
+      id: familyTargetId(trackId, lesson.featureFamily),
+      firstSlug: lesson.slug,
+    });
+  }
+  return targets;
+}
+
+function familyTargetId(trackId: TrackInfo['id'], family: string): string {
+  return `${trackId}-${family.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '')}`;
 }
 
 function StatusBadge({ status }: { status: LessonStatus }) {
