@@ -15,6 +15,7 @@ export default function CommandPalette() {
   const [query, setQuery] = useState('');
   const [selected, setSelected] = useState(0);
   const inputRef = useRef<HTMLInputElement>(null);
+  const dialogRef = useRef<HTMLDialogElement>(null);
 
   const closePalette = useCallback(() => {
     setOpen(false);
@@ -75,6 +76,25 @@ export default function CommandPalette() {
     }
   }
 
+  function onDialogKeyDown(event: KeyboardEvent<HTMLDialogElement>) {
+    if (event.key !== 'Tab') return;
+
+    const focusable = dialogRef.current?.querySelectorAll<HTMLElement>(
+      'a[href], button:not([disabled]), input:not([disabled]), [tabindex]:not([tabindex="-1"])',
+    );
+    if (!focusable?.length) return;
+
+    const first = focusable[0];
+    const last = focusable[focusable.length - 1];
+    if (event.shiftKey && document.activeElement === first) {
+      event.preventDefault();
+      last.focus();
+    } else if (!event.shiftKey && document.activeElement === last) {
+      event.preventDefault();
+      first.focus();
+    }
+  }
+
   return (
     <>
       <button
@@ -87,8 +107,11 @@ export default function CommandPalette() {
       </button>
 
       <dialog
+        ref={dialogRef}
         open={open}
         aria-label="Command palette"
+        aria-modal="true"
+        onKeyDown={onDialogKeyDown}
         className="fixed left-1/2 top-16 z-50 m-0 w-[min(42rem,calc(100vw-2rem))] -translate-x-1/2 rounded-xl border border-line bg-panel p-0 text-fg shadow-[0_18px_48px_oklch(0_0_0_/_0.32)] backdrop:bg-canvas/70"
       >
         <div className="border-b border-line px-3 py-3">

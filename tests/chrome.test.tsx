@@ -43,6 +43,21 @@ test('escape closes the command palette and clears the query', async () => {
   expect(screen.getByRole('textbox', { name: /search lessons/i })).toHaveFocus();
 });
 
+test('command palette keeps tab focus inside the dialog', async () => {
+  const user = userEvent.setup();
+  render(<Chrome />);
+  await user.click(screen.getByRole('button', { name: /open command palette/i }));
+  const input = screen.getByRole('textbox', { name: /search lessons/i });
+  const dialog = screen.getByRole('dialog', { name: /command palette/i });
+
+  await user.keyboard('{Shift>}{Tab}{/Shift}');
+  expect(dialog).toContainElement(document.activeElement);
+  expect(input).not.toHaveFocus();
+
+  await user.keyboard('{Tab}');
+  expect(input).toHaveFocus();
+});
+
 test('command palette searches feature metadata and docs references', async () => {
   const user = userEvent.setup();
   render(<Chrome />);

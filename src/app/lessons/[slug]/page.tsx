@@ -13,7 +13,7 @@ export default async function LessonPage({ params }: { params: Promise<{ slug: s
   if (!lesson) notFound();
 
   return (
-    <main className="grid min-h-[calc(100vh-2.6rem)] min-w-0 grid-cols-1 md:grid-cols-[56fr_44fr]">
+    <main id="main-content" tabIndex={-1} className="grid min-h-[calc(100vh-2.6rem)] min-w-0 grid-cols-1 md:grid-cols-[56fr_44fr]">
       <LessonPane lesson={lesson} />
       <TerminalSession script={lesson.session} challenge={lesson.challenge} />
     </main>

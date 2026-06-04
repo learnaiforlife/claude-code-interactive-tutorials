@@ -3,7 +3,7 @@ import { IMPACT_ECO, IMPACT_PRICING } from '@/lib/impact';
 
 export default function HowWeCalculate() {
   return (
-    <main className="min-h-[calc(100vh-2.6rem)] bg-paper px-6 py-14 text-ink">
+    <main id="main-content" tabIndex={-1} className="min-h-[calc(100vh-2.6rem)] bg-paper px-6 py-14 text-ink">
       <article className="mx-auto max-w-3xl">
         <Link href="/" className="font-mono text-xs text-info hover:text-ink">
           Back to track
@@ -82,4 +82,3 @@ export default function HowWeCalculate() {
     </main>
   );
 }
-

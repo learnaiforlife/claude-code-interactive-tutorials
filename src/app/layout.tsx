@@ -15,6 +15,12 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="en" className={`${inter.variable} ${fira.variable}`}>
       <body className="min-h-screen">
+        <a
+          href="#main-content"
+          className="sr-only focus:not-sr-only focus:fixed focus:left-3 focus:top-3 focus:z-[var(--z-tooltip)] focus:rounded-md focus:bg-info-bright focus:px-3 focus:py-2 focus:font-mono focus:text-sm focus:font-semibold focus:text-terminal"
+        >
+          Skip to content
+        </a>
         <Chrome />
         {children}
       </body>

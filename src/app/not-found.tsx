@@ -2,7 +2,7 @@ import Link from 'next/link';
 
 export default function NotFound() {
   return (
-    <main className="min-h-[calc(100vh-2.6rem)] bg-paper px-6 py-14 text-ink">
+    <main id="main-content" tabIndex={-1} className="min-h-[calc(100vh-2.6rem)] bg-paper px-6 py-14 text-ink">
       <div className="mx-auto grid max-w-5xl gap-10 md:grid-cols-[1fr_0.9fr] md:items-center">
         <section>
           <p className="font-mono text-sm text-success">{'// route not found'}</p>
@@ -39,4 +39,3 @@ export default function NotFound() {
     </main>
   );
 }
-
