@@ -1,9 +1,9 @@
 import { test, expect } from 'vitest';
 import { getAllLessons, getLesson, getLessonsByTrack, getAdjacent, signatureTip } from '@/lib/lessons';
 
-test('there are 8 beginner lessons and 11 feature modules in track order', () => {
+test('there are 8 beginner lessons, 11 feature modules, and 7 power-user modules in track order', () => {
   const all = getAllLessons();
-  expect(all).toHaveLength(19);
+  expect(all).toHaveLength(26);
   expect(getLessonsByTrack('beginner').map((l) => l.order)).toEqual([1, 2, 3, 4, 5, 6, 7, 8]);
   expect(getLessonsByTrack('feature-modules').map((l) => l.slug)).toEqual([
     'agent-loop',
@@ -17,6 +17,15 @@ test('there are 8 beginner lessons and 11 feature modules in track order', () =>
     'built-in-tools',
     'bash-powershell',
     'checkpointing',
+  ]);
+  expect(getLessonsByTrack('power-user').map((l) => l.slug)).toEqual([
+    'custom-slash-commands',
+    'skills-on-demand',
+    'subagents-isolated-context',
+    'hooks-automation',
+    'mcp-tool-discovery',
+    'plugins-workflows',
+    'plugin-distribution',
   ]);
 });
 
@@ -43,14 +52,17 @@ test('every lesson has exactly 3 tips and exactly one signature tip', () => {
 test('tip ids are globally unique across all lessons', () => {
   const ids = getAllLessons().flatMap((l) => l.tips.map((t) => t.id));
   expect(new Set(ids).size).toBe(ids.length);
-  expect(ids).toHaveLength(57);
+  expect(ids).toHaveLength(78);
 });
 
-test('lessons 3, 4 and 5 have type-it-yourself terminal challenges', () => {
+test('beginner challenge lessons and extension modules have type-it-yourself terminal challenges', () => {
   expect(getLesson('bash-commands')?.challenge?.accepted.length).toBeGreaterThan(0);
   expect(getLesson('creating-skills')?.challenge?.accepted.length).toBeGreaterThan(0);
   expect(getLesson('creating-subagents')?.challenge?.accepted.length).toBeGreaterThan(0);
   expect(getLesson('effective-prompting')?.challenge).toBeUndefined();
+  for (const lesson of getLessonsByTrack('power-user')) {
+    expect(lesson.challenge?.accepted.length).toBeGreaterThan(0);
+  }
 });
 
 test('getAdjacent gives prev/next by order', () => {
@@ -63,4 +75,7 @@ test('getAdjacent gives prev/next by order', () => {
   expect(getAdjacent('agent-loop').next?.slug).toBe('context-window');
   expect(getAdjacent('permission-modes').next?.slug).toBe('prompt-input');
   expect(getAdjacent('checkpointing').next).toBeNull();
+  expect(getAdjacent('custom-slash-commands').prev).toBeNull();
+  expect(getAdjacent('custom-slash-commands').next?.slug).toBe('skills-on-demand');
+  expect(getAdjacent('plugin-distribution').next).toBeNull();
 });

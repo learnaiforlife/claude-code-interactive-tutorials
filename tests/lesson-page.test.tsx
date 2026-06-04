@@ -22,6 +22,12 @@ test('feature module lessons render their track and family', () => {
   expect(screen.getByText('Lesson 1 of 11')).toBeInTheDocument();
 });
 
+test('power-user module lessons render their track and extension family', () => {
+  render(<LessonPane lesson={getLesson('custom-slash-commands')!} />);
+  expect(screen.getByText(/Power User Modules · Extensions/i)).toBeInTheDocument();
+  expect(screen.getByText('Lesson 1 of 7')).toBeInTheDocument();
+});
+
 test('banking the signature tip completes the lesson and confirms', async () => {
   const user = userEvent.setup();
   render(<LessonPane lesson={getLesson('bash-commands')!} />);

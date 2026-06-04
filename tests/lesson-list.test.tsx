@@ -11,12 +11,15 @@ const SLUGS = [
   'agent-loop', 'context-window', 'permission-modes', 'prompt-input',
   'continue-resume', 'slash-commands', 'search-and-read', 'claude-md',
   'built-in-tools', 'bash-powershell', 'checkpointing',
+  'custom-slash-commands', 'skills-on-demand', 'subagents-isolated-context',
+  'hooks-automation', 'mcp-tool-discovery', 'plugins-workflows', 'plugin-distribution',
 ];
 
-test('renders beginner and feature-module rows grouped by track', () => {
+test('renders beginner, feature-module, and power-user rows grouped by track', () => {
   render(<LessonList />);
   expect(screen.getByRole('heading', { name: 'Beginner Track' })).toBeInTheDocument();
   expect(screen.getByRole('heading', { name: 'Feature Modules v1' })).toBeInTheDocument();
+  expect(screen.getByRole('heading', { name: 'Power User Modules' })).toBeInTheDocument();
   for (const slug of SLUGS) {
     expect(screen.getByTestId(`lesson-row-${slug}`)).toBeInTheDocument();
   }
@@ -39,6 +42,15 @@ test('first feature module starts available in its own track', async () => {
   expect(within(agentLoop).getByText('Now')).toBeInTheDocument();
   expect(agentLoop.querySelector('a')).not.toBeNull();
   expect(within(contextWindow).getByText('Locked')).toBeInTheDocument();
+});
+
+test('first power-user module starts available in its own track', async () => {
+  render(<LessonList />);
+  const customCommands = await screen.findByTestId('lesson-row-custom-slash-commands');
+  const skills = screen.getByTestId('lesson-row-skills-on-demand');
+  expect(within(customCommands).getByText('Now')).toBeInTheDocument();
+  expect(customCommands.querySelector('a')).not.toBeNull();
+  expect(within(skills).getByText('Locked')).toBeInTheDocument();
 });
 
 test('banking lesson 1 marks it Done and unlocks lesson 2', async () => {
