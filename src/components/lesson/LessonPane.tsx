@@ -4,7 +4,8 @@ import type { Lesson } from '@/lib/types';
 import { signatureTip, getAdjacent } from '@/lib/lessons';
 import { tipBankedIn } from '@/lib/progress';
 import { useProgress, bankTipNow } from '@/lib/use-progress';
-import { Check, ArrowLeft, ArrowRight } from '@/components/ui/icons';
+import { ArrowLeft, ArrowRight } from '@/components/ui/icons';
+import PlantReward from '@/components/impact/PlantReward';
 
 export default function LessonPane({ lesson }: { lesson: Lesson }) {
   const sig = signatureTip(lesson);
@@ -42,9 +43,7 @@ export default function LessonPane({ lesson }: { lesson: Lesson }) {
         <p className="mt-1 text-sm leading-relaxed text-ink-soft">{sig.detail}</p>
 
         {banked ? (
-          <div className="mt-4 inline-flex items-center gap-2 rounded-lg bg-success/10 px-3.5 py-2 font-mono text-sm font-medium text-success">
-            <Check className="h-4 w-4" /> Tip banked · ~{sig.savedTokens.toLocaleString()} tokens saved
-          </div>
+          <PlantReward tip={sig} />
         ) : (
           <button
             type="button"
