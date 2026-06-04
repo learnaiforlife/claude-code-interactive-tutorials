@@ -8,7 +8,7 @@ export default function TerminalSession({ script, challenge }: { script: Session
   const [runId, setRunId] = useState(0);
 
   return (
-    <div className="flex h-full min-h-[22rem] flex-col bg-terminal font-mono text-[0.82rem] leading-relaxed">
+    <div className="flex h-full min-h-[22rem] min-w-0 flex-col overflow-hidden bg-terminal font-mono text-[0.82rem] leading-relaxed">
       <div className="flex items-center gap-2 border-b border-line px-4 py-2 text-xs uppercase tracking-wider text-fg-mute">
         <span className="flex gap-1.5" aria-hidden="true">
           <span className="h-2 w-2 rounded-full" style={{ background: '#ff5f56' }} />
@@ -18,7 +18,7 @@ export default function TerminalSession({ script, challenge }: { script: Session
         <span className="ml-1">claude · session</span>
       </div>
 
-      <Player key={runId} script={script} challenge={challenge} reduced={reduced} />
+      <Player key={`${runId}-${reduced ? 'reduced' : 'motion'}`} script={script} challenge={challenge} reduced={reduced} />
 
       <div className="flex justify-end border-t border-line px-4 py-2">
         <button
@@ -94,9 +94,10 @@ function Player({
   }, [script, reduced]);
 
   useEffect(() => {
+    if (reduced) return;
     const el = scrollRef.current;
     if (el && typeof el.scrollTo === 'function') el.scrollTo({ top: el.scrollHeight });
-  }, [shown, typed]);
+  }, [shown, typed, reduced]);
 
   const running = !reduced && (typed !== null || shown.length < script.length);
   const challengeReady = Boolean(challenge) && !running;
@@ -134,14 +135,14 @@ function Player({
   }
 
   return (
-    <div ref={scrollRef} className="flex-1 overflow-y-auto px-4 py-3">
+    <div ref={scrollRef} className="min-w-0 flex-1 overflow-y-auto overflow-x-hidden px-4 py-3">
       {shown.map((line, idx) => (
         <Line key={idx} line={line} />
       ))}
       {typed !== null && (
-        <div className="flex gap-2">
+        <div className="flex min-w-0 gap-2">
           <span className="text-success-bright">›</span>
-          <span className="text-fg">
+          <span className="min-w-0 break-words text-fg">
             {typed}
             <Cursor />
           </span>
@@ -205,33 +206,33 @@ function Line({ line }: { line: SessionLine }) {
   switch (line.kind) {
     case 'prompt':
       return (
-        <div className="flex gap-2 pt-1">
+        <div className="flex min-w-0 gap-2 pt-1">
           <span className="text-success-bright">›</span>
-          <span className="text-fg">{line.text}</span>
+          <span className="min-w-0 break-words text-fg">{line.text}</span>
         </div>
       );
     case 'reply':
       return (
-        <div className="flex gap-2 pt-0.5">
+        <div className="flex min-w-0 gap-2 pt-0.5">
           <span className="text-info-bright">⏺</span>
-          <span className="text-fg/90">{line.text}</span>
+          <span className="min-w-0 break-words text-fg/90">{line.text}</span>
         </div>
       );
     case 'thinking':
-      return <div className="pt-0.5 italic text-fg-mute">✶ {line.text ?? 'Thinking'}…</div>;
+      return <div className="min-w-0 break-words pt-0.5 italic text-fg-mute">✶ {line.text ?? 'Thinking'}…</div>;
     case 'tool':
       return (
-        <div className="flex gap-2 text-info-bright">
+        <div className="flex min-w-0 gap-2 text-info-bright">
           <span aria-hidden="true">⎿</span>
-          <span className="text-fg-mute">{line.text}</span>
+          <span className="min-w-0 break-words text-fg-mute">{line.text}</span>
         </div>
       );
     case 'out':
-      return <div className="pl-4 text-fg-mute">{line.text}</div>;
+      return <div className="min-w-0 break-words pl-4 text-fg-mute">{line.text}</div>;
     case 'good':
-      return <div className="text-success-bright">✓ {line.text}</div>;
+      return <div className="min-w-0 break-words text-success-bright">✓ {line.text}</div>;
     case 'warn':
-      return <div className="text-command-bright">▲ {line.text}</div>;
+      return <div className="min-w-0 break-words text-command-bright">▲ {line.text}</div>;
     case 'rule':
       return (
         <div className="flex items-center gap-2 py-1.5 text-[0.7rem] uppercase tracking-wider text-fg-mute/70">
@@ -242,10 +243,10 @@ function Line({ line }: { line: SessionLine }) {
       );
     case 'impact':
       return (
-        <div className="mt-2 flex items-center gap-2 rounded-md border border-success-bright/30 bg-success-bright/10 px-3 py-2 text-success-bright">
+        <div className="mt-2 flex min-w-0 flex-wrap items-center gap-2 rounded-md border border-success-bright/30 bg-success-bright/10 px-3 py-2 text-success-bright">
           <span aria-hidden="true">↓</span>
           <span className="font-semibold">~{(line.savedTokens ?? 0).toLocaleString()} tokens saved</span>
-          {line.note && <span className="text-fg-mute">· {line.note}</span>}
+          {line.note && <span className="min-w-0 break-words text-fg-mute">· {line.note}</span>}
         </div>
       );
   }

@@ -87,6 +87,7 @@ export default function CommandPalette() {
           <div className="flex items-center gap-2 rounded-lg border border-line bg-terminal px-3 py-2">
             <span className="text-success-bright">›</span>
             <input
+              aria-label="Search lessons, features, and token habits"
               autoFocus
               value={query}
               onChange={(event) => {
@@ -208,4 +209,3 @@ function PaletteStatus({ status }: { status: LessonStatus }) {
     </span>
   );
 }
-

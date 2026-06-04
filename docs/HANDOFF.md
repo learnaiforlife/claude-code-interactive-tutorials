@@ -85,7 +85,7 @@ src/
     progress.ts         # localStorage progress: bankTip + pure *In(progress,...) derivations + wrappers
     use-progress.ts     # useProgress() store (useSyncExternalStore) + bankTipNow()
     use-reduced-motion.ts # usePrefersReducedMotion() (useSyncExternalStore)
-tests/                  # 11 suites, 33 tests (setup.ts mocks next/font, next/link, localStorage, matchMedia)
+tests/                  # 12 suites, 39 tests (setup.ts mocks next/font, next/link, localStorage, matchMedia)
 ```
 
 Data model: each `Lesson` has `tips: Tip[]` (exactly 3, one `kind:'signature'`) and `session: SessionLine[]`.
@@ -108,22 +108,23 @@ Lessons 3, 4, and 5 also have `challenge?: TerminalChallenge` for type-it-yourse
 - **Type-it-yourself terminal core**: lessons 3, 4, and 5 now include terminal challenges with `?` hints, `reset`, incorrect feedback, and scripted success output.
 - **Command palette**: real `⌘K` palette searches lessons/features/tips, shows Done/Now/Locked states, and only exposes navigable links for unlocked lessons.
 - **Lesson checks + branded 404**: each lesson has a low-stakes check with explain-on-wrong feedback, and `/not-found` uses the dual-tone house style.
+- **Release hardening pass**: axe-core structural a11y coverage for chrome, Forest, lesson, terminal, and 404; semantic Forest markers; mobile overflow fixes; reduced-motion terminal remounts into the full transcript.
 
-**Verified:** 33/33 tests, lint clean, production build passes (`/`, `/how-we-calculate`, all 8 lessons prerender static). Browser screenshot tooling was blocked by an occupied Playwright profile during the latest pass; route HTML was verified via the running dev server on `:3001`.
+**Verified:** 39/39 tests, lint clean, production build passes (`/`, `/how-we-calculate`, all 8 lessons prerender static). Browser QA used isolated headless Chrome DevTools Protocol because the MCP Playwright profile was locked: desktop home, mobile home, desktop/mobile lesson, reduced-motion lesson, and branded 404 rendered without horizontal overflow.
 
 ---
 
 ## 6. NEXT STEPS (prioritized)
 
 ### P1 polish — Impact System QA and craft
-The Impact System is implemented, but still needs a real browser screenshot pass once the Playwright profile lock is cleared.
-1. Visual QA desktop + mobile: home Forest, lesson inline-tip banking, Plant reward, cascade toggle states.
-2. Reduced-motion browser QA: Plant final state, no count-up movement, terminal transcript still instant.
-3. Craft pass: newest-tree glow, Forest density, mobile wrapping, empty-state language, metric legibility.
+The Impact System is implemented and the baseline home Forest has desktop/mobile screenshot coverage. Remaining:
+1. Interactive browser QA: bank a lesson tip, confirm Plant reward, newest-tree glow, and cascade toggle states.
+2. Reduced-motion browser QA for Plant count-up final state.
+3. Craft pass: Forest density, empty-state language, and metric legibility.
 
 ### P2 polish — Interactive terminal QA and expansion
 Core type-it-yourself challenges are implemented for lessons 3, 4, and 5. Remaining work:
-1. Browser QA once the Playwright profile lock clears: desktop, mobile, reduced motion, Replay after challenge.
+1. Browser QA: Replay after challenge and typed success/incorrect flows in a rendered browser.
 2. Consider moving the challenge intro from terminal-only into the left lesson pane for stronger instruction.
 3. Add type challenges to future feature modules as they are created.
 
@@ -132,12 +133,12 @@ The master plan now has a **Feature-module curriculum expansion** section and de
 
 ### P3 polish — Command palette QA
 Core `⌘K` palette is implemented. Remaining work:
-1. Browser QA once Playwright profile lock clears: mouse open, keyboard shortcut, search, close, mobile layout.
+1. Browser QA: mouse open, keyboard shortcut, search, close, mobile layout.
 2. Add future feature modules to palette results once those lessons exist.
 3. Consider richer fuzzy ranking if the lesson count grows beyond the first tracks.
 
 ### P4 — Content & polish
-- Lighthouse/perf pass, full a11y audit on both surfaces, then **Vercel deploy**.
+- Lighthouse/perf pass, manual keyboard audit, then **Vercel deploy**.
 
 ### Backlog / Phase 3+ (from the master plan)
 Intermediate/advanced tracks, accounts/cloud sync, real shell integration, sharing. Out of MVP.
@@ -145,10 +146,10 @@ Intermediate/advanced tracks, accounts/cloud sync, real shell integration, shari
 ---
 
 ## 7. Honest current gaps (don't represent these as done)
-- Latest Impact UI has not had a screenshot-based browser QA pass because the Playwright profile was locked.
-- The terminal now supports guided typing for lessons 3, 4, and 5, but it has not had screenshot-based browser QA.
-- The command palette has test coverage and build coverage, but not screenshot-based browser QA.
-- The branded 404 has test and build coverage, but not screenshot-based browser QA.
+- Impact baseline has desktop/mobile screenshot coverage, but the bank-tip Plant reward and cascade toggles still need rendered interaction QA.
+- The terminal has desktop/mobile/reduced-motion screenshot coverage, but guided typing success/incorrect flows still need rendered interaction QA.
+- The command palette has unit, axe, and build coverage, but not rendered screenshot QA for open/search/close states.
+- The branded 404 has test, axe, build, and desktop screenshot coverage.
 
 ---
 

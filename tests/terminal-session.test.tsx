@@ -1,6 +1,6 @@
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { test, expect, vi } from 'vitest';
+import { afterEach, test, expect, vi } from 'vitest';
 import TerminalSession from '@/components/lesson/TerminalSession';
 import type { SessionLine, TerminalChallenge } from '@/lib/types';
 
@@ -30,6 +30,10 @@ function reduceMotion() {
     addListener() {}, removeListener() {}, dispatchEvent() { return false; },
   }));
 }
+
+afterEach(() => {
+  delete (HTMLDivElement.prototype as HTMLDivElement & { scrollTo?: unknown }).scrollTo;
+});
 
 test('under reduced motion the full transcript renders immediately', () => {
   reduceMotion();
@@ -61,4 +65,17 @@ test('interactive challenge supports hint, incorrect, reset and correct command'
   await user.type(input, 'rg "AuthError" src/server');
   await user.click(screen.getByRole('button', { name: 'Run' }));
   expect(screen.getAllByText(/Found it\./).length).toBeGreaterThan(0);
+});
+
+test('reduced motion does not auto-scroll past the instant transcript', () => {
+  reduceMotion();
+  const scrollTo = vi.fn();
+  Object.defineProperty(HTMLDivElement.prototype, 'scrollTo', {
+    configurable: true,
+    value: scrollTo,
+  });
+
+  render(<TerminalSession script={script} challenge={challenge} />);
+  expect(screen.getByText(/grep for AuthError/)).toBeInTheDocument();
+  expect(scrollTo).not.toHaveBeenCalled();
 });

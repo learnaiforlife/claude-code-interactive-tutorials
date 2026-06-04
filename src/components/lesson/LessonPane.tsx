@@ -24,7 +24,7 @@ export default function LessonPane({ lesson }: { lesson: Lesson }) {
   }
 
   return (
-    <section className="flex min-h-full flex-col bg-paper px-7 py-9 text-ink md:px-10 md:py-12">
+    <section className="flex min-h-full min-w-0 flex-col bg-paper px-7 py-9 text-ink md:px-10 md:py-12">
       <p className="font-mono text-xs uppercase tracking-[0.14em] text-ink-soft">Module 1 · Basics</p>
 
       <div className="mt-4 flex items-start gap-5">
