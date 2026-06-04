@@ -32,7 +32,7 @@ export function formatRange(lo: number, hi: number, unit: string): string {
 
 export function ImpactMetricGrid({ costUsd, eco }: { costUsd: number; eco: EcoImpact }) {
   return (
-    <div className="grid grid-cols-1 gap-2 min-[360px]:grid-cols-2 sm:grid-cols-4">
+    <div className="grid grid-cols-1 gap-2.5 min-[360px]:grid-cols-2 2xl:grid-cols-4">
       <Metric label="Cost" value={formatCost(costUsd)} tone="text-success" />
       <Metric label="Energy" value={formatRange(eco.whLo, eco.whHi, 'Wh')} tone="text-command" />
       <Metric label="Water" value={formatRange(eco.mlLo, eco.mlHi, 'mL')} tone="text-info" />
@@ -51,9 +51,9 @@ export function MethodologyLink({ className = '' }: { className?: string }) {
 
 function Metric({ label, value, tone }: { label: string; value: string; tone: string }) {
   return (
-    <div className="rounded-lg border border-line-soft bg-paper px-3 py-2">
-      <div className="font-mono text-[0.68rem] text-ink-soft">{label}</div>
-      <div className={`mt-1 font-mono text-sm font-semibold tabular-nums ${tone}`}>{value}</div>
+    <div className="rounded-lg border border-line-soft bg-paper px-3 py-2.5">
+      <div className="font-mono text-[0.68rem] font-semibold text-ink-soft">{label}</div>
+      <div className={`mt-1 font-mono text-base font-bold leading-tight tabular-nums ${tone}`}>{value}</div>
     </div>
   );
 }

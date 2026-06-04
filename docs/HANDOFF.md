@@ -114,16 +114,15 @@ Lessons 3, 4, and 5 plus all Power User and Team lessons also have `challenge?: 
 - **Lesson checks + branded 404**: each lesson has a low-stakes check with explain-on-wrong feedback, and `/not-found` uses the dual-tone house style.
 - **Release hardening pass**: axe-core structural a11y coverage for chrome, Forest, lesson, terminal, and 404; semantic Forest markers; mobile overflow fixes; reduced-motion terminal remounts into the full transcript.
 
-**Verified:** 56/56 tests, lint clean, production build passes (`/`, `/how-we-calculate`, all 91 lessons prerender static; 96 static pages total). Rendered browser QA used isolated headless Chrome DevTools Protocol because the MCP Playwright profile was locked: banked `bash-commands`, confirmed Plant reward, cascade scaling, Forest newest-tree glow/count, reduced-motion final token state, no console/runtime errors, and no horizontal overflow. Terminal interaction QA also covered reduced-motion typed challenges on `bash-commands`: hint, incorrect feedback, reset, success output, Replay clearing challenge output, mobile success, no console/runtime errors, and no horizontal overflow. Command palette QA covered mouse open, focused search, locked search results, Escape close/reset, keyboard shortcut open, unlocked Enter navigation, mobile search/close, no console/runtime errors, and no horizontal overflow.
+**Verified:** 56/56 tests, lint clean, production build passes (`/`, `/how-we-calculate`, all 91 lessons prerender static; 96 static pages total). Rendered browser QA used isolated headless Chrome DevTools Protocol because the MCP Playwright profile was locked: banked `bash-commands`, confirmed Plant reward, cascade scaling, Forest newest-tree glow/count, reduced-motion final token state, no console/runtime errors, and no horizontal overflow. Forest craft QA now covers the denser 273-tree field, empty-state guidance, next-tree prompt, metric legibility, team cascade scaling, desktop/mobile layouts, no console/runtime errors, and no horizontal overflow. Terminal interaction QA also covered reduced-motion typed challenges on `bash-commands`: hint, incorrect feedback, reset, success output, Replay clearing challenge output, mobile success, no console/runtime errors, and no horizontal overflow. Command palette QA covered mouse open, focused search, locked search results, Escape close/reset, keyboard shortcut open, unlocked Enter navigation, mobile search/close, no console/runtime errors, and no horizontal overflow.
 
 ---
 
 ## 6. NEXT STEPS (prioritized)
 
 ### P1 polish — Impact System QA and craft
-The Impact System is implemented and rendered interaction QA now covers Plant reward, cascade scaling, newest-tree glow/count, and reduced-motion final token state. Remaining:
-1. Craft pass: Forest density, empty-state language, and metric legibility.
-2. Optional follow-up: turn the rendered Impact interaction script into a committed e2e harness once the project has an official browser-test runner.
+The Impact System is implemented and rendered interaction QA now covers Plant reward, cascade scaling, newest-tree glow/count, reduced-motion final token state, dense Forest rendering, empty-state guidance, next-tree prompt, metric legibility, desktop/mobile layouts, and overflow checks. Remaining:
+1. Optional follow-up: turn the rendered Impact interaction script into a committed e2e harness once the project has an official browser-test runner.
 
 ### P2 polish — Interactive terminal QA and expansion
 Core type-it-yourself challenges are implemented and rendered QA covers hint, incorrect, reset, success, Replay, mobile success, reduced-motion behavior, and overflow checks on `bash-commands`. Remaining work:
@@ -152,7 +151,7 @@ Intermediate/advanced tracks, accounts/cloud sync, real shell integration, shari
 ---
 
 ## 7. Honest current gaps (don't represent these as done)
-- Impact rendered QA now covers the 273-tree Forest, bank-tip Plant reward, cascade toggles, newest-tree glow, and reduced-motion final state. Only craft polish remains.
+- Impact rendered QA now covers the 273-tree Forest, bank-tip Plant reward, cascade toggles, newest-tree glow, empty guidance, next-tree copy, metric legibility, and reduced-motion final state. Remaining Impact work is optional e2e harnessing.
 - The terminal rendered QA covers desktop/mobile/reduced-motion screenshots plus guided hint, incorrect, reset, success, and Replay flows. Remaining terminal work is instruction placement and future-module expansion.
 - The command palette has unit, axe, build, and rendered desktop/mobile interaction coverage. Remaining palette work is future expansion and optional fuzzy ranking.
 - The branded 404 has test, axe, build, and desktop screenshot coverage.
@@ -161,5 +160,5 @@ Intermediate/advanced tracks, accounts/cloud sync, real shell integration, shari
 
 ## 8. Start here
 1. `npm install && npm test && npm run dev` — confirm green and click through `/` → a lesson → bank a tip → watch it unlock.
-2. Continue with **P1 craft polish**, **P2** terminal instruction polish, or **P4** manual keyboard/perf/deploy polish.
+2. Continue with **P2** terminal instruction polish or **P4** manual keyboard/perf/deploy polish.
 3. Keep commits small; keep test/lint/build green; follow §3 conventions.
