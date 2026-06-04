@@ -7,6 +7,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
+    "audit:curriculum": "node scripts/audit-curriculum-contract.mjs",
     "audit:docs": "node scripts/audit-claude-docs-coverage.mjs",
     "qa:rendered": "npm run build && node scripts/rendered-qa.mjs",
     "test": "vitest run",
