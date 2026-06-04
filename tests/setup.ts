@@ -28,8 +28,17 @@ class MemoryStorage implements Storage {
   key(i: number) { return Array.from(this.store.keys())[i] ?? null; }
 }
 
+function mediaQueryList(matches: boolean) {
+  return {
+    matches, media: '', onchange: null,
+    addEventListener() {}, removeEventListener() {},
+    addListener() {}, removeListener() {}, dispatchEvent() { return false; },
+  };
+}
+
 beforeEach(() => {
   vi.stubGlobal('localStorage', new MemoryStorage());
+  vi.stubGlobal('matchMedia', () => mediaQueryList(false));
 });
 
 afterEach(() => {

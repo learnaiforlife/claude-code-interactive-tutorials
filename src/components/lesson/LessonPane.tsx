@@ -23,9 +23,18 @@ export default function LessonPane({ lesson }: { lesson: Lesson }) {
         <h1 className="text-balance text-3xl font-bold leading-[1.1] tracking-tight">{lesson.title}</h1>
       </div>
 
-      <p className="mt-5 max-w-[58ch] leading-relaxed text-ink-soft">{lesson.context}</p>
+      <p className="mt-5 max-w-[58ch] text-[0.95rem] leading-relaxed text-ink">{lesson.context}</p>
 
-      <div className="mt-8 rounded-xl border border-line-soft bg-black/[0.02] p-5">
+      <div className="mt-6">
+        <p className="font-mono text-xs font-semibold uppercase tracking-wide text-ink-soft">The idea</p>
+        <p className="mt-2 max-w-[58ch] leading-relaxed text-ink-soft">{lesson.concept}</p>
+      </div>
+
+      <p className="mt-6 flex items-center gap-2 font-mono text-xs text-ink-soft">
+        <span className="text-success">▶</span> Watch the session, then bank the tip.
+      </p>
+
+      <div className="mt-4 rounded-xl border border-line-soft bg-black/[0.02] p-5">
         <div className="flex items-center gap-2 font-mono text-xs font-semibold uppercase tracking-wide text-success">
           <span className="inline-block h-1.5 w-1.5 rounded-full bg-success" /> Signature tip
         </div>
