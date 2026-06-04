@@ -9,6 +9,7 @@
     "lint": "eslint",
     "audit:curriculum": "node scripts/audit-curriculum-contract.mjs",
     "audit:docs": "node scripts/audit-claude-docs-coverage.mjs",
+    "audit:commands": "node scripts/audit-commands-contract.mjs",
     "qa:rendered": "npm run build && node scripts/rendered-qa.mjs",
     "test": "vitest run",
     "test:watch": "vitest"
