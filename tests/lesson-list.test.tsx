@@ -8,7 +8,9 @@ beforeEach(() => resetProgress());
 const SLUGS = [
   'what-is-claude-code', 'effective-prompting', 'bash-commands', 'creating-skills',
   'creating-subagents', 'mcp-overview', 'mcp-management', 'common-mistakes',
-  'agent-loop', 'context-window', 'permission-modes',
+  'agent-loop', 'context-window', 'permission-modes', 'prompt-input',
+  'continue-resume', 'slash-commands', 'search-and-read', 'claude-md',
+  'built-in-tools', 'bash-powershell', 'checkpointing',
 ];
 
 test('renders beginner and feature-module rows grouped by track', () => {

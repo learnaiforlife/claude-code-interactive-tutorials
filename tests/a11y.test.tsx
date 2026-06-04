@@ -30,7 +30,7 @@ test('chrome command palette has no structural accessibility violations', async 
 
 test('forest dashboard has no structural accessibility violations', async () => {
   const { container } = render(<ForestDashboard />);
-  await screen.findByLabelText('0 of 33 trees planted');
+  await screen.findByLabelText('0 of 57 trees planted');
   await expectNoA11yViolations(container);
 });
 

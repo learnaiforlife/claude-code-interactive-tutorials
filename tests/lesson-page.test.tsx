@@ -19,7 +19,7 @@ test('renders the lesson numeral, title and signature tip', () => {
 test('feature module lessons render their track and family', () => {
   render(<LessonPane lesson={getLesson('agent-loop')!} />);
   expect(screen.getByText(/Feature Modules v1 · Core Session Workflow/i)).toBeInTheDocument();
-  expect(screen.getByText('Lesson 1 of 3')).toBeInTheDocument();
+  expect(screen.getByText('Lesson 1 of 11')).toBeInTheDocument();
 });
 
 test('banking the signature tip completes the lesson and confirms', async () => {

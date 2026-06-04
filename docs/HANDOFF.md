@@ -39,9 +39,9 @@ Authoritative specs (already written — follow them, don't redo):
 **Commands:**
 ```bash
 npm run dev      # local dev (Turbopack)
-npm test         # vitest run  (currently 20 passing, 8 files)
+npm test         # vitest run  (currently 42 passing, 12 files)
 npm run lint     # eslint      (currently clean)
-npm run build    # next build  (currently passes; 11 lessons prerender static)
+npm run build    # next build  (currently passes; 19 lessons prerender static)
 ```
 
 ---
@@ -80,7 +80,7 @@ src/
     ui/icons.tsx                # in-house Check/Lock/ArrowLeft/ArrowRight (no icon dep)
   lib/
     types.ts            # TrackInfo, Lesson, Tip, SessionLine, TerminalChallenge, Progress, Track
-    lessons.ts          # 11 lessons across Beginner + Feature Modules v1, each with 3 tips (1 signature)
+    lessons.ts          # 19 lessons across Beginner + Feature Modules v1, each with 3 tips (1 signature)
     impact.ts           # exact cost, eco ranges, cascade factors, banked-tip totals
     progress.ts         # localStorage progress: bankTip + pure *In(progress,...) derivations + wrappers
     use-progress.ts     # useProgress() store (useSyncExternalStore) + bankTipNow()
@@ -100,19 +100,19 @@ Lessons 3, 4, and 5 also have `challenge?: TerminalChallenge` for type-it-yourse
 
 - **Scaffold + test harness** (commit `87c1919`).
 - **Dual-tone design system**: OKLCH tokens, Inter/Fira fonts, terminal-native house chrome (`aadb43d`).
-- **Lesson model + 33-tip registry + localStorage progress** (`8236f29`), now extended with track metadata, feature-family metadata, official docs references, and explicit efficiency habits.
+- **Lesson model + 57-tip registry + localStorage progress** (`8236f29`), now extended with track metadata, feature-family metadata, official docs references, and explicit efficiency habits.
 - **Editorial dashboard** (track sections, progress meters, Done/Now/Locked; locked lessons are non-navigable so banking a signature tip unlocks the next lesson in that track) and **split-screen lesson page** (`7f17e54`).
 - **Live animated terminal sessions + real per-lesson content** (`8c6e3e3`): `TerminalSession` plays each lesson's scripted Claude Code session (prompts type out, tool/output lines stream, ends on a tokens-saved tally; autoplay + Replay; reduced-motion renders the full transcript instantly). Every lesson has a `concept` + a `session`.
 - **Impact System foundations** (`ad96ab1`): `impact.ts`, exact Sonnet input-token cost math, honest eco ranges, cascade controls, methodology page, Plant reward, and Forest dashboard.
-- **33-tip banking pass**: inline tips are visible and bankable in each lesson, the Forest tracks 33 trees, signature tips still drive lesson completion/unlock.
+- **57-tip banking pass**: inline tips are visible and bankable in each lesson, the Forest tracks 57 trees, signature tips still drive lesson completion/unlock.
 - **Feature-module curriculum plan**: `docs/plans/2026-06-04-claude-code-feature-curriculum.md` maps Claude Code features to module tracks and efficiency hooks, with an official-index coverage audit and build sequence.
-- **Feature Modules v1 starter track**: three shipped modules, Agent loop, Context window, and Permission modes. Each teaches what it is, how it works, how to use it, and how to use it efficiently with a bankable token-saving habit.
+- **Feature Modules v1 track**: 11 shipped modules covering Agent loop, Prompt input, Continue/resume, Slash commands, Search/read, CLAUDE.md, Context window, Built-in tools, Bash/PowerShell, Permission modes, and Checkpointing. Each teaches what it is, how it works, how to use it, and how to use it efficiently with a bankable token-saving habit.
 - **Type-it-yourself terminal core**: lessons 3, 4, and 5 now include terminal challenges with `?` hints, `reset`, incorrect feedback, and scripted success output.
 - **Command palette**: real `⌘K` palette searches lessons/features/docs refs/tips, shows Done/Now/Locked states, and only exposes navigable links for unlocked lessons.
 - **Lesson checks + branded 404**: each lesson has a low-stakes check with explain-on-wrong feedback, and `/not-found` uses the dual-tone house style.
 - **Release hardening pass**: axe-core structural a11y coverage for chrome, Forest, lesson, terminal, and 404; semantic Forest markers; mobile overflow fixes; reduced-motion terminal remounts into the full transcript.
 
-**Verified:** 42/42 tests, lint clean, production build passes (`/`, `/how-we-calculate`, all 11 lessons prerender static). Browser QA used isolated headless Chrome DevTools Protocol because the MCP Playwright profile was locked: desktop home, mobile home, desktop/mobile lesson, reduced-motion lesson, branded 404, expanded dashboard, and `agent-loop` rendered without horizontal overflow.
+**Verified:** 42/42 tests, lint clean, production build passes (`/`, `/how-we-calculate`, all 19 lessons prerender static). Browser QA used isolated headless Chrome DevTools Protocol because the MCP Playwright profile was locked: desktop home, mobile home, desktop/mobile lesson, reduced-motion lesson, branded 404, expanded dashboard, `agent-loop`, and `checkpointing` rendered without horizontal overflow.
 
 ---
 
@@ -132,7 +132,7 @@ Core type-it-yourself challenges are implemented for lessons 3, 4, and 5. Remain
 
 ### P2.5 — Feature-module expansion
 The master plan now has a **Feature-module curriculum expansion** section and detailed plan file. Use the official Claude Code docs index (`https://code.claude.com/docs/llms.txt`) as the source map. Each new module must teach what the feature is, how it works, how to use it, and the token-efficiency habit attached to that feature.
-Next modules to add: Prompt input, Continue/resume, Slash commands, Search/read, CLAUDE.md, Built-in tools, Bash/PowerShell, and Checkpointing.
+Feature Modules v1 is shipped. Next modules to add: Custom slash commands, Skills, Subagents, Hooks, MCP, Plugins, Plugin distribution, Worktrees, Agent view, Agent teams, Goals, Scheduled tasks, and Integrations.
 
 ### P3 polish — Command palette QA
 Core `⌘K` palette is implemented. Remaining work:
@@ -149,7 +149,7 @@ Intermediate/advanced tracks, accounts/cloud sync, real shell integration, shari
 ---
 
 ## 7. Honest current gaps (don't represent these as done)
-- Impact baseline has desktop/mobile screenshot coverage for 33 trees, but the bank-tip Plant reward and cascade toggles still need rendered interaction QA.
+- Impact baseline has desktop/mobile screenshot coverage for 57 trees, but the bank-tip Plant reward and cascade toggles still need rendered interaction QA.
 - The terminal has desktop/mobile/reduced-motion screenshot coverage, but guided typing success/incorrect flows still need rendered interaction QA.
 - The command palette has unit, axe, and build coverage, but not rendered screenshot QA for open/search/close states.
 - The branded 404 has test, axe, build, and desktop screenshot coverage.

@@ -25,7 +25,7 @@ test('opens the command palette and searches lessons', async () => {
   expect(screen.getByRole('dialog', { name: /command palette/i })).toBeInTheDocument();
   await user.type(screen.getByPlaceholderText(/search lessons/i), 'bash');
   expect(screen.getByText(/How to run bash commands/i)).toBeInTheDocument();
-  expect(screen.getByText('Locked')).toBeInTheDocument();
+  expect(screen.getAllByText('Locked').length).toBeGreaterThan(0);
 });
 
 test('command palette searches feature metadata and docs references', async () => {

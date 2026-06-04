@@ -1,14 +1,22 @@
 import { test, expect } from 'vitest';
 import { getAllLessons, getLesson, getLessonsByTrack, getAdjacent, signatureTip } from '@/lib/lessons';
 
-test('there are 8 beginner lessons and 3 feature modules in track order', () => {
+test('there are 8 beginner lessons and 11 feature modules in track order', () => {
   const all = getAllLessons();
-  expect(all).toHaveLength(11);
+  expect(all).toHaveLength(19);
   expect(getLessonsByTrack('beginner').map((l) => l.order)).toEqual([1, 2, 3, 4, 5, 6, 7, 8]);
   expect(getLessonsByTrack('feature-modules').map((l) => l.slug)).toEqual([
     'agent-loop',
     'context-window',
     'permission-modes',
+    'prompt-input',
+    'continue-resume',
+    'slash-commands',
+    'search-and-read',
+    'claude-md',
+    'built-in-tools',
+    'bash-powershell',
+    'checkpointing',
   ]);
 });
 
@@ -35,7 +43,7 @@ test('every lesson has exactly 3 tips and exactly one signature tip', () => {
 test('tip ids are globally unique across all lessons', () => {
   const ids = getAllLessons().flatMap((l) => l.tips.map((t) => t.id));
   expect(new Set(ids).size).toBe(ids.length);
-  expect(ids).toHaveLength(33);
+  expect(ids).toHaveLength(57);
 });
 
 test('lessons 3, 4 and 5 have type-it-yourself terminal challenges', () => {
@@ -53,4 +61,6 @@ test('getAdjacent gives prev/next by order', () => {
   expect(getAdjacent('common-mistakes').next).toBeNull();
   expect(getAdjacent('agent-loop').prev).toBeNull();
   expect(getAdjacent('agent-loop').next?.slug).toBe('context-window');
+  expect(getAdjacent('permission-modes').next?.slug).toBe('prompt-input');
+  expect(getAdjacent('checkpointing').next).toBeNull();
 });
