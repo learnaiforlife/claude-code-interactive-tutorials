@@ -1,7 +1,7 @@
 'use client';
 import { useState } from 'react';
 import Link from 'next/link';
-import type { Lesson, Tip } from '@/lib/types';
+import type { Lesson, TerminalChallenge, Tip } from '@/lib/types';
 import { signatureTip, getAdjacent, getLessonsByTrack, getTrackInfo } from '@/lib/lessons';
 import { tipBankedIn } from '@/lib/progress';
 import { useProgress, bankTipNow } from '@/lib/use-progress';
@@ -48,6 +48,8 @@ export default function LessonPane({ lesson }: { lesson: Lesson }) {
       <p className="mt-6 flex items-center gap-2 font-mono text-xs text-ink-soft">
         <span className="text-success">▶</span> Watch the session, then bank each token-saving habit.
       </p>
+
+      {lesson.challenge ? <ChallengeBrief challenge={lesson.challenge} /> : null}
 
       <div className="mt-4 rounded-xl border border-line-soft bg-black/[0.02] p-5">
         <div className="flex items-center gap-2 font-mono text-xs font-semibold uppercase tracking-wide text-success">
@@ -127,6 +129,27 @@ export default function LessonPane({ lesson }: { lesson: Lesson }) {
           <span />
         )}
       </nav>
+    </section>
+  );
+}
+
+function ChallengeBrief({ challenge }: { challenge: TerminalChallenge }) {
+  return (
+    <section
+      aria-labelledby="challenge-brief-heading"
+      className="mt-4 rounded-xl border border-info/25 bg-info/5 p-5"
+    >
+      <div className="font-mono text-xs font-semibold uppercase tracking-wide text-info">Type it yourself</div>
+      <h2 id="challenge-brief-heading" className="mt-2 text-lg font-semibold leading-snug text-ink">
+        {challenge.intro}
+      </h2>
+      <p className="mt-2 max-w-[58ch] text-sm leading-relaxed text-ink-soft">
+        After the transcript finishes, the terminal asks: <span className="font-medium text-ink">{challenge.prompt}</span>
+      </p>
+      <p className="mt-3 flex flex-wrap items-center gap-1.5 font-mono text-xs text-ink-soft">
+        Type <kbd className="rounded border border-line-soft bg-paper px-1.5 py-0.5 text-ink">?</kbd> for a hint, or{' '}
+        <kbd className="rounded border border-line-soft bg-paper px-1.5 py-0.5 text-ink">reset</kbd> to clear your attempt.
+      </p>
     </section>
   );
 }

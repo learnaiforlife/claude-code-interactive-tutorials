@@ -103,13 +103,24 @@ test('getLesson returns the lesson for a known slug, undefined otherwise', () =>
 
 test('every lesson has exactly 3 tips and exactly one signature tip', () => {
   for (const lesson of getAllLessons()) {
+    expect(lesson.title.length).toBeGreaterThan(0);
+    expect(lesson.context.length).toBeGreaterThan(20);
+    expect(lesson.concept.length).toBeGreaterThan(20);
+    expect(lesson.session.length).toBeGreaterThan(0);
+    expect(lesson.session.some((line) => line.kind === 'impact' && (line.savedTokens ?? 0) > 0)).toBe(true);
     expect(lesson.tips).toHaveLength(3);
     expect(lesson.tips.filter((t) => t.kind === 'signature')).toHaveLength(1);
     expect(signatureTip(lesson).kind).toBe('signature');
+    expect(signatureTip(lesson).savedTokens).toBeGreaterThan(0);
     expect(lesson.check.options.filter((option) => option.correct)).toHaveLength(1);
     expect(lesson.featureFamily.length).toBeGreaterThan(0);
     expect(lesson.efficiencyHabit.length).toBeGreaterThan(0);
     expect(lesson.docsRefs.length).toBeGreaterThan(0);
+    for (const tip of lesson.tips) {
+      expect(tip.title.length).toBeGreaterThan(0);
+      expect(tip.detail.length).toBeGreaterThan(0);
+      expect(tip.savedTokens).toBeGreaterThan(0);
+    }
     for (const ref of lesson.docsRefs) {
       expect(ref.href).toMatch(/^https:\/\/code\.claude\.com\/docs\/en\/.+\.md$/);
     }

@@ -16,6 +16,15 @@ test('renders the lesson numeral, title and signature tip', () => {
   expect(screen.getByText(/What is the efficient first move/i)).toBeInTheDocument();
 });
 
+test('surfaces type-it-yourself challenge instructions in the lesson pane', () => {
+  render(<LessonPane lesson={getLesson('bash-commands')!} />);
+  expect(screen.getByRole('heading', { level: 2, name: /Your turn: find where auth errors are thrown/i })).toBeInTheDocument();
+  expect(screen.getByText(/After the transcript finishes, the terminal asks/i)).toBeInTheDocument();
+  expect(screen.getByText(/Type the efficient command/i)).toBeInTheDocument();
+  expect(screen.getByText('?')).toBeInTheDocument();
+  expect(screen.getByText('reset')).toBeInTheDocument();
+});
+
 test('feature module lessons render their track and family', () => {
   render(<LessonPane lesson={getLesson('agent-loop')!} />);
   expect(screen.getByText(/Feature Modules · Core Session Workflow/i)).toBeInTheDocument();
