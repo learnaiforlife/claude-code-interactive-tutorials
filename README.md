@@ -20,7 +20,7 @@ npm run audit:docs   # live Claude Code docs coverage audit
 - 91 lessons across Beginner, Feature Modules, Power User Modules, and Team Modules.
 - 273 bankable token-saving tips.
 - Live docs audit checks the official Claude Code docs index against lesson `docsRefs`.
-- Rendered QA covers terminal challenge flows, Replay, Plant and Forest cascade scaling, command palette locked/unlocked behavior, desktop/mobile overflow, and browser console/runtime errors.
+- Rendered QA covers terminal challenge flows, Replay, Plant and Forest cascade scaling, newest-tree marker/count, command palette locked/unlocked behavior, desktop/mobile overflow, and browser console/runtime errors.
 
 ## Development Notes
 

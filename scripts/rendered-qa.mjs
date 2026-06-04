@@ -30,7 +30,7 @@ async function main() {
 
   console.log('Rendered QA passed');
   console.log(`- Production app: ${appUrl}`);
-  console.log('- Covered: terminal challenge, Replay, Plant and Forest cascade scaling, palette locked/unlocked flows, desktop/mobile overflow, console/runtime errors');
+  console.log('- Covered: terminal challenge, Replay, Plant and Forest cascade scaling, newest-tree marker, palette locked/unlocked flows, desktop/mobile overflow, console/runtime errors');
 }
 
 async function runDesktopLearningFlow(browser) {
@@ -104,6 +104,22 @@ async function runDesktopLearningFlow(browser) {
   await page.waitForText('1 / 273 tips banked');
   await page.waitForText('3,200 raw tokens banked');
   await page.waitForText('Sprout stage');
+  const forestTreeState = await page.evaluate(() => {
+    const forest = document.querySelector('ol[aria-label="1 of 273 trees planted"]');
+    const newestTree = Array.from(document.querySelectorAll('li[aria-label$=" planted"]')).find((element) =>
+      element.getAttribute('aria-label') === "Lesson 3: Search, don't slurp planted",
+    );
+    return {
+      forestCount: forest?.getAttribute('aria-label'),
+      plantedCount: document.querySelectorAll('li[aria-label$=" planted"]').length,
+      newestClass: newestTree?.querySelector('svg')?.getAttribute('class') ?? '',
+      newestGlow: Boolean(newestTree?.querySelector('circle')),
+    };
+  });
+  assert(forestTreeState.forestCount === '1 of 273 trees planted', 'Forest should expose the planted tree count');
+  assert(forestTreeState.plantedCount === 1, 'Forest should mark exactly one planted tree');
+  assert(forestTreeState.newestClass.includes('scale-125'), 'Newest planted tree should use the newest-tree scale marker');
+  assert(forestTreeState.newestGlow, 'Newest planted tree should render the glow circle');
   await page.clickByText('Team of 20');
   await page.waitForText('160,000,000 scaled tokens saved');
 
