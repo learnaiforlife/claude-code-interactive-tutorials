@@ -1,36 +1,30 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Claude Code Interactive Tutorials
 
-## Getting Started
+An interactive tutorial platform for learning Claude Code by doing. Each module teaches what a feature is, how it works, how to use it, and how to use it efficiently with a bankable token-saving habit.
 
-First, run the development server:
+## Commands
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+npm run dev          # local development
+npm test             # Vitest component and data tests
+npm run lint         # ESLint
+npm run build        # production build
+npm run qa:rendered  # production build plus headless Chrome rendered QA
+npm run audit:docs   # live Claude Code docs coverage audit
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+`npm run qa:rendered` starts `next start` on a free port and drives a local Chrome or Chromium binary through DevTools Protocol. If Chrome is not installed in a standard location, set `CHROME_PATH` to the browser binary.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Current Coverage
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+- 91 lessons across Beginner, Feature Modules, Power User Modules, and Team Modules.
+- 273 bankable token-saving tips.
+- Live docs audit checks the official Claude Code docs index against lesson `docsRefs`.
+- Rendered QA covers terminal challenge flows, Plant reward, Forest update, command palette search, desktop/mobile overflow, and browser console/runtime errors.
 
-## Learn More
+## Development Notes
 
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- Browser-backed state must use the existing `useSyncExternalStore` pattern.
+- Do not read `localStorage` during initial render or render-time state initialization.
+- Keep user-facing copy free of em dashes and placeholder text.
+- Before committing, run `npm run audit:docs`, `npm test`, `npm run lint`, and `npm run build`. Run `npm run qa:rendered` for UI or rendered-flow changes.

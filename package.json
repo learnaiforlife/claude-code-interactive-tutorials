@@ -8,6 +8,7 @@
     "start": "next start",
     "lint": "eslint",
     "audit:docs": "node scripts/audit-claude-docs-coverage.mjs",
+    "qa:rendered": "npm run build && node scripts/rendered-qa.mjs",
     "test": "vitest run",
     "test:watch": "vitest"
   },

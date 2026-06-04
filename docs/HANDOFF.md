@@ -44,6 +44,7 @@ npm run dev      # local dev (Turbopack)
 npm test         # vitest run  (currently 59 passing, 13 files)
 npm run lint     # eslint      (currently clean)
 npm run build    # next build  (currently passes; 91 lessons prerender static)
+npm run qa:rendered # production build + headless Chrome rendered QA
 npm run audit:docs # live Claude Code docs coverage audit
 ```
 
@@ -117,20 +118,20 @@ Lessons 3, 4, and 5 plus all Power User and Team lessons also have `challenge?: 
 - **Lesson checks + branded 404**: each lesson has a low-stakes check with explain-on-wrong feedback, and `/not-found` uses the dual-tone house style.
 - **Release hardening pass**: axe-core structural a11y coverage for chrome, Forest, lesson, terminal, and 404; semantic Forest markers; skip link to main content; command-palette focus trap; mobile overflow fixes; reduced-motion terminal remounts into the full transcript.
 
-**Verified:** 59/59 tests, lint clean, production build passes (`/`, `/how-we-calculate`, all 91 lessons prerender static; 96 static pages total). `npm run audit:docs` fetches the live official Claude Code docs index and currently reports 145 live pages, 145 unique lesson refs, 0 missing, and 0 stale. Rendered browser QA used isolated headless Chrome DevTools Protocol because the MCP Playwright profile was locked: banked `bash-commands`, confirmed Plant reward, cascade scaling, Forest newest-tree glow/count, reduced-motion final token state, no console/runtime errors, and no horizontal overflow. Forest craft QA now covers the denser 273-tree field, empty-state guidance, next-tree prompt, metric legibility, team cascade scaling, desktop/mobile layouts, no console/runtime errors, and no horizontal overflow. Terminal interaction QA also covered reduced-motion typed challenges on `bash-commands`: hint, incorrect feedback, reset, success output, Replay clearing challenge output, mobile success, no console/runtime errors, and no horizontal overflow. Terminal instruction QA now covers the left-pane type-it-yourself brief on `bash-commands` at desktop and mobile widths: challenge heading, terminal prompt, `?`/`reset` affordances, no console/runtime errors, no horizontal overflow, and no overlap with the signature tip. Command palette QA covered mouse open, focused search, locked search results, Escape close/reset, keyboard shortcut open, unlocked Enter navigation, mobile search/close, no console/runtime errors, and no horizontal overflow. P4 keyboard/perf smoke covers skip link, palette focus trap, lesson bank/check/terminal/replay tab reachability, reduced-motion terminal input reachability, 91 ms home DOMContentLoaded / 124 ms load, 70 ms lesson DOMContentLoaded / 85 ms load, no console/runtime errors. Formal Lighthouse on production `next start` covers `/` and `/lessons/bash-commands`: 97 performance, 100 accessibility, 100 best practices, 100 SEO, 100 agentic browsing on both routes; label/content-name passes; FCP 0.8-0.9 s, LCP 2.6 s, TBT 0 ms, CLS 0.
+**Verified:** 59/59 tests, lint clean, production build passes (`/`, `/how-we-calculate`, all 91 lessons prerender static; 96 static pages total). `npm run audit:docs` fetches the live official Claude Code docs index and currently reports 145 live pages, 145 unique lesson refs, 0 missing, and 0 stale. `npm run qa:rendered` starts production `next start` on a free port and drives local headless Chrome through DevTools Protocol: terminal challenge hint/incorrect/reset/success, Plant reward, Forest update, command palette search, desktop/mobile overflow, and browser console/runtime errors. Rendered browser QA used isolated headless Chrome DevTools Protocol because the MCP Playwright profile was locked: banked `bash-commands`, confirmed Plant reward, cascade scaling, Forest newest-tree glow/count, reduced-motion final token state, no console/runtime errors, and no horizontal overflow. Forest craft QA now covers the denser 273-tree field, empty-state guidance, next-tree prompt, metric legibility, team cascade scaling, desktop/mobile layouts, no console/runtime errors, and no horizontal overflow. Terminal interaction QA also covered reduced-motion typed challenges on `bash-commands`: hint, incorrect feedback, reset, success output, Replay clearing challenge output, mobile success, no console/runtime errors, and no horizontal overflow. Terminal instruction QA now covers the left-pane type-it-yourself brief on `bash-commands` at desktop and mobile widths: challenge heading, terminal prompt, `?`/`reset` affordances, no console/runtime errors, no horizontal overflow, and no overlap with the signature tip. Command palette QA covered mouse open, focused search, locked search results, Escape close/reset, keyboard shortcut open, unlocked Enter navigation, mobile search/close, no console/runtime errors, and no horizontal overflow. P4 keyboard/perf smoke covers skip link, palette focus trap, lesson bank/check/terminal/replay tab reachability, reduced-motion terminal input reachability, 91 ms home DOMContentLoaded / 124 ms load, 70 ms lesson DOMContentLoaded / 85 ms load, no console/runtime errors. Formal Lighthouse on production `next start` covers `/` and `/lessons/bash-commands`: 97 performance, 100 accessibility, 100 best practices, 100 SEO, 100 agentic browsing on both routes; label/content-name passes; FCP 0.8-0.9 s, LCP 2.6 s, TBT 0 ms, CLS 0.
 
 ---
 
 ## 6. NEXT STEPS (prioritized)
 
 ### P1 polish — Impact System QA and craft
-The Impact System is implemented and rendered interaction QA now covers Plant reward, cascade scaling, newest-tree glow/count, reduced-motion final token state, dense Forest rendering, empty-state guidance, next-tree prompt, metric legibility, desktop/mobile layouts, and overflow checks. Remaining:
-1. Optional follow-up: turn the rendered Impact interaction script into a committed e2e harness once the project has an official browser-test runner.
+The Impact System is implemented and `npm run qa:rendered` now covers Plant reward and Forest update in a committed rendered harness. Remaining:
+1. Optional follow-up: expand the harness to cover cascade toggles and newest-tree glow/count directly.
 
 ### P2 polish — Interactive terminal QA and expansion
 Core type-it-yourself challenges are implemented and rendered QA covers hint, incorrect, reset, success, Replay, mobile success, reduced-motion behavior, overflow checks, and the left-pane challenge brief on `bash-commands`. Remaining work:
 1. Add type challenges to future feature modules as they are created.
-2. Optional follow-up: turn the rendered terminal interaction script into a committed e2e harness once the project has an official browser-test runner.
+2. Optional follow-up: expand `npm run qa:rendered` to cover Replay and additional representative lesson challenges.
 
 ### P2.5 — Feature-module expansion
 The master plan now has a **Feature-module curriculum expansion** section and detailed plan file. Use the official Claude Code docs index (`https://code.claude.com/docs/llms.txt`) as the source map. Each new module must teach what the feature is, how it works, how to use it, and the token-efficiency habit attached to that feature.
@@ -142,7 +143,7 @@ Feature Modules, Power User Modules, and Team Modules are shipped through the re
 Core `⌘K` palette is implemented and rendered QA covers mouse open, focused search, locked results, Escape close/reset, keyboard shortcut open, unlocked Enter navigation, mobile search/close, and overflow checks. Remaining work:
 1. Add future feature modules to palette results once those lessons exist.
 2. Consider richer fuzzy ranking if the lesson count grows beyond the first tracks.
-3. Optional follow-up: turn the rendered palette interaction script into a committed e2e harness once the project has an official browser-test runner.
+3. Optional follow-up: expand `npm run qa:rendered` to cover unlocked Enter navigation and locked-result behavior directly.
 
 ### P4 — Content & polish
 Manual keyboard smoke, basic rendered load timing, and formal Lighthouse/perf reporting are complete. Remaining:
@@ -154,7 +155,7 @@ Intermediate/advanced tracks, accounts/cloud sync, real shell integration, shari
 ---
 
 ## 7. Honest current gaps (don't represent these as done)
-- Impact rendered QA now covers the 273-tree Forest, bank-tip Plant reward, cascade toggles, newest-tree glow, empty guidance, next-tree copy, metric legibility, and reduced-motion final state. Remaining Impact work is optional e2e harnessing.
+- Impact rendered QA now has a committed `npm run qa:rendered` harness for Plant reward and Forest update. Remaining Impact harness work is direct cascade-toggle and newest-tree assertions.
 - The terminal rendered QA covers desktop/mobile/reduced-motion screenshots plus guided hint, incorrect, reset, success, Replay flows, and left-pane challenge instruction placement. Remaining terminal work is future-module expansion.
 - The command palette has unit, axe, build, and rendered desktop/mobile interaction coverage. Remaining palette work is future expansion and optional fuzzy ranking.
 - The branded 404 has test, axe, build, and desktop screenshot coverage.
@@ -164,5 +165,5 @@ Intermediate/advanced tracks, accounts/cloud sync, real shell integration, shari
 
 ## 8. Start here
 1. `npm install && npm test && npm run dev` — confirm green and click through `/` → a lesson → bank a tip → watch it unlock.
-2. Continue with **P4** Vercel deploy once credentials are fixed, or turn the rendered QA scripts into an e2e harness.
+2. Continue with **P4** Vercel deploy once credentials are fixed, or expand `npm run qa:rendered` with cascade, Replay, and locked-palette assertions.
 3. Keep commits small; keep test/lint/build green; follow §3 conventions.
