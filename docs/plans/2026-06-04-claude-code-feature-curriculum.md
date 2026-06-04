@@ -164,7 +164,7 @@ For each slice, update the command palette search index, dashboard grouping, For
 1. **MVP complete**: current beginner track, Impact System, command palette, type-it-yourself terminal for lessons 3, 4, and 5, checks, branded 404.
 2. **Feature modules v1**: Foundations, Core Session Workflow, Codebase Context, Tools and Permissions.
 3. **Power user modules**: Extensions, Parallel and Large Work, Integrations.
-4. **Team modules**: Programmatic Use, Team and Enterprise.
+4. **Team modules**: Programmatic Use, Team and Enterprise. Shipped as 24 Team modules.
 
 ## Acceptance For New Modules
 

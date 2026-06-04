@@ -1,9 +1,9 @@
 import { test, expect } from 'vitest';
 import { getAllLessons, getLesson, getLessonsByTrack, getAdjacent, signatureTip } from '@/lib/lessons';
 
-test('there are 8 beginner lessons, 11 feature modules, 24 power-user modules, and 12 team modules in track order', () => {
+test('there are 8 beginner lessons, 11 feature modules, 24 power-user modules, and 24 team modules in track order', () => {
   const all = getAllLessons();
-  expect(all).toHaveLength(55);
+  expect(all).toHaveLength(67);
   expect(getLessonsByTrack('beginner').map((l) => l.order)).toEqual([1, 2, 3, 4, 5, 6, 7, 8]);
   expect(getLessonsByTrack('feature-modules').map((l) => l.slug)).toEqual([
     'agent-loop',
@@ -57,6 +57,18 @@ test('there are 8 beginner lessons, 11 feature modules, 24 power-user modules, a
     'observability-sdk',
     'hosting-session-storage',
     'secure-deployment-sdk',
+    'organization-setup',
+    'analytics-monitoring',
+    'managed-settings-policy',
+    'managed-mcp',
+    'security-data-usage',
+    'network-gateways',
+    'github-enterprise-server',
+    'amazon-bedrock-provider',
+    'google-vertex-ai-provider',
+    'microsoft-foundry-provider',
+    'claude-platform-on-aws',
+    'rollout-kits',
   ]);
 });
 
@@ -83,7 +95,7 @@ test('every lesson has exactly 3 tips and exactly one signature tip', () => {
 test('tip ids are globally unique across all lessons', () => {
   const ids = getAllLessons().flatMap((l) => l.tips.map((t) => t.id));
   expect(new Set(ids).size).toBe(ids.length);
-  expect(ids).toHaveLength(165);
+  expect(ids).toHaveLength(201);
 });
 
 test('beginner challenge lessons and advanced modules have type-it-yourself terminal challenges', () => {
@@ -113,5 +125,7 @@ test('getAdjacent gives prev/next by order', () => {
   expect(getAdjacent('deep-links').next).toBeNull();
   expect(getAdjacent('agent-sdk-overview').prev).toBeNull();
   expect(getAdjacent('agent-sdk-overview').next?.slug).toBe('headless-automation');
-  expect(getAdjacent('secure-deployment-sdk').next).toBeNull();
+  expect(getAdjacent('secure-deployment-sdk').next?.slug).toBe('organization-setup');
+  expect(getAdjacent('organization-setup').prev?.slug).toBe('secure-deployment-sdk');
+  expect(getAdjacent('rollout-kits').next).toBeNull();
 });

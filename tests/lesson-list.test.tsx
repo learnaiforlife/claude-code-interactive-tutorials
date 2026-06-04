@@ -22,6 +22,10 @@ const SLUGS = [
   'sdk-permissions-user-input', 'sdk-streaming', 'structured-outputs',
   'custom-tools-sdk', 'tool-search-sdk', 'cost-tracking-sdk',
   'observability-sdk', 'hosting-session-storage', 'secure-deployment-sdk',
+  'organization-setup', 'analytics-monitoring', 'managed-settings-policy',
+  'managed-mcp', 'security-data-usage', 'network-gateways',
+  'github-enterprise-server', 'amazon-bedrock-provider', 'google-vertex-ai-provider',
+  'microsoft-foundry-provider', 'claude-platform-on-aws', 'rollout-kits',
 ];
 
 test('renders beginner, feature-module, power-user, and team rows grouped by track', () => {
