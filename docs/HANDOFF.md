@@ -39,7 +39,7 @@ Authoritative specs (already written — follow them, don't redo):
 **Commands:**
 ```bash
 npm run dev      # local dev (Turbopack)
-npm test         # vitest run  (currently 52 passing, 12 files)
+npm test         # vitest run  (currently 55 passing, 13 files)
 npm run lint     # eslint      (currently clean)
 npm run build    # next build  (currently passes; 91 lessons prerender static)
 ```
@@ -85,7 +85,7 @@ src/
     progress.ts         # localStorage progress: bankTip + pure *In(progress,...) derivations + wrappers
     use-progress.ts     # useProgress() store (useSyncExternalStore) + bankTipNow()
     use-reduced-motion.ts # usePrefersReducedMotion() (useSyncExternalStore)
-tests/                  # 12 suites, 52 tests (setup.ts mocks next/font, next/link, localStorage, matchMedia)
+tests/                  # 13 suites, 55 tests (setup.ts mocks next/font, next/link, localStorage, matchMedia)
 ```
 
 Data model: each `Lesson` has `tips: Tip[]` (exactly 3, one `kind:'signature'`) and `session: SessionLine[]`.
@@ -114,17 +114,16 @@ Lessons 3, 4, and 5 plus all Power User and Team lessons also have `challenge?: 
 - **Lesson checks + branded 404**: each lesson has a low-stakes check with explain-on-wrong feedback, and `/not-found` uses the dual-tone house style.
 - **Release hardening pass**: axe-core structural a11y coverage for chrome, Forest, lesson, terminal, and 404; semantic Forest markers; mobile overflow fixes; reduced-motion terminal remounts into the full transcript.
 
-**Verified:** 52/52 tests, lint clean, production build passes (`/`, `/how-we-calculate`, all 91 lessons prerender static; 96 static pages total). Rendered browser QA used isolated headless Chrome DevTools Protocol because the MCP Playwright profile was locked: desktop home, mobile home, desktop/mobile `whats-new-changelog`, no console/runtime errors, and no horizontal overflow.
+**Verified:** 55/55 tests, lint clean, production build passes (`/`, `/how-we-calculate`, all 91 lessons prerender static; 96 static pages total). Rendered browser QA used isolated headless Chrome DevTools Protocol because the MCP Playwright profile was locked: banked `bash-commands`, confirmed Plant reward, cascade scaling, Forest newest-tree glow/count, reduced-motion final token state, no console/runtime errors, and no horizontal overflow.
 
 ---
 
 ## 6. NEXT STEPS (prioritized)
 
 ### P1 polish — Impact System QA and craft
-The Impact System is implemented and the baseline home Forest has desktop/mobile screenshot coverage. Remaining:
-1. Interactive browser QA: bank a lesson tip, confirm Plant reward, newest-tree glow, and cascade toggle states.
-2. Reduced-motion browser QA for Plant count-up final state.
-3. Craft pass: Forest density, empty-state language, and metric legibility.
+The Impact System is implemented and rendered interaction QA now covers Plant reward, cascade scaling, newest-tree glow/count, and reduced-motion final token state. Remaining:
+1. Craft pass: Forest density, empty-state language, and metric legibility.
+2. Optional follow-up: turn the rendered Impact interaction script into a committed e2e harness once the project has an official browser-test runner.
 
 ### P2 polish — Interactive terminal QA and expansion
 Core type-it-yourself challenges are implemented for lessons 3, 4, and 5. Remaining work:
@@ -153,7 +152,7 @@ Intermediate/advanced tracks, accounts/cloud sync, real shell integration, shari
 ---
 
 ## 7. Honest current gaps (don't represent these as done)
-- Impact baseline has desktop/mobile screenshot coverage for previous Forest states. The 273-tree Forest plus bank-tip Plant reward and cascade toggles still need rendered interaction QA.
+- Impact rendered QA now covers the 273-tree Forest, bank-tip Plant reward, cascade toggles, newest-tree glow, and reduced-motion final state. Only craft polish remains.
 - The terminal has desktop/mobile/reduced-motion screenshot coverage, but guided typing success/incorrect flows still need rendered interaction QA.
 - The command palette has unit, axe, and build coverage, but not rendered screenshot QA for open/search/close states.
 - The branded 404 has test, axe, build, and desktop screenshot coverage.
@@ -162,5 +161,5 @@ Intermediate/advanced tracks, accounts/cloud sync, real shell integration, shari
 
 ## 8. Start here
 1. `npm install && npm test && npm run dev` — confirm green and click through `/` → a lesson → bank a tip → watch it unlock.
-2. Continue with **P1 polish** or start **P2** interactive terminal.
+2. Continue with **P1 craft polish** or start **P2** interactive terminal.
 3. Keep commits small; keep test/lint/build green; follow §3 conventions.

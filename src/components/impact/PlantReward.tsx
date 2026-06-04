@@ -40,7 +40,7 @@ export default function PlantReward({ tip }: { tip: Tip }) {
 }
 
 function useCountUp(target: number, reducedMotion: boolean): number {
-  const [value, setValue] = useState(target);
+  const [value, setValue] = useState(() => (reducedMotion ? target : 0));
 
   useEffect(() => {
     if (reducedMotion) {
@@ -48,18 +48,22 @@ function useCountUp(target: number, reducedMotion: boolean): number {
       return () => window.clearTimeout(done);
     }
 
-    const reset = window.setTimeout(() => setValue(0), 0);
-    const start = performance.now();
     let frame = 0;
 
-    function tick(now: number) {
-      const progress = Math.min((now - start) / 700, 1);
-      const eased = 1 - Math.pow(1 - progress, 4);
-      setValue(Math.round(target * eased));
-      if (progress < 1) frame = window.requestAnimationFrame(tick);
-    }
+    const reset = window.setTimeout(() => {
+      setValue(0);
+      const start = performance.now();
 
-    frame = window.requestAnimationFrame(tick);
+      function tick(now: number) {
+        const progress = Math.max(0, Math.min((now - start) / 700, 1));
+        const eased = 1 - Math.pow(1 - progress, 4);
+        setValue(Math.round(target * eased));
+        if (progress < 1) frame = window.requestAnimationFrame(tick);
+      }
+
+      frame = window.requestAnimationFrame(tick);
+    }, 0);
+
     return () => {
       window.clearTimeout(reset);
       window.cancelAnimationFrame(frame);
@@ -85,4 +89,3 @@ function PlantSvg({ reducedMotion }: { reducedMotion: boolean }) {
     </svg>
   );
 }
-
