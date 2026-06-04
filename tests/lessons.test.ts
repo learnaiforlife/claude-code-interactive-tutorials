@@ -1,9 +1,9 @@
 import { test, expect } from 'vitest';
 import { getAllLessons, getLesson, getLessonsByTrack, getAdjacent, signatureTip } from '@/lib/lessons';
 
-test('there are 8 beginner lessons, 11 feature modules, and 24 power-user modules in track order', () => {
+test('there are 8 beginner lessons, 11 feature modules, 24 power-user modules, and 12 team modules in track order', () => {
   const all = getAllLessons();
-  expect(all).toHaveLength(43);
+  expect(all).toHaveLength(55);
   expect(getLessonsByTrack('beginner').map((l) => l.order)).toEqual([1, 2, 3, 4, 5, 6, 7, 8]);
   expect(getLessonsByTrack('feature-modules').map((l) => l.slug)).toEqual([
     'agent-loop',
@@ -44,6 +44,20 @@ test('there are 8 beginner lessons, 11 feature modules, and 24 power-user module
     'channels-events',
     'deep-links',
   ]);
+  expect(getLessonsByTrack('team').map((l) => l.slug)).toEqual([
+    'agent-sdk-overview',
+    'headless-automation',
+    'sdk-sessions',
+    'sdk-permissions-user-input',
+    'sdk-streaming',
+    'structured-outputs',
+    'custom-tools-sdk',
+    'tool-search-sdk',
+    'cost-tracking-sdk',
+    'observability-sdk',
+    'hosting-session-storage',
+    'secure-deployment-sdk',
+  ]);
 });
 
 test('getLesson returns the lesson for a known slug, undefined otherwise', () => {
@@ -69,15 +83,15 @@ test('every lesson has exactly 3 tips and exactly one signature tip', () => {
 test('tip ids are globally unique across all lessons', () => {
   const ids = getAllLessons().flatMap((l) => l.tips.map((t) => t.id));
   expect(new Set(ids).size).toBe(ids.length);
-  expect(ids).toHaveLength(129);
+  expect(ids).toHaveLength(165);
 });
 
-test('beginner challenge lessons and extension modules have type-it-yourself terminal challenges', () => {
+test('beginner challenge lessons and advanced modules have type-it-yourself terminal challenges', () => {
   expect(getLesson('bash-commands')?.challenge?.accepted.length).toBeGreaterThan(0);
   expect(getLesson('creating-skills')?.challenge?.accepted.length).toBeGreaterThan(0);
   expect(getLesson('creating-subagents')?.challenge?.accepted.length).toBeGreaterThan(0);
   expect(getLesson('effective-prompting')?.challenge).toBeUndefined();
-  for (const lesson of getLessonsByTrack('power-user')) {
+  for (const lesson of [...getLessonsByTrack('power-user'), ...getLessonsByTrack('team')]) {
     expect(lesson.challenge?.accepted.length).toBeGreaterThan(0);
   }
 });
@@ -97,4 +111,7 @@ test('getAdjacent gives prev/next by order', () => {
   expect(getAdjacent('plugin-distribution').next?.slug).toBe('worktrees-isolation');
   expect(getAdjacent('scheduled-tasks-routines').next?.slug).toBe('vs-code-integration');
   expect(getAdjacent('deep-links').next).toBeNull();
+  expect(getAdjacent('agent-sdk-overview').prev).toBeNull();
+  expect(getAdjacent('agent-sdk-overview').next?.slug).toBe('headless-automation');
+  expect(getAdjacent('secure-deployment-sdk').next).toBeNull();
 });

@@ -40,6 +40,12 @@ test('integration power-user lessons render their family and position', () => {
   expect(screen.getByText('Lesson 14 of 24')).toBeInTheDocument();
 });
 
+test('team module lessons render their track and SDK family', () => {
+  render(<LessonPane lesson={getLesson('agent-sdk-overview')!} />);
+  expect(screen.getByText(/Team Modules · Programmatic Use \/ SDK/i)).toBeInTheDocument();
+  expect(screen.getByText('Lesson 1 of 12')).toBeInTheDocument();
+});
+
 test('banking the signature tip completes the lesson and confirms', async () => {
   const user = userEvent.setup();
   render(<LessonPane lesson={getLesson('bash-commands')!} />);

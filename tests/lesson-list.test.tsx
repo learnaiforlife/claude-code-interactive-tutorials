@@ -18,13 +18,18 @@ const SLUGS = [
   'jetbrains-integration', 'desktop-workflow', 'chrome-computer-use',
   'github-actions', 'gitlab-ci-cd', 'code-review', 'slack-remote-control',
   'web-cloud-sessions', 'channels-events', 'deep-links',
+  'agent-sdk-overview', 'headless-automation', 'sdk-sessions',
+  'sdk-permissions-user-input', 'sdk-streaming', 'structured-outputs',
+  'custom-tools-sdk', 'tool-search-sdk', 'cost-tracking-sdk',
+  'observability-sdk', 'hosting-session-storage', 'secure-deployment-sdk',
 ];
 
-test('renders beginner, feature-module, and power-user rows grouped by track', () => {
+test('renders beginner, feature-module, power-user, and team rows grouped by track', () => {
   render(<LessonList />);
   expect(screen.getByRole('heading', { name: 'Beginner Track' })).toBeInTheDocument();
   expect(screen.getByRole('heading', { name: 'Feature Modules v1' })).toBeInTheDocument();
   expect(screen.getByRole('heading', { name: 'Power User Modules' })).toBeInTheDocument();
+  expect(screen.getByRole('heading', { name: 'Team Modules' })).toBeInTheDocument();
   for (const slug of SLUGS) {
     expect(screen.getByTestId(`lesson-row-${slug}`)).toBeInTheDocument();
   }
@@ -56,6 +61,15 @@ test('first power-user module starts available in its own track', async () => {
   expect(within(customCommands).getByText('Now')).toBeInTheDocument();
   expect(customCommands.querySelector('a')).not.toBeNull();
   expect(within(skills).getByText('Locked')).toBeInTheDocument();
+});
+
+test('first team module starts available in its own track', async () => {
+  render(<LessonList />);
+  const sdkOverview = await screen.findByTestId('lesson-row-agent-sdk-overview');
+  const headless = screen.getByTestId('lesson-row-headless-automation');
+  expect(within(sdkOverview).getByText('Now')).toBeInTheDocument();
+  expect(sdkOverview.querySelector('a')).not.toBeNull();
+  expect(within(headless).getByText('Locked')).toBeInTheDocument();
 });
 
 test('banking lesson 1 marks it Done and unlocks lesson 2', async () => {
