@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import { useEffect, useMemo, useState, type KeyboardEvent } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState, type KeyboardEvent } from 'react';
 import { getAllLessons } from '@/lib/lessons';
 import { lessonStatusIn, type LessonStatus } from '@/lib/progress';
 import { useProgress } from '@/lib/use-progress';
@@ -14,6 +14,13 @@ export default function CommandPalette() {
   const [open, setOpen] = useState(false);
   const [query, setQuery] = useState('');
   const [selected, setSelected] = useState(0);
+  const inputRef = useRef<HTMLInputElement>(null);
+
+  const closePalette = useCallback(() => {
+    setOpen(false);
+    setQuery('');
+    setSelected(0);
+  }, []);
 
   useEffect(() => {
     function onKeyDown(event: globalThis.KeyboardEvent) {
@@ -22,13 +29,17 @@ export default function CommandPalette() {
         setOpen(true);
       }
       if (event.key === 'Escape') {
-        setOpen(false);
+        closePalette();
       }
     }
 
     window.addEventListener('keydown', onKeyDown);
     return () => window.removeEventListener('keydown', onKeyDown);
-  }, []);
+  }, [closePalette]);
+
+  useEffect(() => {
+    if (open) inputRef.current?.focus();
+  }, [open]);
 
   const results = useMemo(() => {
     const needle = query.trim().toLowerCase();
@@ -47,12 +58,6 @@ export default function CommandPalette() {
       return haystack.includes(needle);
     });
   }, [query]);
-
-  function closePalette() {
-    setOpen(false);
-    setQuery('');
-    setSelected(0);
-  }
 
   function onInputKeyDown(event: KeyboardEvent<HTMLInputElement>) {
     if (event.key === 'ArrowDown') {
@@ -91,7 +96,7 @@ export default function CommandPalette() {
             <span className="text-success-bright">›</span>
             <input
               aria-label="Search lessons, features, and token habits"
-              autoFocus
+              ref={inputRef}
               value={query}
               onChange={(event) => {
                 setQuery(event.target.value);

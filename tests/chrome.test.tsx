@@ -23,9 +23,24 @@ test('opens the command palette and searches lessons', async () => {
   render(<Chrome />);
   await user.click(screen.getByRole('button', { name: /open command palette/i }));
   expect(screen.getByRole('dialog', { name: /command palette/i })).toBeInTheDocument();
+  expect(screen.getByRole('textbox', { name: /search lessons/i })).toHaveFocus();
   await user.type(screen.getByPlaceholderText(/search lessons/i), 'bash');
   expect(screen.getByText(/How to run bash commands/i)).toBeInTheDocument();
   expect(screen.getAllByText('Locked').length).toBeGreaterThan(0);
+});
+
+test('escape closes the command palette and clears the query', async () => {
+  const user = userEvent.setup();
+  render(<Chrome />);
+  await user.click(screen.getByRole('button', { name: /open command palette/i }));
+  await user.type(screen.getByRole('textbox', { name: /search lessons/i }), 'bash');
+
+  await user.keyboard('{Escape}');
+  expect(screen.queryByRole('dialog', { name: /command palette/i })).not.toBeInTheDocument();
+
+  await user.keyboard('{Control>}k{/Control}');
+  expect(screen.getByRole('textbox', { name: /search lessons/i })).toHaveValue('');
+  expect(screen.getByRole('textbox', { name: /search lessons/i })).toHaveFocus();
 });
 
 test('command palette searches feature metadata and docs references', async () => {

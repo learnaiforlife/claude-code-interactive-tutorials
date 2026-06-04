@@ -39,7 +39,7 @@ Authoritative specs (already written — follow them, don't redo):
 **Commands:**
 ```bash
 npm run dev      # local dev (Turbopack)
-npm test         # vitest run  (currently 55 passing, 13 files)
+npm test         # vitest run  (currently 56 passing, 13 files)
 npm run lint     # eslint      (currently clean)
 npm run build    # next build  (currently passes; 91 lessons prerender static)
 ```
@@ -85,7 +85,7 @@ src/
     progress.ts         # localStorage progress: bankTip + pure *In(progress,...) derivations + wrappers
     use-progress.ts     # useProgress() store (useSyncExternalStore) + bankTipNow()
     use-reduced-motion.ts # usePrefersReducedMotion() (useSyncExternalStore)
-tests/                  # 13 suites, 55 tests (setup.ts mocks next/font, next/link, localStorage, matchMedia)
+tests/                  # 13 suites, 56 tests (setup.ts mocks next/font, next/link, localStorage, matchMedia)
 ```
 
 Data model: each `Lesson` has `tips: Tip[]` (exactly 3, one `kind:'signature'`) and `session: SessionLine[]`.
@@ -110,11 +110,11 @@ Lessons 3, 4, and 5 plus all Power User and Team lessons also have `challenge?: 
 - **Power User Modules track**: 26 shipped modules covering Custom slash commands, Skills, Subagents, Hooks, MCP, Plugins, Plugin distribution, Worktrees, Agent view, Agent teams, Dynamic workflows, Goals, Scheduled tasks/routines, VS Code, JetBrains, Desktop, Chrome/computer use, GitHub Actions, GitLab CI/CD, Code Review, Slack/Remote Control, web/cloud sessions, channels, deep links, security guidance plugin, and ultrareview. Each includes official docs refs, a typed terminal challenge, and a token-efficiency habit.
 - **Team Modules track**: 33 shipped modules covering Agent SDK, headless automation, SDK sessions, SDK permissions/user input, SDK streaming, structured outputs, custom tools, tool search, cost tracking, observability, hosting/session storage, secure deployment, organization setup, analytics/monitoring, managed settings, managed MCP, security/data usage, network gateways, GitHub Enterprise Server, Bedrock, Vertex AI, Microsoft Foundry, Claude Platform on AWS, rollout kits, SDK agent loop, SDK migration, SDK plugins, SDK skills, SDK slash commands, SDK subagents, SDK todo lists, Python SDK reference orientation, and release awareness through changelog/What's new. Each includes official docs refs, a typed terminal challenge, and a token-efficiency habit.
 - **Type-it-yourself terminal core**: lessons 3, 4, and 5 plus all Power User and Team lessons now include terminal challenges with `?` hints, `reset`, incorrect feedback, and scripted success output.
-- **Command palette**: real `⌘K` palette searches lessons/features/docs refs/tips, shows Done/Now/Locked states, and only exposes navigable links for unlocked lessons.
+- **Command palette**: real `⌘K` palette searches lessons/features/docs refs/tips, focuses search on open, resets cleanly on Escape, shows Done/Now/Locked states, and only exposes navigable links for unlocked lessons.
 - **Lesson checks + branded 404**: each lesson has a low-stakes check with explain-on-wrong feedback, and `/not-found` uses the dual-tone house style.
 - **Release hardening pass**: axe-core structural a11y coverage for chrome, Forest, lesson, terminal, and 404; semantic Forest markers; mobile overflow fixes; reduced-motion terminal remounts into the full transcript.
 
-**Verified:** 55/55 tests, lint clean, production build passes (`/`, `/how-we-calculate`, all 91 lessons prerender static; 96 static pages total). Rendered browser QA used isolated headless Chrome DevTools Protocol because the MCP Playwright profile was locked: banked `bash-commands`, confirmed Plant reward, cascade scaling, Forest newest-tree glow/count, reduced-motion final token state, no console/runtime errors, and no horizontal overflow. Terminal interaction QA also covered reduced-motion typed challenges on `bash-commands`: hint, incorrect feedback, reset, success output, Replay clearing challenge output, mobile success, no console/runtime errors, and no horizontal overflow.
+**Verified:** 56/56 tests, lint clean, production build passes (`/`, `/how-we-calculate`, all 91 lessons prerender static; 96 static pages total). Rendered browser QA used isolated headless Chrome DevTools Protocol because the MCP Playwright profile was locked: banked `bash-commands`, confirmed Plant reward, cascade scaling, Forest newest-tree glow/count, reduced-motion final token state, no console/runtime errors, and no horizontal overflow. Terminal interaction QA also covered reduced-motion typed challenges on `bash-commands`: hint, incorrect feedback, reset, success output, Replay clearing challenge output, mobile success, no console/runtime errors, and no horizontal overflow. Command palette QA covered mouse open, focused search, locked search results, Escape close/reset, keyboard shortcut open, unlocked Enter navigation, mobile search/close, no console/runtime errors, and no horizontal overflow.
 
 ---
 
@@ -138,10 +138,10 @@ Feature Modules, Power User Modules, and Team Modules are shipped through the re
 2. When new docs appear, add a module only if it teaches durable user behavior, not release-note trivia.
 
 ### P3 polish — Command palette QA
-Core `⌘K` palette is implemented. Remaining work:
-1. Browser QA: mouse open, keyboard shortcut, search, close, mobile layout.
-2. Add future feature modules to palette results once those lessons exist.
-3. Consider richer fuzzy ranking if the lesson count grows beyond the first tracks.
+Core `⌘K` palette is implemented and rendered QA covers mouse open, focused search, locked results, Escape close/reset, keyboard shortcut open, unlocked Enter navigation, mobile search/close, and overflow checks. Remaining work:
+1. Add future feature modules to palette results once those lessons exist.
+2. Consider richer fuzzy ranking if the lesson count grows beyond the first tracks.
+3. Optional follow-up: turn the rendered palette interaction script into a committed e2e harness once the project has an official browser-test runner.
 
 ### P4 — Content & polish
 - Lighthouse/perf pass, manual keyboard audit, then **Vercel deploy**.
@@ -154,12 +154,12 @@ Intermediate/advanced tracks, accounts/cloud sync, real shell integration, shari
 ## 7. Honest current gaps (don't represent these as done)
 - Impact rendered QA now covers the 273-tree Forest, bank-tip Plant reward, cascade toggles, newest-tree glow, and reduced-motion final state. Only craft polish remains.
 - The terminal rendered QA covers desktop/mobile/reduced-motion screenshots plus guided hint, incorrect, reset, success, and Replay flows. Remaining terminal work is instruction placement and future-module expansion.
-- The command palette has unit, axe, and build coverage, but not rendered screenshot QA for open/search/close states.
+- The command palette has unit, axe, build, and rendered desktop/mobile interaction coverage. Remaining palette work is future expansion and optional fuzzy ranking.
 - The branded 404 has test, axe, build, and desktop screenshot coverage.
 
 ---
 
 ## 8. Start here
 1. `npm install && npm test && npm run dev` — confirm green and click through `/` → a lesson → bank a tip → watch it unlock.
-2. Continue with **P1 craft polish**, **P2** terminal instruction polish, or **P3** command palette rendered QA.
+2. Continue with **P1 craft polish**, **P2** terminal instruction polish, or **P4** manual keyboard/perf/deploy polish.
 3. Keep commits small; keep test/lint/build green; follow §3 conventions.
