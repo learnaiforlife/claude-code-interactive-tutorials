@@ -8,6 +8,16 @@ import { useProgress } from '@/lib/use-progress';
 import { Check, Lock, ArrowRight } from '@/components/ui/icons';
 
 const lessons = getAllLessons();
+const SEARCH_FIELDS = [
+  { key: 'title', weight: 120 },
+  { key: 'slug', weight: 70 },
+  { key: 'featureFamily', weight: 64 },
+  { key: 'efficiencyHabit', weight: 56 },
+  { key: 'docs', weight: 36 },
+  { key: 'tips', weight: 30 },
+  { key: 'concept', weight: 18 },
+  { key: 'format', weight: 12 },
+] as const;
 
 export default function CommandPalette() {
   const progress = useProgress();
@@ -45,19 +55,11 @@ export default function CommandPalette() {
   const results = useMemo(() => {
     const needle = query.trim().toLowerCase();
     if (!needle) return lessons;
-    return lessons.filter((lesson) => {
-      const haystack = [
-        lesson.title,
-        lesson.format,
-        lesson.featureFamily,
-        lesson.efficiencyHabit,
-        lesson.concept,
-        lesson.slug,
-        ...lesson.docsRefs.flatMap((ref) => [ref.title, ref.href]),
-        ...lesson.tips.flatMap((tip) => [tip.title, tip.detail]),
-      ].join(' ').toLowerCase();
-      return haystack.includes(needle);
-    });
+    return lessons
+      .map((lesson, index) => ({ lesson, index, score: scoreLesson(lesson, needle) }))
+      .filter((result) => result.score > 0)
+      .sort((a, b) => b.score - a.score || a.index - b.index)
+      .map((result) => result.lesson);
   }, [query]);
 
   function onInputKeyDown(event: KeyboardEvent<HTMLInputElement>) {
@@ -151,7 +153,8 @@ export default function CommandPalette() {
                       href={`/lessons/${lesson.slug}`}
                       order={lesson.order}
                       title={lesson.title}
-                      meta={`${lesson.format} · ${lesson.estimatedMinutes} min`}
+                      meta={`${lesson.featureFamily} · ${lesson.format} · ${lesson.estimatedMinutes} min`}
+                      detail={lesson.efficiencyHabit}
                       status={status}
                       active={active}
                       onNavigate={closePalette}
@@ -169,11 +172,50 @@ export default function CommandPalette() {
   );
 }
 
+function scoreLesson(lesson: (typeof lessons)[number], needle: string): number {
+  const tokens = tokenize(needle);
+  if (!tokens.length) return 0;
+
+  const fields = {
+    title: lesson.title,
+    slug: lesson.slug,
+    featureFamily: lesson.featureFamily,
+    efficiencyHabit: lesson.efficiencyHabit,
+    docs: lesson.docsRefs.flatMap((ref) => [ref.title, ref.href]).join(' '),
+    tips: lesson.tips.flatMap((tip) => [tip.title, tip.detail]).join(' '),
+    concept: lesson.concept,
+    format: lesson.format,
+  };
+
+  const haystack = Object.values(fields).join(' ').toLowerCase();
+  if (!tokens.every((token) => haystack.includes(token))) return 0;
+
+  let score = 0;
+  for (const { key, weight } of SEARCH_FIELDS) {
+    const value = fields[key].toLowerCase();
+    if (value.includes(needle)) score += weight * 5;
+    for (const token of tokens) {
+      if (value.includes(token)) score += weight;
+    }
+    if (value.startsWith(needle)) score += weight * 2;
+  }
+
+  return score;
+}
+
+function tokenize(value: string): string[] {
+  return value
+    .toLowerCase()
+    .split(/[^a-z0-9]+/)
+    .filter(Boolean);
+}
+
 function PaletteRow({
   href,
   order,
   title,
   meta,
+  detail,
   status,
   active,
   onNavigate,
@@ -182,6 +224,7 @@ function PaletteRow({
   order: number;
   title: string;
   meta: string;
+  detail: string;
   status: LessonStatus;
   active: boolean;
   onNavigate: () => void;
@@ -199,6 +242,7 @@ function PaletteRow({
           {title}
         </span>
         <span className="mt-0.5 block truncate font-mono text-xs text-fg-mute">{meta}</span>
+        <span className="mt-1 block truncate text-xs leading-relaxed text-fg-mute">{detail}</span>
       </span>
       <PaletteStatus status={status} />
     </>

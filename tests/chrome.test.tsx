@@ -1,4 +1,4 @@
-import { render, screen } from '@testing-library/react';
+import { render, screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { test, expect, beforeEach } from 'vitest';
 import Chrome from '@/components/chrome/Chrome';
@@ -64,6 +64,19 @@ test('command palette searches feature metadata and docs references', async () =
   await user.click(screen.getByRole('button', { name: /open command palette/i }));
   await user.type(screen.getByRole('textbox', { name: /search lessons/i }), 'prompt caching');
   expect(screen.getByText(/Common beginner mistakes/i)).toBeInTheDocument();
+});
+
+test('command palette ranks multi-term feature and efficiency matches', async () => {
+  const user = userEvent.setup();
+  render(<Chrome />);
+  await user.click(screen.getByRole('button', { name: /open command palette/i }));
+  await user.type(screen.getByRole('textbox', { name: /search lessons/i }), 'agent sdk smallest tool surface');
+
+  const dialog = screen.getByRole('dialog', { name: /command palette/i });
+  const rows = within(dialog).getAllByRole('listitem');
+  expect(within(rows[0]).getByText(/Agent SDK: Claude Code as a library/i)).toBeInTheDocument();
+  expect(within(rows[0]).getByText(/Programmatic Use \/ SDK/i)).toBeInTheDocument();
+  expect(within(rows[0]).getByText(/Start with the smallest tool surface/i)).toBeInTheDocument();
 });
 
 test('unlocked palette results are navigable links', async () => {

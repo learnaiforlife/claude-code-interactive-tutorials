@@ -30,7 +30,7 @@ async function main() {
 
   console.log('Rendered QA passed');
   console.log(`- Production app: ${appUrl}`);
-  console.log('- Covered: feature maps and jump links, module briefs, module paths, multiple terminal challenges, Replay, multi-tip Forest state, Plant and Forest cascade scaling, newest-tree marker, palette locked/unlocked flows, desktop/mobile overflow, console/runtime errors');
+  console.log('- Covered: feature maps and jump links, module briefs, module paths, ranked palette search, multiple terminal challenges, Replay, multi-tip Forest state, Plant and Forest cascade scaling, newest-tree marker, palette locked/unlocked flows, desktop/mobile overflow, console/runtime errors');
 }
 
 async function runDesktopLearningFlow(browser) {
@@ -220,8 +220,9 @@ async function runDesktopLearningFlow(browser) {
   await page.waitForText('7,900 raw tokens banked');
 
   await page.clickByLabel('⌘K, open command palette');
-  await page.typeInto('[aria-label="Search lessons, features, and token habits"]', 'agent sdk');
+  await page.typeInto('[aria-label="Search lessons, features, and token habits"]', 'agent sdk smallest tool surface');
   await page.waitForText('Agent SDK: Claude Code as a library');
+  await page.waitForText('Start with the smallest tool surface');
   await page.press('Escape');
   await page.waitFor(() => !document.querySelector('dialog[open]'));
 
