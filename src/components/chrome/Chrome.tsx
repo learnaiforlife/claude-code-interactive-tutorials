@@ -18,7 +18,7 @@ export default function Chrome({ breadcrumb }: { breadcrumb?: string }) {
       <span className="min-w-0 flex-1 truncate text-fg-mute">{breadcrumb ?? ''}</span>
       <kbd
         className="rounded border border-line px-1.5 py-0.5 font-mono text-[0.7rem] text-fg-mute"
-        title="Command palette — arrives in Phase 4"
+        title="Command palette (arrives in Phase 4)"
       >
         ⌘K
       </kbd>

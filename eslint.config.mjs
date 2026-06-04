@@ -12,6 +12,12 @@ const eslintConfig = defineConfig([
     "out/**",
     "build/**",
     "next-env.d.ts",
+    // Non-app code: vendored skills, brainstorm artifacts, docs, logs.
+    ".agents/**",
+    ".claude/**",
+    ".superpowers/**",
+    "docs/**",
+    "logs/**",
   ]),
 ]);
 

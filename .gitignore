@@ -44,3 +44,7 @@ next-env.d.ts
 .superpowers/
 logs/
 cct-scaffold/
+
+# QA / screenshot artifacts
+.playwright-mcp/
+*.png

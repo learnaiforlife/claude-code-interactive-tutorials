@@ -5,9 +5,9 @@ const LESSONS: Lesson[] = [
     slug: 'what-is-claude-code', order: 1, track: 'beginner',
     title: 'What Claude Code is and how to think about it',
     estimatedMinutes: 5, format: 'Concept + quiz',
-    context: 'Claude Code is a terminal-native AI agent. Before anything else, learn when to reach for it — and when not to.',
+    context: 'Claude Code is a terminal-native AI agent. Before anything else, learn when to reach for it, and when not to.',
     tips: [
-      { id: 'l1-litmus', kind: 'signature', savedTokens: 2000, title: 'AI is not for everything — run the litmus', detail: 'Could a command, your editor, or your own memory do this for 0 tokens? If yes, do that.' },
+      { id: 'l1-litmus', kind: 'signature', savedTokens: 2000, title: 'AI is not for everything: run the litmus', detail: 'Could a command, your editor, or your own memory do this for 0 tokens? If yes, do that.' },
       { id: 'l1-context-cost', kind: 'inline', savedTokens: 1200, title: "Context isn't free or one-time", detail: 'Claude re-reads the whole conversation every turn.' },
       { id: 'l1-model-match', kind: 'inline', savedTokens: 1500, title: 'Match the model to the task', detail: 'Opus for hard reasoning, Haiku for mechanical bulk.' },
     ],
@@ -16,7 +16,7 @@ const LESSONS: Lesson[] = [
     slug: 'effective-prompting', order: 2, track: 'beginner',
     title: 'How to prompt Claude Code effectively',
     estimatedMinutes: 8, format: 'Interactive exercise',
-    context: 'A precise prompt is the cheapest optimization there is — it prevents the back-and-forth that re-sends everything.',
+    context: 'A precise prompt is the cheapest optimization there is. It prevents the back-and-forth that re-sends everything.',
     tips: [
       { id: 'l2-precise', kind: 'signature', savedTokens: 1800, title: 'One precise prompt beats five vague ones', detail: 'Each clarify→retry round re-sends the entire context.' },
       { id: 'l2-scope', kind: 'inline', savedTokens: 1000, title: 'Scope the context', detail: 'Name the files/dirs to touch instead of "look around the repo".' },
@@ -27,7 +27,7 @@ const LESSONS: Lesson[] = [
     slug: 'bash-commands', order: 3, track: 'beginner',
     title: 'How to run bash commands from Claude Code',
     estimatedMinutes: 10, format: 'Terminal sim + challenge',
-    context: 'Claude can run shell commands for you — but reading whole files into context is the classic token sink.',
+    context: 'Claude can run shell commands for you, but reading whole files into context is the classic token sink.',
     tips: [
       { id: 'l3-grep', kind: 'signature', savedTokens: 3200, title: "Search, don't slurp", detail: 'grep/glob to the 5 relevant lines instead of reading whole files.' },
       { id: 'l3-command', kind: 'inline', savedTokens: 2500, title: 'Let a command do deterministic work', detail: 'Rename/move/count/test = 0 model tokens.' },
@@ -60,9 +60,9 @@ const LESSONS: Lesson[] = [
     slug: 'mcp-overview', order: 6, track: 'beginner',
     title: 'How to view MCP servers and tools',
     estimatedMinutes: 8, format: 'Guided walkthrough',
-    context: "Every enabled MCP tool's schema rides in your context on every turn — so knowing what's loaded matters.",
+    context: "Every enabled MCP tool's schema rides in your context on every turn, so knowing what's loaded matters.",
     tips: [
-      { id: 'l6-schema-cost', kind: 'signature', savedTokens: 900, title: "Every enabled tool's schema lives in your context", detail: 'Loaded every turn — seeing what is loaded is step one.' },
+      { id: 'l6-schema-cost', kind: 'signature', savedTokens: 900, title: "Every enabled tool's schema lives in your context", detail: 'Loaded every turn; seeing what is loaded is step one.' },
       { id: 'l6-sprawl', kind: 'inline', savedTokens: 1500, title: 'Spot tool sprawl', detail: 'A dozen servers can dominate the budget before you type.' },
       { id: 'l6-on-demand', kind: 'inline', savedTokens: 2000, title: 'Prefer on-demand tool discovery', detail: 'Lazily loading schemas beats carrying every schema always.' },
     ],

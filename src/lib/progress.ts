@@ -36,26 +36,43 @@ export function bankTip(slug: string, tipId: string): void {
   }
 }
 
+export type LessonStatus = 'done' | 'now' | 'locked';
+
+/* Pure derivations from a Progress snapshot (used by reactive UI via useProgress). */
+export function tipBankedIn(p: Progress, slug: string, tipId: string): boolean {
+  return (p.bankedTips[slug] ?? []).includes(tipId);
+}
+
+export function lessonCompleteIn(p: Progress, slug: string): boolean {
+  const lesson = getLesson(slug);
+  return lesson ? tipBankedIn(p, slug, signatureTip(lesson).id) : false;
+}
+
+export function lessonStatusIn(p: Progress, slug: string): LessonStatus {
+  if (lessonCompleteIn(p, slug)) return 'done';
+  const { prev } = getAdjacent(slug);
+  if (prev && !lessonCompleteIn(p, prev.slug)) return 'locked';
+  return 'now';
+}
+
+export function trackCompletionIn(p: Progress, track: Track): { done: number; total: number } {
+  const lessons = getLessonsByTrack(track);
+  return { done: lessons.filter((l) => lessonCompleteIn(p, l.slug)).length, total: lessons.length };
+}
+
+/* localStorage-reading convenience wrappers (non-reactive callers + tests). */
 export function isTipBanked(slug: string, tipId: string): boolean {
-  return (read().bankedTips[slug] ?? []).includes(tipId);
+  return tipBankedIn(read(), slug, tipId);
 }
 
 export function isLessonComplete(slug: string): boolean {
-  const lesson = getLesson(slug);
-  if (!lesson) return false;
-  return isTipBanked(slug, signatureTip(lesson).id);
+  return lessonCompleteIn(read(), slug);
+}
+
+export function lessonStatus(slug: string): LessonStatus {
+  return lessonStatusIn(read(), slug);
 }
 
 export function trackCompletion(track: Track): { done: number; total: number } {
-  const lessons = getLessonsByTrack(track);
-  return { done: lessons.filter((l) => isLessonComplete(l.slug)).length, total: lessons.length };
-}
-
-export type LessonStatus = 'done' | 'now' | 'locked';
-
-export function lessonStatus(slug: string): LessonStatus {
-  if (isLessonComplete(slug)) return 'done';
-  const { prev } = getAdjacent(slug);
-  if (prev && !isLessonComplete(prev.slug)) return 'locked';
-  return 'now';
+  return trackCompletionIn(read(), track);
 }
