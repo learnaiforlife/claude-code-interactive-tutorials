@@ -41,6 +41,7 @@ export default function LessonPane({ lesson }: { lesson: Lesson }) {
       <p className="mt-5 max-w-[58ch] text-[0.95rem] leading-relaxed text-ink">{lesson.context}</p>
 
       <ModuleBrief lesson={lesson} />
+      <ModulePath />
 
       <div className="mt-6">
         <p className="font-mono text-xs font-semibold uppercase tracking-wide text-ink-soft">The idea</p>
@@ -131,6 +132,48 @@ export default function LessonPane({ lesson }: { lesson: Lesson }) {
           <span />
         )}
       </nav>
+    </section>
+  );
+}
+
+function ModulePath() {
+  const steps = [
+    {
+      label: 'What it is',
+      text: 'The feature, workflow, or Claude Code surface this module covers.',
+    },
+    {
+      label: 'How it works',
+      text: 'The context, tools, permissions, or docs that shape the workflow.',
+    },
+    {
+      label: 'Use it',
+      text: 'A Claude Code session demonstrates the workflow with prompts, tool output, and a check.',
+    },
+    {
+      label: 'Use it efficiently',
+      text: 'Bank the signature and inline tips that turn the efficient habit into tracked impact.',
+    },
+  ];
+
+  return (
+    <section aria-labelledby="module-path-heading" className="mt-5 border-y border-line-soft py-4">
+      <h2 id="module-path-heading" className="font-mono text-xs font-semibold uppercase tracking-wide text-ink-soft">
+        Module path
+      </h2>
+      <ol className="mt-3 grid gap-3 sm:grid-cols-2">
+        {steps.map((step, index) => (
+          <li key={step.label} className="flex gap-3">
+            <span className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full border border-line-soft font-mono text-[0.68rem] text-ink-soft">
+              {index + 1}
+            </span>
+            <div className="min-w-0">
+              <h3 className="text-sm font-semibold leading-snug text-ink">{step.label}</h3>
+              <p className="mt-1 text-sm leading-relaxed text-ink-soft">{step.text}</p>
+            </div>
+          </li>
+        ))}
+      </ol>
     </section>
   );
 }

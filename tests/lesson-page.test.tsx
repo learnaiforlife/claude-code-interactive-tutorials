@@ -21,6 +21,12 @@ test('renders the lesson numeral, title and signature tip', () => {
     'href',
     'https://code.claude.com/docs/en/tools-reference.md',
   );
+  expect(screen.getByRole('heading', { name: 'Module path' })).toBeInTheDocument();
+  expect(screen.getByText('What it is')).toBeInTheDocument();
+  expect(screen.getByText('How it works')).toBeInTheDocument();
+  expect(screen.getByText('Use it')).toBeInTheDocument();
+  expect(screen.getByText('Use it efficiently')).toBeInTheDocument();
+  expect(screen.getByText(/A Claude Code session demonstrates the workflow/i)).toBeInTheDocument();
   expect(screen.getByText(/Search, don't slurp/i)).toBeInTheDocument();
   expect(screen.getByText(/What is the efficient first move/i)).toBeInTheDocument();
 });
