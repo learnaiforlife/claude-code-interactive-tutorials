@@ -93,7 +93,7 @@ export default function LessonPane({ lesson }: { lesson: Lesson }) {
                     <button
                       type="button"
                       onClick={() => bankTip(tip)}
-                      aria-label={`Bank ${tip.title}`}
+                      aria-label={`Bank tip · ~${tip.savedTokens.toLocaleString()} tokens: ${tip.title}`}
                       className="inline-flex shrink-0 items-center justify-center rounded-lg border border-line-soft px-2.5 py-1.5 font-mono text-xs font-semibold text-ink transition-colors hover:bg-success/10 hover:text-success"
                     >
                       Bank tip · ~{tip.savedTokens.toLocaleString()}

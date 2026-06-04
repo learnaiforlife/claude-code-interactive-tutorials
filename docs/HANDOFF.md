@@ -115,7 +115,7 @@ Lessons 3, 4, and 5 plus all Power User and Team lessons also have `challenge?: 
 - **Lesson checks + branded 404**: each lesson has a low-stakes check with explain-on-wrong feedback, and `/not-found` uses the dual-tone house style.
 - **Release hardening pass**: axe-core structural a11y coverage for chrome, Forest, lesson, terminal, and 404; semantic Forest markers; skip link to main content; command-palette focus trap; mobile overflow fixes; reduced-motion terminal remounts into the full transcript.
 
-**Verified:** 58/58 tests, lint clean, production build passes (`/`, `/how-we-calculate`, all 91 lessons prerender static; 96 static pages total). `npm run audit:docs` fetches the live official Claude Code docs index and currently reports 145 live pages, 145 unique lesson refs, 0 missing, and 0 stale. Rendered browser QA used isolated headless Chrome DevTools Protocol because the MCP Playwright profile was locked: banked `bash-commands`, confirmed Plant reward, cascade scaling, Forest newest-tree glow/count, reduced-motion final token state, no console/runtime errors, and no horizontal overflow. Forest craft QA now covers the denser 273-tree field, empty-state guidance, next-tree prompt, metric legibility, team cascade scaling, desktop/mobile layouts, no console/runtime errors, and no horizontal overflow. Terminal interaction QA also covered reduced-motion typed challenges on `bash-commands`: hint, incorrect feedback, reset, success output, Replay clearing challenge output, mobile success, no console/runtime errors, and no horizontal overflow. Command palette QA covered mouse open, focused search, locked search results, Escape close/reset, keyboard shortcut open, unlocked Enter navigation, mobile search/close, no console/runtime errors, and no horizontal overflow. P4 keyboard/perf smoke covers skip link, palette focus trap, lesson bank/check/terminal/replay tab reachability, reduced-motion terminal input reachability, 91 ms home DOMContentLoaded / 124 ms load, 70 ms lesson DOMContentLoaded / 85 ms load, no console/runtime errors.
+**Verified:** 58/58 tests, lint clean, production build passes (`/`, `/how-we-calculate`, all 91 lessons prerender static; 96 static pages total). `npm run audit:docs` fetches the live official Claude Code docs index and currently reports 145 live pages, 145 unique lesson refs, 0 missing, and 0 stale. Rendered browser QA used isolated headless Chrome DevTools Protocol because the MCP Playwright profile was locked: banked `bash-commands`, confirmed Plant reward, cascade scaling, Forest newest-tree glow/count, reduced-motion final token state, no console/runtime errors, and no horizontal overflow. Forest craft QA now covers the denser 273-tree field, empty-state guidance, next-tree prompt, metric legibility, team cascade scaling, desktop/mobile layouts, no console/runtime errors, and no horizontal overflow. Terminal interaction QA also covered reduced-motion typed challenges on `bash-commands`: hint, incorrect feedback, reset, success output, Replay clearing challenge output, mobile success, no console/runtime errors, and no horizontal overflow. Command palette QA covered mouse open, focused search, locked search results, Escape close/reset, keyboard shortcut open, unlocked Enter navigation, mobile search/close, no console/runtime errors, and no horizontal overflow. P4 keyboard/perf smoke covers skip link, palette focus trap, lesson bank/check/terminal/replay tab reachability, reduced-motion terminal input reachability, 91 ms home DOMContentLoaded / 124 ms load, 70 ms lesson DOMContentLoaded / 85 ms load, no console/runtime errors. Formal Lighthouse on production `next start` covers `/` and `/lessons/bash-commands`: 97 performance, 100 accessibility, 100 best practices, 100 SEO, 100 agentic browsing on both routes; label/content-name passes; FCP 0.8-0.9 s, LCP 2.6 s, TBT 0 ms, CLS 0.
 
 ---
 
@@ -144,9 +144,8 @@ Core `⌘K` palette is implemented and rendered QA covers mouse open, focused se
 3. Optional follow-up: turn the rendered palette interaction script into a committed e2e harness once the project has an official browser-test runner.
 
 ### P4 — Content & polish
-Manual keyboard smoke and basic rendered load timing are complete. Remaining:
-1. Formal Lighthouse/perf report.
-2. Vercel deploy.
+Manual keyboard smoke, basic rendered load timing, and formal Lighthouse/perf reporting are complete. Remaining:
+1. Vercel deploy.
 
 ### Backlog / Phase 3+ (from the master plan)
 Intermediate/advanced tracks, accounts/cloud sync, real shell integration, sharing. Out of MVP.
@@ -158,11 +157,11 @@ Intermediate/advanced tracks, accounts/cloud sync, real shell integration, shari
 - The terminal rendered QA covers desktop/mobile/reduced-motion screenshots plus guided hint, incorrect, reset, success, and Replay flows. Remaining terminal work is instruction placement and future-module expansion.
 - The command palette has unit, axe, build, and rendered desktop/mobile interaction coverage. Remaining palette work is future expansion and optional fuzzy ranking.
 - The branded 404 has test, axe, build, and desktop screenshot coverage.
-- P4 has rendered keyboard/perf smoke, but no formal Lighthouse report or Vercel deployment yet.
+- P4 has rendered keyboard/perf smoke and a formal Lighthouse report, but no Vercel deployment yet.
 
 ---
 
 ## 8. Start here
 1. `npm install && npm test && npm run dev` — confirm green and click through `/` → a lesson → bank a tip → watch it unlock.
-2. Continue with **P2** terminal instruction polish or **P4** Lighthouse/deploy polish.
+2. Continue with **P4** Vercel deploy or **P2** terminal instruction polish.
 3. Keep commits small; keep test/lint/build green; follow §3 conventions.

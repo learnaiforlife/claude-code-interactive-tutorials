@@ -101,7 +101,7 @@ export default function CommandPalette() {
         type="button"
         onClick={() => setOpen(true)}
         className="rounded border border-line px-1.5 py-0.5 font-mono text-[0.7rem] text-fg-mute transition-colors hover:border-fg-mute hover:text-fg"
-        aria-label="Open command palette"
+        aria-label="⌘K, open command palette"
       >
         ⌘K
       </button>

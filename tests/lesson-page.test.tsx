@@ -87,7 +87,7 @@ test('renders and banks inline tips without completing the lesson', async () => 
   const user = userEvent.setup();
   render(<LessonPane lesson={getLesson('bash-commands')!} />);
   expect(screen.getByText(/Let a command do deterministic work/i)).toBeInTheDocument();
-  await user.click(screen.getByRole('button', { name: /bank let a command do deterministic work/i }));
+  await user.click(screen.getByRole('button', { name: /bank tip.*let a command do deterministic work/i }));
   expect(isTipBanked('bash-commands', 'l3-command')).toBe(true);
   expect(isLessonComplete('bash-commands')).toBe(false);
   expect(screen.getByText(/tokens kept out of the next prompt loop/i)).toBeInTheDocument();
