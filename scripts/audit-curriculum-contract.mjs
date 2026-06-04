@@ -19,6 +19,7 @@ const errors = [];
 
 auditLessonCount(lessons, errors);
 auditLessonContract(lessons, errors);
+const teachingPaths = auditTeachingPaths(lessons, errors);
 auditChallengeCoverage(lessons, errors);
 auditUniqueIds(lessons, errors);
 auditCopyCharacters(lessons, errors);
@@ -32,6 +33,7 @@ for (const [track, expected] of Object.entries(EXPECTED_TRACK_COUNTS)) {
 console.log(`Docs refs: ${unique(lessons.flatMap((lesson) => lesson.docsRefs.map((ref) => ref.href))).length} unique`);
 console.log(`Tips: ${lessons.flatMap((lesson) => lesson.tips).length}`);
 console.log(`Challenges: ${lessons.filter((lesson) => lesson.challenge).length}`);
+console.log(`Teaching paths: ${teachingPaths.complete} / ${lessons.length}`);
 console.log(`Errors: ${errors.length}`);
 
 if (errors.length) {
@@ -136,6 +138,35 @@ function auditChallengeCoverage(allLessons, output) {
   }
 }
 
+function auditTeachingPaths(allLessons, output) {
+  let complete = 0;
+
+  for (const lesson of allLessons) {
+    const label = lesson.slug ?? '<missing slug>';
+    const hasWhatItIs = textLength(lesson.featureFamily) > 0 && textLength(lesson.context) >= 20;
+    const hasHowItWorks = textLength(lesson.concept) >= 20 && Array.isArray(lesson.docsRefs) && lesson.docsRefs.length > 0;
+    const sessionKinds = new Set((lesson.session ?? []).map((line) => line.kind));
+    const hasUseIt =
+      sessionKinds.has('prompt') &&
+      [...sessionKinds].some((kind) => ['tool', 'reply', 'good', 'out'].includes(kind));
+    const hasUseItEfficiently =
+      textLength(lesson.efficiencyHabit) > 0 &&
+      Array.isArray(lesson.tips) &&
+      lesson.tips.length === 3 &&
+      lesson.tips.some((tip) => tip.kind === 'signature' && Number(tip.savedTokens) > 0) &&
+      (lesson.session ?? []).some((line) => line.kind === 'impact' && Number(line.savedTokens) > 0);
+
+    if (!hasWhatItIs) output.push(`${label} teaching path must cover what the feature is`);
+    if (!hasHowItWorks) output.push(`${label} teaching path must cover how the feature works`);
+    if (!hasUseIt) output.push(`${label} teaching path must demonstrate how to use the feature`);
+    if (!hasUseItEfficiently) output.push(`${label} teaching path must attach token efficiency to the module`);
+
+    if (hasWhatItIs && hasHowItWorks && hasUseIt && hasUseItEfficiently) complete += 1;
+  }
+
+  return { complete };
+}
+
 function auditUniqueIds(allLessons, output) {
   const lessonSlugs = allLessons.map((lesson) => lesson.slug);
   const duplicateSlugs = duplicates(lessonSlugs);
@@ -160,6 +191,10 @@ function requireText(value, label, output, minLength = 1) {
   if (typeof value !== 'string' || value.trim().length < minLength) {
     output.push(`${label} must be at least ${minLength} characters`);
   }
+}
+
+function textLength(value) {
+  return typeof value === 'string' ? value.trim().length : 0;
 }
 
 function readLessons(file) {

@@ -29,13 +29,14 @@ Coverage that is already represented in the tracks below:
 - Team and enterprise: admin setup, analytics, monitoring, managed settings, managed MCP, Bedrock, Vertex AI, Microsoft Foundry, LLM gateways, legal/compliance, data usage, security, champion kit, communications kit, rollout kits.
 - Release awareness: changelog plus weekly What's new digests, taught as scoped workflow/version review rather than release-note summarization.
 
-Coverage gaps to keep explicit during implementation:
+Implementation coverage to keep explicit:
 
-- **Diagnostics and loaded context**: `/context`, `/doctor`, `/hooks`, `/mcp`, debug config, and `.claude` directory inspection need their own module because they teach learners to see what Claude is paying for before optimizing.
-- **Model and response behavior**: model config, fast mode, output styles, fullscreen rendering, status line, and terminal config belong together as "session ergonomics", not scattered as trivia.
-- **Evented workflows**: channels and deep links are distinct from chat integrations because they push external state into a running session or launch a correctly scoped one.
-- **Production SDK use**: hosting, session storage, observability, secure deployment, user input, and file checkpointing should not be hidden under a generic Agent SDK module.
+- **Diagnostics and loaded context**: `/context`, `/doctor`, `/hooks`, `/mcp`, debug config, and `.claude` directory inspection are covered through the MCP, hooks, runtime troubleshooting, and managed-settings modules. The efficiency hook is to inspect loaded context before asking Claude to debug behavior.
+- **Model and response behavior**: model config, fast mode, output styles, fullscreen rendering, status line, terminal configuration, and keybindings are represented as session ergonomics modules. The efficiency hook is to set the interface and model behavior once instead of repeatedly explaining friction.
+- **Evented workflows**: channels and deep links are separate Power User modules because they push external state into a running session or launch a scoped one. The efficiency hook is to route event payloads instead of pasting incident histories.
+- **Production SDK use**: hosting, session storage, observability, secure deployment, user input, permissions, streaming, structured output, cost tracking, and tool search are separate Team modules, not hidden under a generic Agent SDK overview.
 - **Live docs drift**: the June 4, 2026 live index is fully referenced by lessons. Run `npm run audit:docs` before claiming complete feature coverage after future docs changes.
+- **Teaching shape**: `npm run audit:curriculum` verifies every module has evidence for what it is, how it works, how to use it, and how to use it efficiently.
 
 ## Track 1: Foundations
 
