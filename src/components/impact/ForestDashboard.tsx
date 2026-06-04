@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { getAllLessons } from '@/lib/lessons';
 import { bankedSavedTokensIn, bankedTipsIn, calculateImpact, type CascadeMode } from '@/lib/impact';
-import { tipBankedIn, trackCompletionIn } from '@/lib/progress';
+import { lessonCompleteIn, tipBankedIn } from '@/lib/progress';
 import { useProgress } from '@/lib/use-progress';
 import CascadeControl from './CascadeControl';
 import { formatTokens, ImpactMetricGrid, MethodologyLink } from './ImpactFigures';
@@ -14,7 +14,8 @@ const tipMarkers = lessons.flatMap((lesson) => lesson.tips.map((tip) => ({ lesso
 export default function ForestDashboard() {
   const progress = useProgress();
   const [mode, setMode] = useState<CascadeMode>('per-use');
-  const { done, total } = trackCompletionIn(progress, 'beginner');
+  const done = lessons.filter((lesson) => lessonCompleteIn(progress, lesson.slug)).length;
+  const total = lessons.length;
   const bankedTipCount = bankedTipsIn(progress).length;
   const savedTokens = bankedSavedTokensIn(progress);
   const impact = calculateImpact(savedTokens, mode);
@@ -26,7 +27,7 @@ export default function ForestDashboard() {
     <section className="border-b border-line-soft bg-paper px-6 py-10 text-ink">
       <div className="mx-auto grid max-w-5xl gap-8 lg:grid-cols-[1.1fr_1fr] lg:items-end">
         <div className="min-w-0">
-          <h1 className="text-balance text-3xl font-bold tracking-tight">Beginner Track</h1>
+          <h1 className="text-balance text-3xl font-bold tracking-tight">Impact Forest</h1>
           <p className="mt-3 max-w-[62ch] leading-relaxed text-ink-soft">
             Learn Claude Code the efficient way. Every banked habit saves tokens, money, and energy.
             <span className="ml-2 font-mono text-sm text-success">{'// AI is not for everything.'}</span>

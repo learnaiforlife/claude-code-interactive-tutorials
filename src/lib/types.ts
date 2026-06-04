@@ -1,5 +1,11 @@
-export type Track = 'beginner' | 'intermediate' | 'advanced';
+export type Track = 'beginner' | 'feature-modules' | 'power-user' | 'team';
 export type TipKind = 'signature' | 'inline';
+
+export interface TrackInfo {
+  id: Track;
+  title: string;
+  description: string;
+}
 
 export interface Tip {
   id: string;          // unique, e.g. 'l3-grep'

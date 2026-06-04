@@ -1,4 +1,29 @@
-import type { Lesson, Tip } from './types';
+import type { Lesson, Tip, Track, TrackInfo } from './types';
+
+export const TRACKS: TrackInfo[] = [
+  {
+    id: 'beginner',
+    title: 'Beginner Track',
+    description: 'Core Claude Code habits, taught by doing.',
+  },
+  {
+    id: 'feature-modules',
+    title: 'Feature Modules v1',
+    description: 'Claude Code features mapped to what they do, how they work, and how to use them efficiently.',
+  },
+  {
+    id: 'power-user',
+    title: 'Power User Modules',
+    description: 'Extensions, parallel work, integrations, and larger operating patterns.',
+  },
+  {
+    id: 'team',
+    title: 'Team Modules',
+    description: 'SDK, enterprise, rollout, monitoring, and policy features.',
+  },
+];
+
+const TRACK_ORDER = new Map<Track, number>(TRACKS.map((track, index) => [track.id, index]));
 
 const LESSONS: Lesson[] = [
   {
@@ -330,10 +355,125 @@ const LESSONS: Lesson[] = [
       { id: 'l8-no-reread', kind: 'inline', savedTokens: 700, title: 'Don\'t re-read to "verify"', detail: 'The harness already tracks file state after an edit.' },
     ],
   },
+  {
+    slug: 'agent-loop', order: 1, track: 'feature-modules',
+    title: 'Agent loop: read, edit, run, decide',
+    estimatedMinutes: 9, format: 'Feature walkthrough',
+    featureFamily: 'Core Session Workflow',
+    docsRefs: [
+      { title: 'How Claude Code works', href: 'https://code.claude.com/docs/en/how-claude-code-works.md' },
+      { title: 'Best practices for Claude Code', href: 'https://code.claude.com/docs/en/best-practices.md' },
+    ],
+    efficiencyHabit: 'Approve narrow deterministic tool calls and challenge broad repo exploration.',
+    context: 'Claude Code works in a loop: inspect context, choose tools, make changes, run checks, and ask when it needs permission.',
+    concept: 'The efficient user guides the loop. Let Claude run narrow commands when the next step is deterministic, but stop broad reads before they turn into an expensive repo tour.',
+    session: [
+      { kind: 'prompt', text: 'fix the failing profile test' },
+      { kind: 'thinking', text: 'Planning the next tool call' },
+      { kind: 'tool', text: 'Read entire src directory before checking the failure' },
+      { kind: 'warn', text: 'Broad exploration first. ~12,000 context tokens before the failing test is known.' },
+      { kind: 'rule', text: 'guide the loop to the narrow evidence' },
+      { kind: 'prompt', text: 'run the profile test, then inspect only the failing file' },
+      { kind: 'tool', text: 'npm test profile.test.tsx' },
+      { kind: 'out', text: 'ProfileForm expects saved name after submit' },
+      { kind: 'tool', text: 'Read src/profile/ProfileForm.tsx' },
+      { kind: 'good', text: 'One failing path, one file, one edit.' },
+      { kind: 'impact', savedTokens: 8400, note: 'Approve work, not wandering.' },
+    ],
+    check: {
+      question: 'Claude asks to read the whole repo before running the failing test. What is the efficient response?',
+      options: [
+        { id: 'approve-all', text: 'Approve the broad read.', correct: false, explanation: 'That spends context before the failure is scoped.' },
+        { id: 'narrow', text: 'Ask it to run the failing test first, then inspect the file named by the failure.', correct: true, explanation: 'Correct. The test output narrows the next read.' },
+        { id: 'manual', text: 'Paste every related file into the prompt.', correct: false, explanation: 'Pasting files imports the same context cost, but with less tool control.' },
+      ],
+    },
+    tips: [
+      { id: 'fm1-loop-scope', kind: 'signature', savedTokens: 2600, title: 'Approve work, not wandering', detail: 'Let the loop take the narrow next step, not a broad repo tour.' },
+      { id: 'fm1-test-first', kind: 'inline', savedTokens: 1800, title: 'Run the failing check first', detail: 'A test failure names the evidence before Claude reads files.' },
+      { id: 'fm1-small-tools', kind: 'inline', savedTokens: 2200, title: 'Prefer narrow tool calls', detail: 'One file, one grep, or one test beats an exploratory sweep.' },
+    ],
+  },
+  {
+    slug: 'context-window', order: 2, track: 'feature-modules',
+    title: 'Context window: what fills it and what to drop',
+    estimatedMinutes: 10, format: 'Context simulation',
+    featureFamily: 'Codebase Context',
+    docsRefs: [
+      { title: 'Explore the context window', href: 'https://code.claude.com/docs/en/context-window.md' },
+      { title: 'How Claude Code uses prompt caching', href: 'https://code.claude.com/docs/en/prompt-caching.md' },
+      { title: 'Manage costs effectively', href: 'https://code.claude.com/docs/en/costs.md' },
+    ],
+    efficiencyHabit: 'Keep durable context stable, then clear or compact unrelated history.',
+    context: 'The context window is the working memory Claude pays attention to each turn. Files, tool schemas, messages, and rules all compete for that space.',
+    concept: 'Treat context like a budget. Stable project rules can be useful and cacheable, but stale chat history and unnecessary reads get resent until you drop or compact them.',
+    session: [
+      { kind: 'out', text: 'loaded: CLAUDE.md, 6 tool schemas, 28 messages, 3 files' },
+      { kind: 'warn', text: 'New task starts with 31,000 stale tokens from the prior debug thread.' },
+      { kind: 'rule', text: 'keep stable context, drop stale work' },
+      { kind: 'prompt', text: '/context' },
+      { kind: 'out', text: 'largest blocks: old auth thread, two full log files, stable project rules' },
+      { kind: 'prompt', text: '/clear, then reference the one file needed for the new task' },
+      { kind: 'good', text: 'Stable rules remain in project memory. Stale messages are gone.' },
+      { kind: 'impact', savedTokens: 18000, note: 'Drop stale history before it compounds.' },
+    ],
+    check: {
+      question: 'A new task starts after a long unrelated debugging thread. What should stay?',
+      options: [
+        { id: 'all-history', text: 'All previous messages, in case they matter.', correct: false, explanation: 'Unrelated history is paid for again and distracts the task.' },
+        { id: 'stable-rules', text: 'Stable project rules and the specific file needed now.', correct: true, explanation: 'Correct. Keep durable context, drop stale conversation history.' },
+        { id: 'full-logs', text: 'Both full log files from the old investigation.', correct: false, explanation: 'Logs should be searched or referenced only when the new task needs them.' },
+      ],
+    },
+    tips: [
+      { id: 'fm2-drop-stale', kind: 'signature', savedTokens: 3200, title: 'Drop stale history', detail: 'Clear or compact when the task changes.' },
+      { id: 'fm2-stable-context', kind: 'inline', savedTokens: 1400, title: 'Keep stable context stable', detail: 'Durable project rules are cheaper than re-explaining them.' },
+      { id: 'fm2-context-audit', kind: 'inline', savedTokens: 1600, title: 'Audit what is loaded', detail: '/context shows the largest context blocks before you optimize.' },
+    ],
+  },
+  {
+    slug: 'permission-modes', order: 3, track: 'feature-modules',
+    title: 'Permission modes: allow the safe path',
+    estimatedMinutes: 9, format: 'Approval exercise',
+    featureFamily: 'Tools, Permissions, And Safety',
+    docsRefs: [
+      { title: 'Choose a permission mode', href: 'https://code.claude.com/docs/en/permission-modes.md' },
+      { title: 'Tools reference', href: 'https://code.claude.com/docs/en/tools-reference.md' },
+    ],
+    efficiencyHabit: 'Allow the narrow safe command, deny broad access, and avoid repeated approval chatter.',
+    context: 'Permission modes control when Claude can edit files or run commands. The efficient setup is not maximum freedom, it is the smallest access that lets safe work proceed.',
+    concept: 'Repeated approval prompts cost attention and tokens, but broad access creates expensive mistakes. Scope permissions to the repo, task, and command family you actually trust.',
+    session: [
+      { kind: 'prompt', text: 'update generated types after the schema change' },
+      { kind: 'reply', text: 'I need to run the codegen command.' },
+      { kind: 'warn', text: 'If you deny every safe repeat command, the session burns turns on approval chatter.' },
+      { kind: 'rule', text: 'allow the specific safe command' },
+      { kind: 'prompt', text: 'allow npm run codegen, deny broad file deletion commands' },
+      { kind: 'tool', text: 'npm run codegen' },
+      { kind: 'good', text: 'Generated types updated with one approved command.' },
+      { kind: 'impact', savedTokens: 3600, note: 'Narrow permission beats repeated negotiation.' },
+    ],
+    check: {
+      question: 'Claude needs to run the same safe codegen command twice. What is the efficient permission choice?',
+      options: [
+        { id: 'deny', text: 'Deny every run and ask Claude to explain again.', correct: false, explanation: 'That burns turns on repeated approval negotiation.' },
+        { id: 'allow-specific', text: 'Allow the specific codegen command, keep broad risky commands denied.', correct: true, explanation: 'Correct. Narrow permission removes chatter without widening the blast radius.' },
+        { id: 'allow-all', text: 'Allow every command for the rest of the session.', correct: false, explanation: 'That is broader than the task needs and can make mistakes expensive.' },
+      ],
+    },
+    tips: [
+      { id: 'fm3-narrow-allow', kind: 'signature', savedTokens: 1900, title: 'Allow only what is needed', detail: 'Specific safe commands avoid approval loops without opening broad access.' },
+      { id: 'fm3-deny-broad', kind: 'inline', savedTokens: 1100, title: 'Deny broad risky commands', detail: 'Do not pay for recovery from commands the task never needed.' },
+      { id: 'fm3-state-policy', kind: 'inline', savedTokens: 900, title: 'State the permission rule once', detail: 'One clear allow/deny rule beats repeated negotiation.' },
+    ],
+  },
 ];
 
 export function getAllLessons(): Lesson[] {
-  return [...LESSONS].sort((a, b) => a.order - b.order);
+  return [...LESSONS].sort((a, b) => {
+    const trackDelta = (TRACK_ORDER.get(a.track) ?? 99) - (TRACK_ORDER.get(b.track) ?? 99);
+    return trackDelta || a.order - b.order;
+  });
 }
 
 export function getLesson(slug: string): Lesson | undefined {
@@ -344,12 +484,18 @@ export function getLessonsByTrack(track: Lesson['track']): Lesson[] {
   return getAllLessons().filter((l) => l.track === track);
 }
 
+export function getTrackInfo(track: Track): TrackInfo {
+  return TRACKS.find((info) => info.id === track) ?? TRACKS[0];
+}
+
 export function signatureTip(lesson: Lesson): Tip {
   return lesson.tips.find((t) => t.kind === 'signature')!;
 }
 
 export function getAdjacent(slug: string): { prev: Lesson | null; next: Lesson | null } {
-  const all = getAllLessons();
+  const current = getLesson(slug);
+  if (!current) return { prev: null, next: null };
+  const all = getLessonsByTrack(current.track);
   const i = all.findIndex((l) => l.slug === slug);
   return {
     prev: i > 0 ? all[i - 1] : null,

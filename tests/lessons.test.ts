@@ -1,10 +1,15 @@
 import { test, expect } from 'vitest';
-import { getAllLessons, getLesson, getAdjacent, signatureTip } from '@/lib/lessons';
+import { getAllLessons, getLesson, getLessonsByTrack, getAdjacent, signatureTip } from '@/lib/lessons';
 
-test('there are 8 beginner lessons in order 1..8', () => {
+test('there are 8 beginner lessons and 3 feature modules in track order', () => {
   const all = getAllLessons();
-  expect(all).toHaveLength(8);
-  expect(all.map((l) => l.order)).toEqual([1, 2, 3, 4, 5, 6, 7, 8]);
+  expect(all).toHaveLength(11);
+  expect(getLessonsByTrack('beginner').map((l) => l.order)).toEqual([1, 2, 3, 4, 5, 6, 7, 8]);
+  expect(getLessonsByTrack('feature-modules').map((l) => l.slug)).toEqual([
+    'agent-loop',
+    'context-window',
+    'permission-modes',
+  ]);
 });
 
 test('getLesson returns the lesson for a known slug, undefined otherwise', () => {
@@ -30,7 +35,7 @@ test('every lesson has exactly 3 tips and exactly one signature tip', () => {
 test('tip ids are globally unique across all lessons', () => {
   const ids = getAllLessons().flatMap((l) => l.tips.map((t) => t.id));
   expect(new Set(ids).size).toBe(ids.length);
-  expect(ids).toHaveLength(24);
+  expect(ids).toHaveLength(33);
 });
 
 test('lessons 3, 4 and 5 have type-it-yourself terminal challenges', () => {
@@ -46,4 +51,6 @@ test('getAdjacent gives prev/next by order', () => {
   expect(adj.next?.slug).toBe('creating-skills');
   expect(getAdjacent('what-is-claude-code').prev).toBeNull();
   expect(getAdjacent('common-mistakes').next).toBeNull();
+  expect(getAdjacent('agent-loop').prev).toBeNull();
+  expect(getAdjacent('agent-loop').next?.slug).toBe('context-window');
 });

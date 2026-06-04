@@ -2,7 +2,7 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import type { Lesson, Tip } from '@/lib/types';
-import { signatureTip, getAdjacent } from '@/lib/lessons';
+import { signatureTip, getAdjacent, getLessonsByTrack, getTrackInfo } from '@/lib/lessons';
 import { tipBankedIn } from '@/lib/progress';
 import { useProgress, bankTipNow } from '@/lib/use-progress';
 import { Check, ArrowLeft, ArrowRight } from '@/components/ui/icons';
@@ -13,6 +13,8 @@ export default function LessonPane({ lesson }: { lesson: Lesson }) {
   const sig = signatureTip(lesson);
   const inlineTips = lesson.tips.filter((tip) => tip.kind === 'inline');
   const { prev, next } = getAdjacent(lesson.slug);
+  const trackTotal = getLessonsByTrack(lesson.track).length;
+  const track = getTrackInfo(lesson.track);
   const progress = useProgress();
   const banked = tipBankedIn(progress, lesson.slug, sig.id);
   const [rewardTipId, setRewardTipId] = useState<string | null>(null);
@@ -25,7 +27,9 @@ export default function LessonPane({ lesson }: { lesson: Lesson }) {
 
   return (
     <section className="flex min-h-full min-w-0 flex-col bg-paper px-7 py-9 text-ink md:px-10 md:py-12">
-      <p className="font-mono text-xs uppercase tracking-[0.14em] text-ink-soft">Module 1 · Basics</p>
+      <p className="font-mono text-xs uppercase tracking-[0.14em] text-ink-soft">
+        {track.title} · {lesson.featureFamily}
+      </p>
 
       <div className="mt-4 flex items-start gap-5">
         <span className="font-mono text-[3.25rem] font-extrabold leading-[0.8] tracking-tight text-ink-soft tabular-nums">
@@ -114,7 +118,7 @@ export default function LessonPane({ lesson }: { lesson: Lesson }) {
         ) : (
           <span />
         )}
-        <span>Lesson {lesson.order} of 8</span>
+        <span>Lesson {lesson.order} of {trackTotal}</span>
         {next ? (
           <Link href={`/lessons/${next.slug}`} className="inline-flex items-center gap-1.5 hover:text-ink">
             {String(next.order).padStart(2, '0')} <ArrowRight className="h-3.5 w-3.5" />

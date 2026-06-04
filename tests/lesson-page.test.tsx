@@ -9,10 +9,17 @@ beforeEach(() => resetProgress());
 
 test('renders the lesson numeral, title and signature tip', () => {
   render(<LessonPane lesson={getLesson('bash-commands')!} />);
+  expect(screen.getByText(/Beginner Track · Tools, Permissions, And Safety/i)).toBeInTheDocument();
   expect(screen.getByText('03')).toBeInTheDocument();
   expect(screen.getByRole('heading', { level: 1, name: /bash commands/i })).toBeInTheDocument();
   expect(screen.getByText(/Search, don't slurp/i)).toBeInTheDocument();
   expect(screen.getByText(/What is the efficient first move/i)).toBeInTheDocument();
+});
+
+test('feature module lessons render their track and family', () => {
+  render(<LessonPane lesson={getLesson('agent-loop')!} />);
+  expect(screen.getByText(/Feature Modules v1 · Core Session Workflow/i)).toBeInTheDocument();
+  expect(screen.getByText('Lesson 1 of 3')).toBeInTheDocument();
 });
 
 test('banking the signature tip completes the lesson and confirms', async () => {

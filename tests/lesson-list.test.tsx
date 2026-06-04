@@ -8,10 +8,13 @@ beforeEach(() => resetProgress());
 const SLUGS = [
   'what-is-claude-code', 'effective-prompting', 'bash-commands', 'creating-skills',
   'creating-subagents', 'mcp-overview', 'mcp-management', 'common-mistakes',
+  'agent-loop', 'context-window', 'permission-modes',
 ];
 
-test('renders all 8 lesson rows', () => {
+test('renders beginner and feature-module rows grouped by track', () => {
   render(<LessonList />);
+  expect(screen.getByRole('heading', { name: 'Beginner Track' })).toBeInTheDocument();
+  expect(screen.getByRole('heading', { name: 'Feature Modules v1' })).toBeInTheDocument();
   for (const slug of SLUGS) {
     expect(screen.getByTestId(`lesson-row-${slug}`)).toBeInTheDocument();
   }
@@ -25,6 +28,15 @@ test('first lesson is "Now" (a link); later lessons are "Locked" (not links)', a
   expect(l1.querySelector('a')).not.toBeNull();
   expect(within(l2).getByText('Locked')).toBeInTheDocument();
   expect(l2.querySelector('a')).toBeNull();
+});
+
+test('first feature module starts available in its own track', async () => {
+  render(<LessonList />);
+  const agentLoop = await screen.findByTestId('lesson-row-agent-loop');
+  const contextWindow = screen.getByTestId('lesson-row-context-window');
+  expect(within(agentLoop).getByText('Now')).toBeInTheDocument();
+  expect(agentLoop.querySelector('a')).not.toBeNull();
+  expect(within(contextWindow).getByText('Locked')).toBeInTheDocument();
 });
 
 test('banking lesson 1 marks it Done and unlocks lesson 2', async () => {
