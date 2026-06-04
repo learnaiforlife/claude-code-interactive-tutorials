@@ -1,26 +1,80 @@
 @import "tailwindcss";
 
+/*
+  Dual-tone design tokens (DESIGN.md §4). Light "paper" content surfaces +
+  dark "terminal"/"canvas" surfaces. Accents are meaning-bearing and come in
+  on-light (darker, for text/borders on paper) and on-dark (brighter, for the
+  terminal) pairs so both surfaces clear WCAG AA.
+*/
+@theme {
+  /* surfaces */
+  --color-canvas: oklch(0.11 0.012 250);   /* app background (dark) */
+  --color-paper: oklch(0.985 0.004 120);   /* content/reading surface (light) */
+  --color-terminal: oklch(0.09 0.01 235);  /* terminal sim */
+  --color-panel: oklch(0.085 0.01 250);    /* dark elevated chrome */
+
+  /* lines */
+  --color-line: oklch(0.24 0.01 250);      /* border on dark */
+  --color-line-soft: oklch(0.90 0.012 120); /* border on light */
+
+  /* ink — text on light */
+  --color-ink: oklch(0.20 0.012 255);
+  --color-ink-soft: oklch(0.42 0.012 255);
+
+  /* fg — text on dark */
+  --color-fg: oklch(0.93 0.01 250);
+  --color-fg-mute: oklch(0.62 0.012 250);
+
+  /* syntax-lit accents — green=success/prompt/nature, amber=command, blue=info/water */
+  --color-success: oklch(0.45 0.13 155);        /* on light: text, border, button bg (w/ white) */
+  --color-success-bright: oklch(0.74 0.16 155); /* on dark: prompt, success lines */
+  --color-command: oklch(0.47 0.12 55);
+  --color-command-bright: oklch(0.80 0.15 78);
+  --color-info: oklch(0.48 0.15 255);
+  --color-info-bright: oklch(0.72 0.13 230);
+
+  /* fonts (variables set by next/font in layout.tsx) */
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, -apple-system, sans-serif;
+  --font-mono: var(--font-fira), ui-monospace, "SF Mono", SFMono-Regular, monospace;
+}
+
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --z-base: 0;
+  --z-sticky: 20;
+  --z-dropdown: 30;
+  --z-modal-backdrop: 40;
+  --z-modal: 50;
+  --z-toast: 60;
+  --z-tooltip: 70;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+html {
+  background: var(--color-canvas);
+  color: var(--color-fg);
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  margin: 0;
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+::selection {
+  background: oklch(0.74 0.16 155 / 0.25);
+}
+
+:where(a, button, [tabindex], input, select, textarea):focus-visible {
+  outline: 2px solid var(--color-info-bright);
+  outline-offset: 2px;
+  border-radius: 3px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
 }
