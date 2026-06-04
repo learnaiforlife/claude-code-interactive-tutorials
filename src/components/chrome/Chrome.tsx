@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import CommandPalette from './CommandPalette';
 
 /**
  * Terminal-native house chrome (DESIGN.md §3). Wraps every screen.
@@ -16,12 +17,7 @@ export default function Chrome({ breadcrumb }: { breadcrumb?: string }) {
         claude-code · learn
       </Link>
       <span className="min-w-0 flex-1 truncate text-fg-mute">{breadcrumb ?? ''}</span>
-      <kbd
-        className="rounded border border-line px-1.5 py-0.5 font-mono text-[0.7rem] text-fg-mute"
-        title="Command palette (arrives in Phase 4)"
-      >
-        ⌘K
-      </kbd>
+      <CommandPalette />
     </header>
   );
 }

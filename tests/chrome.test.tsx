@@ -1,15 +1,41 @@
 import { render, screen } from '@testing-library/react';
-import { test, expect } from 'vitest';
+import userEvent from '@testing-library/user-event';
+import { test, expect, beforeEach } from 'vitest';
 import Chrome from '@/components/chrome/Chrome';
+import { bankTip, resetProgress } from '@/lib/progress';
+
+beforeEach(() => resetProgress());
 
 test('renders the wordmark and a Cmd+K affordance', () => {
   render(<Chrome breadcrumb="beginner / 03 · bash-commands" />);
   expect(screen.getByText(/claude-code · learn/i)).toBeInTheDocument();
-  expect(screen.getByText('⌘K')).toBeInTheDocument();
+  expect(screen.getByRole('button', { name: /open command palette/i })).toBeInTheDocument();
   expect(screen.getByText(/03 · bash-commands/)).toBeInTheDocument();
 });
 
 test('renders without a breadcrumb', () => {
   render(<Chrome />);
   expect(screen.getByText(/claude-code · learn/i)).toBeInTheDocument();
+});
+
+test('opens the command palette and searches lessons', async () => {
+  const user = userEvent.setup();
+  render(<Chrome />);
+  await user.click(screen.getByRole('button', { name: /open command palette/i }));
+  expect(screen.getByRole('dialog', { name: /command palette/i })).toBeInTheDocument();
+  await user.type(screen.getByPlaceholderText(/search lessons/i), 'bash');
+  expect(screen.getByText(/How to run bash commands/i)).toBeInTheDocument();
+  expect(screen.getByText('Locked')).toBeInTheDocument();
+});
+
+test('unlocked palette results are navigable links', async () => {
+  const user = userEvent.setup();
+  bankTip('what-is-claude-code', 'l1-litmus');
+  bankTip('effective-prompting', 'l2-precise');
+  render(<Chrome />);
+  await user.keyboard('{Meta>}k{/Meta}');
+  await user.type(screen.getByPlaceholderText(/search lessons/i), 'bash');
+  const link = screen.getByRole('link', { name: /How to run bash commands/i });
+  expect(link).toHaveAttribute('href', '/lessons/bash-commands');
+  expect(screen.getByText('Now')).toBeInTheDocument();
 });

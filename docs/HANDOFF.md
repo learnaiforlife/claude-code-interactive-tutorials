@@ -71,7 +71,8 @@ src/
     page.tsx                # Home: editorial Beginner Track + <LessonList/>
     lessons/[slug]/page.tsx # Split-screen: <LessonPane/> + <TerminalSession/>; notFound() on bad slug; generateStaticParams
   components/
-    chrome/Chrome.tsx           # sticky terminal bar (dots, wordmark, breadcrumb slot, ⌘K hint)
+    chrome/Chrome.tsx           # sticky terminal bar (dots, wordmark, breadcrumb slot, real ⌘K trigger)
+    chrome/CommandPalette.tsx   # searchable lesson palette with Done/Now/Locked states
     dashboard/LessonList.tsx    # progress meter + numbered rows + Done/Now/Locked; locked = non-navigable
     impact/                     # Impact math UI: Forest dashboard, Plant reward, cascade controls, metric formatting
     lesson/LessonPane.tsx       # editorial left pane: concept, signature + inline tip banking, Plant reward, prev/next
@@ -84,7 +85,7 @@ src/
     progress.ts         # localStorage progress: bankTip + pure *In(progress,...) derivations + wrappers
     use-progress.ts     # useProgress() store (useSyncExternalStore) + bankTipNow()
     use-reduced-motion.ts # usePrefersReducedMotion() (useSyncExternalStore)
-tests/                  # 10 suites, 29 tests (setup.ts mocks next/font, next/link, localStorage, matchMedia)
+tests/                  # 10 suites, 31 tests (setup.ts mocks next/font, next/link, localStorage, matchMedia)
 ```
 
 Data model: each `Lesson` has `tips: Tip[]` (exactly 3, one `kind:'signature'`) and `session: SessionLine[]`.
@@ -105,8 +106,9 @@ Lessons 3, 4, and 5 also have `challenge?: TerminalChallenge` for type-it-yourse
 - **24-tip banking pass**: inline tips are visible and bankable in each lesson, the Forest tracks 24 trees, signature tips still drive lesson completion/unlock.
 - **Feature-module curriculum plan**: `docs/plans/2026-06-04-claude-code-feature-curriculum.md` maps Claude Code features to module tracks and efficiency hooks.
 - **Type-it-yourself terminal core**: lessons 3, 4, and 5 now include terminal challenges with `?` hints, `reset`, incorrect feedback, and scripted success output.
+- **Command palette**: real `⌘K` palette searches lessons/features/tips, shows Done/Now/Locked states, and only exposes navigable links for unlocked lessons.
 
-**Verified:** 29/29 tests, lint clean, production build passes (`/`, `/how-we-calculate`, all 8 lessons prerender static). Browser screenshot tooling was blocked by an occupied Playwright profile during the latest pass; route HTML was verified via the running dev server on `:3001`.
+**Verified:** 31/31 tests, lint clean, production build passes (`/`, `/how-we-calculate`, all 8 lessons prerender static). Browser screenshot tooling was blocked by an occupied Playwright profile during the latest pass; route HTML was verified via the running dev server on `:3001`.
 
 ---
 
@@ -127,8 +129,11 @@ Core type-it-yourself challenges are implemented for lessons 3, 4, and 5. Remain
 ### P2.5 — Feature-module expansion
 The master plan now has a **Feature-module curriculum expansion** section and detailed plan file. Use the official Claude Code docs index (`https://code.claude.com/docs/llms.txt`) as the source map. Each new module must teach what the feature is, how it works, how to use it, and the token-efficiency habit attached to that feature.
 
-### P3 — Command palette (⌘K)
-Wire the `Chrome` ⌘K hint to a real palette: fuzzy search all lessons, show Done/Now/Locked inline, keyboard-first, navigate on select. Use native `<dialog>`/portal (avoid clipping). Replace the `<kbd>` hint with the real trigger.
+### P3 polish — Command palette QA
+Core `⌘K` palette is implemented. Remaining work:
+1. Browser QA once Playwright profile lock clears: mouse open, keyboard shortcut, search, close, mobile layout.
+2. Add future feature modules to palette results once those lessons exist.
+3. Consider richer fuzzy ranking if the lesson count grows beyond the first tracks.
 
 ### P4 — Content & polish
 - **Lesson "Check"** (lesson anatomy step 4): a small MCQ / fill-in-the-blank per lesson with explain-on-wrong (not graded).
@@ -142,7 +147,7 @@ Intermediate/advanced tracks, accounts/cloud sync, real shell integration, shari
 ## 7. Honest current gaps (don't represent these as done)
 - Latest Impact UI has not had a screenshot-based browser QA pass because the Playwright profile was locked.
 - The terminal now supports guided typing for lessons 3, 4, and 5, but it has not had screenshot-based browser QA.
-- ⌘K is a visual hint only (P3).
+- The command palette has test coverage and build coverage, but not screenshot-based browser QA.
 - 404 is Next's default (P4).
 
 ---
