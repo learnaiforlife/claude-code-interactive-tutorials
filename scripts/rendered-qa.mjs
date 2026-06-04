@@ -30,7 +30,7 @@ async function main() {
 
   console.log('Rendered QA passed');
   console.log(`- Production app: ${appUrl}`);
-  console.log('- Covered: terminal challenge, Plant reward, Forest update, command palette, desktop/mobile overflow, console/runtime errors');
+  console.log('- Covered: terminal challenge, Replay, Plant and Forest cascade scaling, palette locked/unlocked flows, desktop/mobile overflow, console/runtime errors');
 }
 
 async function runDesktopLearningFlow(browser) {
@@ -84,9 +84,19 @@ async function runDesktopLearningFlow(browser) {
   await submitTerminalCommand(page, 'rg "throw new AuthError" src/server');
   await page.waitForText('Found the line without loading two full files.');
   await page.waitForText('3,200 tokens saved');
+  await page.clickByText('Replay');
+  await page.waitForNoText('Found the line without loading two full files.');
+  const replayState = await page.evaluate(() => ({
+    inputValue: document.querySelector('#terminal-challenge-input')?.value,
+    challengeReady: !document.querySelector('#terminal-challenge-input')?.disabled,
+  }));
+  assert(replayState.inputValue === '', 'Replay should clear the challenge input');
+  assert(replayState.challengeReady, 'Replay should leave the reduced-motion challenge ready');
 
   await page.clickByText('Bank this tip');
   await page.waitForText('tokens kept out of the next prompt loop');
+  await page.clickByText('Team of 20');
+  await page.waitForText('160,000,000');
   const progress = await page.evaluate((key) => JSON.parse(localStorage.getItem(key) ?? '{}'), PROGRESS_KEY);
   assert(progress?.bankedTips?.['bash-commands']?.includes('l3-grep'), 'banking did not persist the signature tip');
 
@@ -94,12 +104,42 @@ async function runDesktopLearningFlow(browser) {
   await page.waitForText('1 / 273 tips banked');
   await page.waitForText('3,200 raw tokens banked');
   await page.waitForText('Sprout stage');
+  await page.clickByText('Team of 20');
+  await page.waitForText('160,000,000 scaled tokens saved');
 
   await page.clickByLabel('⌘K, open command palette');
   await page.typeInto('[aria-label="Search lessons, features, and token habits"]', 'agent sdk');
   await page.waitForText('Agent SDK: Claude Code as a library');
   await page.press('Escape');
   await page.waitFor(() => !document.querySelector('dialog[open]'));
+
+  await page.clickByLabel('⌘K, open command palette');
+  await page.typeInto('[aria-label="Search lessons, features, and token habits"]', 'How to prompt Claude Code effectively');
+  await page.waitForText('How to prompt Claude Code effectively');
+  const lockedPaletteState = await page.evaluate(() => {
+    const row = Array.from(document.querySelectorAll('dialog [aria-disabled="true"]')).find((element) =>
+      element.textContent.includes('How to prompt Claude Code effectively'),
+    );
+    return {
+      locked: Boolean(row),
+      hasLink: Boolean(row?.querySelector('a[href]')),
+      href: window.location.pathname,
+    };
+  });
+  assert(lockedPaletteState.locked, 'locked palette result should be aria-disabled');
+  assert(!lockedPaletteState.hasLink, 'locked palette result should not be a link');
+  await page.press('Enter');
+  await sleep(250);
+  const afterLockedEnter = await page.evaluate(() => window.location.pathname);
+  assert(afterLockedEnter === '/', 'Enter on a locked palette result should not navigate');
+  await page.press('Escape');
+  await page.waitFor(() => !document.querySelector('dialog[open]'));
+
+  await page.clickByLabel('⌘K, open command palette');
+  await page.typeInto('[aria-label="Search lessons, features, and token habits"]', 'Agent SDK: Claude Code as a library');
+  await page.waitForText('Agent SDK: Claude Code as a library');
+  await page.press('Enter');
+  await page.waitFor(() => window.location.pathname === '/lessons/agent-sdk-overview');
 
   assertNoPageErrors(page);
   await page.close();
@@ -252,6 +292,15 @@ class Page {
 
   async waitForText(text, timeoutMs = 10000) {
     await this.waitFor((needle) => Array.from(document.body.querySelectorAll('*')).some((element) => {
+      if (element instanceof HTMLScriptElement || element instanceof HTMLStyleElement) return false;
+      if (element.children.length > 0) return false;
+      const style = getComputedStyle(element);
+      return style.display !== 'none' && style.visibility !== 'hidden' && element.textContent.includes(needle);
+    }), timeoutMs, text);
+  }
+
+  async waitForNoText(text, timeoutMs = 10000) {
+    await this.waitFor((needle) => !Array.from(document.body.querySelectorAll('*')).some((element) => {
       if (element instanceof HTMLScriptElement || element instanceof HTMLStyleElement) return false;
       if (element.children.length > 0) return false;
       const style = getComputedStyle(element);
