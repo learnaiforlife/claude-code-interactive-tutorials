@@ -1,9 +1,9 @@
 import { test, expect } from 'vitest';
 import { getAllLessons, getLesson, getLessonsByTrack, getAdjacent, signatureTip } from '@/lib/lessons';
 
-test('there are 8 beginner lessons, 11 feature modules, 24 power-user modules, and 24 team modules in track order', () => {
+test('there are 8 beginner lessons, 24 feature modules, 26 power-user modules, and 24 team modules in track order', () => {
   const all = getAllLessons();
-  expect(all).toHaveLength(67);
+  expect(all).toHaveLength(82);
   expect(getLessonsByTrack('beginner').map((l) => l.order)).toEqual([1, 2, 3, 4, 5, 6, 7, 8]);
   expect(getLessonsByTrack('feature-modules').map((l) => l.slug)).toEqual([
     'agent-loop',
@@ -17,6 +17,19 @@ test('there are 8 beginner lessons, 11 feature modules, 24 power-user modules, a
     'built-in-tools',
     'bash-powershell',
     'checkpointing',
+    'quickstart-install-login',
+    'troubleshoot-install-login',
+    'terminal-configuration',
+    'keybindings-shortcuts',
+    'statusline-usage',
+    'fullscreen-rendering',
+    'voice-dictation',
+    'output-styles',
+    'fast-mode',
+    'sandbox-environments',
+    'dev-containers',
+    'runtime-errors-troubleshooting',
+    'environment-variables',
   ]);
   expect(getLessonsByTrack('power-user').map((l) => l.slug)).toEqual([
     'custom-slash-commands',
@@ -43,6 +56,8 @@ test('there are 8 beginner lessons, 11 feature modules, 24 power-user modules, a
     'web-cloud-sessions',
     'channels-events',
     'deep-links',
+    'security-guidance-plugin',
+    'ultrareview',
   ]);
   expect(getLessonsByTrack('team').map((l) => l.slug)).toEqual([
     'agent-sdk-overview',
@@ -95,7 +110,7 @@ test('every lesson has exactly 3 tips and exactly one signature tip', () => {
 test('tip ids are globally unique across all lessons', () => {
   const ids = getAllLessons().flatMap((l) => l.tips.map((t) => t.id));
   expect(new Set(ids).size).toBe(ids.length);
-  expect(ids).toHaveLength(201);
+  expect(ids).toHaveLength(246);
 });
 
 test('beginner challenge lessons and advanced modules have type-it-yourself terminal challenges', () => {
@@ -117,12 +132,15 @@ test('getAdjacent gives prev/next by order', () => {
   expect(getAdjacent('agent-loop').prev).toBeNull();
   expect(getAdjacent('agent-loop').next?.slug).toBe('context-window');
   expect(getAdjacent('permission-modes').next?.slug).toBe('prompt-input');
-  expect(getAdjacent('checkpointing').next).toBeNull();
+  expect(getAdjacent('checkpointing').next?.slug).toBe('quickstart-install-login');
+  expect(getAdjacent('runtime-errors-troubleshooting').next?.slug).toBe('environment-variables');
+  expect(getAdjacent('environment-variables').next).toBeNull();
   expect(getAdjacent('custom-slash-commands').prev).toBeNull();
   expect(getAdjacent('custom-slash-commands').next?.slug).toBe('skills-on-demand');
   expect(getAdjacent('plugin-distribution').next?.slug).toBe('worktrees-isolation');
   expect(getAdjacent('scheduled-tasks-routines').next?.slug).toBe('vs-code-integration');
-  expect(getAdjacent('deep-links').next).toBeNull();
+  expect(getAdjacent('deep-links').next?.slug).toBe('security-guidance-plugin');
+  expect(getAdjacent('ultrareview').next).toBeNull();
   expect(getAdjacent('agent-sdk-overview').prev).toBeNull();
   expect(getAdjacent('agent-sdk-overview').next?.slug).toBe('headless-automation');
   expect(getAdjacent('secure-deployment-sdk').next?.slug).toBe('organization-setup');

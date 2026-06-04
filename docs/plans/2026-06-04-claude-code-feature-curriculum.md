@@ -152,7 +152,7 @@ Coverage gaps to keep explicit during implementation:
 ## Build Sequence For Feature Expansion
 
 1. **Refactor the lesson model for multiple tracks**: add track metadata, docs references, feature family, prerequisites, and an explicit `efficiencyHabit` field while preserving the current beginner track.
-2. **Ship Feature Modules v1**: Core Session Workflow, Codebase Context, Tools and Permissions. These are closest to the existing beginner lessons and give the biggest token-efficiency payoff.
+2. **Ship Feature Modules**: Core Session Workflow, Codebase Context, Tools and Permissions, then runtime setup and configuration. These are closest to the existing beginner lessons and give the biggest token-efficiency payoff.
 3. **Add extension modules**: custom commands, skills, subagents, hooks, MCP, plugins. Each should include a type-it-yourself terminal challenge because these are operational features.
 4. **Add integration modules**: IDE/Desktop/Chrome/GitHub/Slack/web. These should demonstrate choosing the surface where the context already lives.
 5. **Add SDK and team modules last**: they need a heavier conceptual model, plus clearer audience labeling so beginners do not mistake them for required setup.
@@ -162,7 +162,7 @@ For each slice, update the command palette search index, dashboard grouping, For
 ## Release Slices
 
 1. **MVP complete**: current beginner track, Impact System, command palette, type-it-yourself terminal for lessons 3, 4, and 5, checks, branded 404.
-2. **Feature modules v1**: Foundations, Core Session Workflow, Codebase Context, Tools and Permissions.
+2. **Feature modules**: Foundations, Core Session Workflow, Codebase Context, Tools and Permissions, Runtime Setup.
 3. **Power user modules**: Extensions, Parallel and Large Work, Integrations.
 4. **Team modules**: Programmatic Use, Team and Enterprise. Shipped as 24 Team modules.
 

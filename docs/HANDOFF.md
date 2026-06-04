@@ -39,9 +39,9 @@ Authoritative specs (already written — follow them, don't redo):
 **Commands:**
 ```bash
 npm run dev      # local dev (Turbopack)
-npm test         # vitest run  (currently 49 passing, 12 files)
+npm test         # vitest run  (currently 50 passing, 12 files)
 npm run lint     # eslint      (currently clean)
-npm run build    # next build  (currently passes; 67 lessons prerender static)
+npm run build    # next build  (currently passes; 82 lessons prerender static)
 ```
 
 ---
@@ -80,12 +80,12 @@ src/
     ui/icons.tsx                # in-house Check/Lock/ArrowLeft/ArrowRight (no icon dep)
   lib/
     types.ts            # TrackInfo, Lesson, Tip, SessionLine, TerminalChallenge, Progress, Track
-    lessons.ts          # 67 lessons across Beginner, Feature Modules v1, Power User Modules v1, and Team Modules v1
+    lessons.ts          # 82 lessons across Beginner, Feature Modules, Power User Modules, and Team Modules
     impact.ts           # exact cost, eco ranges, cascade factors, banked-tip totals
     progress.ts         # localStorage progress: bankTip + pure *In(progress,...) derivations + wrappers
     use-progress.ts     # useProgress() store (useSyncExternalStore) + bankTipNow()
     use-reduced-motion.ts # usePrefersReducedMotion() (useSyncExternalStore)
-tests/                  # 12 suites, 49 tests (setup.ts mocks next/font, next/link, localStorage, matchMedia)
+tests/                  # 12 suites, 50 tests (setup.ts mocks next/font, next/link, localStorage, matchMedia)
 ```
 
 Data model: each `Lesson` has `tips: Tip[]` (exactly 3, one `kind:'signature'`) and `session: SessionLine[]`.
@@ -100,21 +100,21 @@ Lessons 3, 4, and 5 plus all Power User and Team lessons also have `challenge?: 
 
 - **Scaffold + test harness** (commit `87c1919`).
 - **Dual-tone design system**: OKLCH tokens, Inter/Fira fonts, terminal-native house chrome (`aadb43d`).
-- **Lesson model + 201-tip registry + localStorage progress** (`8236f29`), now extended with track metadata, feature-family metadata, official docs references, and explicit efficiency habits.
+- **Lesson model + 246-tip registry + localStorage progress** (`8236f29`), now extended with track metadata, feature-family metadata, official docs references, and explicit efficiency habits.
 - **Editorial dashboard** (track sections, progress meters, Done/Now/Locked; locked lessons are non-navigable so banking a signature tip unlocks the next lesson in that track) and **split-screen lesson page** (`7f17e54`).
 - **Live animated terminal sessions + real per-lesson content** (`8c6e3e3`): `TerminalSession` plays each lesson's scripted Claude Code session (prompts type out, tool/output lines stream, ends on a tokens-saved tally; autoplay + Replay; reduced-motion renders the full transcript instantly). Every lesson has a `concept` + a `session`.
 - **Impact System foundations** (`ad96ab1`): `impact.ts`, exact Sonnet input-token cost math, honest eco ranges, cascade controls, methodology page, Plant reward, and Forest dashboard.
-- **201-tip banking pass**: inline tips are visible and bankable in each lesson, the Forest tracks 201 trees, signature tips still drive lesson completion/unlock.
+- **246-tip banking pass**: inline tips are visible and bankable in each lesson, the Forest tracks 246 trees, signature tips still drive lesson completion/unlock.
 - **Feature-module curriculum plan**: `docs/plans/2026-06-04-claude-code-feature-curriculum.md` maps Claude Code features to module tracks and efficiency hooks, with an official-index coverage audit and build sequence.
-- **Feature Modules v1 track**: 11 shipped modules covering Agent loop, Prompt input, Continue/resume, Slash commands, Search/read, CLAUDE.md, Context window, Built-in tools, Bash/PowerShell, Permission modes, and Checkpointing. Each teaches what it is, how it works, how to use it, and how to use it efficiently with a bankable token-saving habit.
-- **Power User Modules v1 track**: 24 shipped modules covering Custom slash commands, Skills, Subagents, Hooks, MCP, Plugins, Plugin distribution, Worktrees, Agent view, Agent teams, Dynamic workflows, Goals, Scheduled tasks/routines, VS Code, JetBrains, Desktop, Chrome/computer use, GitHub Actions, GitLab CI/CD, Code Review, Slack/Remote Control, web/cloud sessions, channels, and deep links. Each includes official docs refs, a typed terminal challenge, and a token-efficiency habit.
-- **Team Modules v1 track**: 24 shipped modules covering Agent SDK, headless automation, SDK sessions, SDK permissions/user input, SDK streaming, structured outputs, custom tools, tool search, cost tracking, observability, hosting/session storage, secure deployment, organization setup, analytics/monitoring, managed settings, managed MCP, security/data usage, network gateways, GitHub Enterprise Server, Bedrock, Vertex AI, Microsoft Foundry, Claude Platform on AWS, and rollout kits. Each includes official docs refs, a typed terminal challenge, and a token-efficiency habit.
+- **Feature Modules track**: 24 shipped modules covering Agent loop, Prompt input, Continue/resume, Slash commands, Search/read, CLAUDE.md, Context window, Built-in tools, Bash/PowerShell, Permission modes, Checkpointing, quickstart/install/login, install troubleshooting, terminal configuration, keybindings, status line, fullscreen rendering, voice dictation, output styles, fast mode, sandbox environments, dev containers, runtime troubleshooting, and environment variables. Each teaches what it is, how it works, how to use it, and how to use it efficiently with a bankable token-saving habit.
+- **Power User Modules track**: 26 shipped modules covering Custom slash commands, Skills, Subagents, Hooks, MCP, Plugins, Plugin distribution, Worktrees, Agent view, Agent teams, Dynamic workflows, Goals, Scheduled tasks/routines, VS Code, JetBrains, Desktop, Chrome/computer use, GitHub Actions, GitLab CI/CD, Code Review, Slack/Remote Control, web/cloud sessions, channels, deep links, security guidance plugin, and ultrareview. Each includes official docs refs, a typed terminal challenge, and a token-efficiency habit.
+- **Team Modules track**: 24 shipped modules covering Agent SDK, headless automation, SDK sessions, SDK permissions/user input, SDK streaming, structured outputs, custom tools, tool search, cost tracking, observability, hosting/session storage, secure deployment, organization setup, analytics/monitoring, managed settings, managed MCP, security/data usage, network gateways, GitHub Enterprise Server, Bedrock, Vertex AI, Microsoft Foundry, Claude Platform on AWS, and rollout kits. Each includes official docs refs, a typed terminal challenge, and a token-efficiency habit.
 - **Type-it-yourself terminal core**: lessons 3, 4, and 5 plus all Power User and Team lessons now include terminal challenges with `?` hints, `reset`, incorrect feedback, and scripted success output.
 - **Command palette**: real `⌘K` palette searches lessons/features/docs refs/tips, shows Done/Now/Locked states, and only exposes navigable links for unlocked lessons.
 - **Lesson checks + branded 404**: each lesson has a low-stakes check with explain-on-wrong feedback, and `/not-found` uses the dual-tone house style.
 - **Release hardening pass**: axe-core structural a11y coverage for chrome, Forest, lesson, terminal, and 404; semantic Forest markers; mobile overflow fixes; reduced-motion terminal remounts into the full transcript.
 
-**Verified:** 49/49 tests, lint clean, production build passes (`/`, `/how-we-calculate`, all 67 lessons prerender static). Browser QA used isolated headless Chrome DevTools Protocol because the MCP Playwright profile was locked: desktop home, mobile home, desktop/mobile lesson, reduced-motion lesson, branded 404, expanded dashboard, `agent-loop`, `checkpointing`, `custom-slash-commands`, `worktrees-isolation`, `vs-code-integration`, `agent-sdk-overview`, and `organization-setup` rendered without horizontal overflow.
+**Verified:** 50/50 tests, lint clean, production build passes (`/`, `/how-we-calculate`, all 82 lessons prerender static). Browser QA used isolated headless Chrome DevTools Protocol because the MCP Playwright profile was locked: desktop home, mobile home, desktop/mobile lesson, reduced-motion lesson, branded 404, expanded dashboard, `agent-loop`, `quickstart-install-login`, `checkpointing`, `custom-slash-commands`, `worktrees-isolation`, `vs-code-integration`, `agent-sdk-overview`, and `organization-setup` rendered without horizontal overflow.
 
 ---
 
@@ -134,9 +134,9 @@ Core type-it-yourself challenges are implemented for lessons 3, 4, and 5. Remain
 
 ### P2.5 — Feature-module expansion
 The master plan now has a **Feature-module curriculum expansion** section and detailed plan file. Use the official Claude Code docs index (`https://code.claude.com/docs/llms.txt`) as the source map. Each new module must teach what the feature is, how it works, how to use it, and the token-efficiency habit attached to that feature.
-Feature Modules v1, Power User Modules v1, and Team Modules v1 are shipped through the Enterprise/provider slice. Next modules to add:
-1. Remaining feature audit: re-run the official docs index and add modules for any new or missed Claude Code pages before deploy.
-2. If the docs index adds new provider, policy, or rollout pages, add them as Team modules with the same docs refs, challenge, check, and token-efficiency habit pattern.
+Feature Modules, Power User Modules, and Team Modules are shipped through the runtime/setup slice. The live docs index has 145 pages; 120 are referenced by lessons, leaving 25 mostly Agent SDK subpages, release/changelog pages, and reference/legal/support pages. Next modules to add:
+1. Agent SDK expansion: SDK agent loop, migration guide, SDK plugins, SDK skills, SDK slash commands, SDK subagents, SDK todo lists, and Python reference orientation.
+2. Docs/reference coverage: champion kit, desktop quickstart, changelog/what's-new, glossary, and legal/compliance should be linked or covered where they teach real user behavior.
 
 ### P3 polish — Command palette QA
 Core `⌘K` palette is implemented. Remaining work:
@@ -153,7 +153,7 @@ Intermediate/advanced tracks, accounts/cloud sync, real shell integration, shari
 ---
 
 ## 7. Honest current gaps (don't represent these as done)
-- Impact baseline has desktop/mobile screenshot coverage for 201 trees, but the bank-tip Plant reward and cascade toggles still need rendered interaction QA.
+- Impact baseline has desktop/mobile screenshot coverage for 246 trees, but the bank-tip Plant reward and cascade toggles still need rendered interaction QA.
 - The terminal has desktop/mobile/reduced-motion screenshot coverage, but guided typing success/incorrect flows still need rendered interaction QA.
 - The command palette has unit, axe, and build coverage, but not rendered screenshot QA for open/search/close states.
 - The branded 404 has test, axe, build, and desktop screenshot coverage.

@@ -18,26 +18,33 @@ test('renders the lesson numeral, title and signature tip', () => {
 
 test('feature module lessons render their track and family', () => {
   render(<LessonPane lesson={getLesson('agent-loop')!} />);
-  expect(screen.getByText(/Feature Modules v1 · Core Session Workflow/i)).toBeInTheDocument();
-  expect(screen.getByText('Lesson 1 of 11')).toBeInTheDocument();
+  expect(screen.getByText(/Feature Modules · Core Session Workflow/i)).toBeInTheDocument();
+  expect(screen.getByText('Lesson 1 of 24')).toBeInTheDocument();
+});
+
+test('runtime setup feature lessons render their family and position', () => {
+  render(<LessonPane lesson={getLesson('quickstart-install-login')!} />);
+  expect(screen.getByText(/Feature Modules · Runtime Setup/i)).toBeInTheDocument();
+  expect(screen.getByText('Lesson 12 of 24')).toBeInTheDocument();
+  expect(screen.getByText(/What should you verify before asking Claude/i)).toBeInTheDocument();
 });
 
 test('power-user module lessons render their track and extension family', () => {
   render(<LessonPane lesson={getLesson('custom-slash-commands')!} />);
   expect(screen.getByText(/Power User Modules · Extensions/i)).toBeInTheDocument();
-  expect(screen.getByText('Lesson 1 of 24')).toBeInTheDocument();
+  expect(screen.getByText('Lesson 1 of 26')).toBeInTheDocument();
 });
 
 test('parallel-work power-user lessons render their family and position', () => {
   render(<LessonPane lesson={getLesson('worktrees-isolation')!} />);
   expect(screen.getByText(/Power User Modules · Parallel And Large Work/i)).toBeInTheDocument();
-  expect(screen.getByText('Lesson 8 of 24')).toBeInTheDocument();
+  expect(screen.getByText('Lesson 8 of 26')).toBeInTheDocument();
 });
 
 test('integration power-user lessons render their family and position', () => {
   render(<LessonPane lesson={getLesson('vs-code-integration')!} />);
   expect(screen.getByText(/Power User Modules · Integrations/i)).toBeInTheDocument();
-  expect(screen.getByText('Lesson 14 of 24')).toBeInTheDocument();
+  expect(screen.getByText('Lesson 14 of 26')).toBeInTheDocument();
 });
 
 test('team module lessons render their track and SDK family', () => {

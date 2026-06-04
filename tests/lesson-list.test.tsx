@@ -11,6 +11,10 @@ const SLUGS = [
   'agent-loop', 'context-window', 'permission-modes', 'prompt-input',
   'continue-resume', 'slash-commands', 'search-and-read', 'claude-md',
   'built-in-tools', 'bash-powershell', 'checkpointing',
+  'quickstart-install-login', 'troubleshoot-install-login', 'terminal-configuration',
+  'keybindings-shortcuts', 'statusline-usage', 'fullscreen-rendering',
+  'voice-dictation', 'output-styles', 'fast-mode', 'sandbox-environments',
+  'dev-containers', 'runtime-errors-troubleshooting', 'environment-variables',
   'custom-slash-commands', 'skills-on-demand', 'subagents-isolated-context',
   'hooks-automation', 'mcp-tool-discovery', 'plugins-workflows', 'plugin-distribution',
   'worktrees-isolation', 'agent-view', 'agent-teams', 'dynamic-workflows',
@@ -18,6 +22,7 @@ const SLUGS = [
   'jetbrains-integration', 'desktop-workflow', 'chrome-computer-use',
   'github-actions', 'gitlab-ci-cd', 'code-review', 'slack-remote-control',
   'web-cloud-sessions', 'channels-events', 'deep-links',
+  'security-guidance-plugin', 'ultrareview',
   'agent-sdk-overview', 'headless-automation', 'sdk-sessions',
   'sdk-permissions-user-input', 'sdk-streaming', 'structured-outputs',
   'custom-tools-sdk', 'tool-search-sdk', 'cost-tracking-sdk',
@@ -31,7 +36,7 @@ const SLUGS = [
 test('renders beginner, feature-module, power-user, and team rows grouped by track', () => {
   render(<LessonList />);
   expect(screen.getByRole('heading', { name: 'Beginner Track' })).toBeInTheDocument();
-  expect(screen.getByRole('heading', { name: 'Feature Modules v1' })).toBeInTheDocument();
+  expect(screen.getByRole('heading', { name: 'Feature Modules' })).toBeInTheDocument();
   expect(screen.getByRole('heading', { name: 'Power User Modules' })).toBeInTheDocument();
   expect(screen.getByRole('heading', { name: 'Team Modules' })).toBeInTheDocument();
   for (const slug of SLUGS) {
