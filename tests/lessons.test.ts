@@ -1,9 +1,9 @@
 import { test, expect } from 'vitest';
 import { getAllLessons, getLesson, getLessonsByTrack, getAdjacent, signatureTip } from '@/lib/lessons';
 
-test('there are 8 beginner lessons, 11 feature modules, and 13 power-user modules in track order', () => {
+test('there are 8 beginner lessons, 11 feature modules, and 24 power-user modules in track order', () => {
   const all = getAllLessons();
-  expect(all).toHaveLength(32);
+  expect(all).toHaveLength(43);
   expect(getLessonsByTrack('beginner').map((l) => l.order)).toEqual([1, 2, 3, 4, 5, 6, 7, 8]);
   expect(getLessonsByTrack('feature-modules').map((l) => l.slug)).toEqual([
     'agent-loop',
@@ -32,6 +32,17 @@ test('there are 8 beginner lessons, 11 feature modules, and 13 power-user module
     'dynamic-workflows',
     'goals-completion',
     'scheduled-tasks-routines',
+    'vs-code-integration',
+    'jetbrains-integration',
+    'desktop-workflow',
+    'chrome-computer-use',
+    'github-actions',
+    'gitlab-ci-cd',
+    'code-review',
+    'slack-remote-control',
+    'web-cloud-sessions',
+    'channels-events',
+    'deep-links',
   ]);
 });
 
@@ -58,7 +69,7 @@ test('every lesson has exactly 3 tips and exactly one signature tip', () => {
 test('tip ids are globally unique across all lessons', () => {
   const ids = getAllLessons().flatMap((l) => l.tips.map((t) => t.id));
   expect(new Set(ids).size).toBe(ids.length);
-  expect(ids).toHaveLength(96);
+  expect(ids).toHaveLength(129);
 });
 
 test('beginner challenge lessons and extension modules have type-it-yourself terminal challenges', () => {
@@ -84,5 +95,6 @@ test('getAdjacent gives prev/next by order', () => {
   expect(getAdjacent('custom-slash-commands').prev).toBeNull();
   expect(getAdjacent('custom-slash-commands').next?.slug).toBe('skills-on-demand');
   expect(getAdjacent('plugin-distribution').next?.slug).toBe('worktrees-isolation');
-  expect(getAdjacent('scheduled-tasks-routines').next).toBeNull();
+  expect(getAdjacent('scheduled-tasks-routines').next?.slug).toBe('vs-code-integration');
+  expect(getAdjacent('deep-links').next).toBeNull();
 });

@@ -25,13 +25,19 @@ test('feature module lessons render their track and family', () => {
 test('power-user module lessons render their track and extension family', () => {
   render(<LessonPane lesson={getLesson('custom-slash-commands')!} />);
   expect(screen.getByText(/Power User Modules · Extensions/i)).toBeInTheDocument();
-  expect(screen.getByText('Lesson 1 of 13')).toBeInTheDocument();
+  expect(screen.getByText('Lesson 1 of 24')).toBeInTheDocument();
 });
 
 test('parallel-work power-user lessons render their family and position', () => {
   render(<LessonPane lesson={getLesson('worktrees-isolation')!} />);
   expect(screen.getByText(/Power User Modules · Parallel And Large Work/i)).toBeInTheDocument();
-  expect(screen.getByText('Lesson 8 of 13')).toBeInTheDocument();
+  expect(screen.getByText('Lesson 8 of 24')).toBeInTheDocument();
+});
+
+test('integration power-user lessons render their family and position', () => {
+  render(<LessonPane lesson={getLesson('vs-code-integration')!} />);
+  expect(screen.getByText(/Power User Modules · Integrations/i)).toBeInTheDocument();
+  expect(screen.getByText('Lesson 14 of 24')).toBeInTheDocument();
 });
 
 test('banking the signature tip completes the lesson and confirms', async () => {

@@ -14,7 +14,10 @@ const SLUGS = [
   'custom-slash-commands', 'skills-on-demand', 'subagents-isolated-context',
   'hooks-automation', 'mcp-tool-discovery', 'plugins-workflows', 'plugin-distribution',
   'worktrees-isolation', 'agent-view', 'agent-teams', 'dynamic-workflows',
-  'goals-completion', 'scheduled-tasks-routines',
+  'goals-completion', 'scheduled-tasks-routines', 'vs-code-integration',
+  'jetbrains-integration', 'desktop-workflow', 'chrome-computer-use',
+  'github-actions', 'gitlab-ci-cd', 'code-review', 'slack-remote-control',
+  'web-cloud-sessions', 'channels-events', 'deep-links',
 ];
 
 test('renders beginner, feature-module, and power-user rows grouped by track', () => {
