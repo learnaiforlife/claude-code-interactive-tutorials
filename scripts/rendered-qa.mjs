@@ -30,7 +30,7 @@ async function main() {
 
   console.log('Rendered QA passed');
   console.log(`- Production app: ${appUrl}`);
-  console.log('- Covered: terminal challenge, Replay, Plant and Forest cascade scaling, newest-tree marker, palette locked/unlocked flows, desktop/mobile overflow, console/runtime errors');
+  console.log('- Covered: multiple terminal challenges, Replay, multi-tip Forest state, Plant and Forest cascade scaling, newest-tree marker, palette locked/unlocked flows, desktop/mobile overflow, console/runtime errors');
 }
 
 async function runDesktopLearningFlow(browser) {
@@ -97,8 +97,8 @@ async function runDesktopLearningFlow(browser) {
   await page.waitForText('tokens kept out of the next prompt loop');
   await page.clickByText('Team of 20');
   await page.waitForText('160,000,000');
-  const progress = await page.evaluate((key) => JSON.parse(localStorage.getItem(key) ?? '{}'), PROGRESS_KEY);
-  assert(progress?.bankedTips?.['bash-commands']?.includes('l3-grep'), 'banking did not persist the signature tip');
+  const signatureProgress = await page.evaluate((key) => JSON.parse(localStorage.getItem(key) ?? '{}'), PROGRESS_KEY);
+  assert(signatureProgress?.bankedTips?.['bash-commands']?.includes('l3-grep'), 'banking did not persist the signature tip');
 
   await page.navigate(appUrl);
   await page.waitForText('1 / 273 tips banked');
@@ -122,6 +122,52 @@ async function runDesktopLearningFlow(browser) {
   assert(forestTreeState.newestGlow, 'Newest planted tree should render the glow circle');
   await page.clickByText('Team of 20');
   await page.waitForText('160,000,000 scaled tokens saved');
+
+  await page.navigate(`${appUrl}${APP_ROUTE}`);
+  await page.waitFor(() => Boolean(document.querySelector('[aria-label="Bank tip · ~2,500 tokens: Let a command do deterministic work"]')));
+  await page.clickByLabel('Bank tip · ~2,500 tokens: Let a command do deterministic work');
+  await page.waitForText('2,500');
+  const inlineProgress = await page.evaluate((key) => JSON.parse(localStorage.getItem(key) ?? '{}'), PROGRESS_KEY);
+  assert(inlineProgress?.bankedTips?.['bash-commands']?.includes('l3-command'), 'banking did not persist the inline tip');
+
+  await page.navigate(appUrl);
+  await page.waitForText('2 / 273 tips banked');
+  await page.waitForText('5,700 raw tokens banked');
+  const multiTipForestState = await page.evaluate(() => {
+    const forest = document.querySelector('ol[aria-label="2 of 273 trees planted"]');
+    const newestTree = Array.from(document.querySelectorAll('li[aria-label$=" planted"]')).find((element) =>
+      element.getAttribute('aria-label') === 'Lesson 3: Let a command do deterministic work planted',
+    );
+    return {
+      forestCount: forest?.getAttribute('aria-label'),
+      plantedCount: document.querySelectorAll('li[aria-label$=" planted"]').length,
+      newestClass: newestTree?.querySelector('svg')?.getAttribute('class') ?? '',
+      newestGlow: Boolean(newestTree?.querySelector('circle')),
+      nextTreeCopy: document.body.textContent.includes('Next tree: 01 · AI is not for everything'),
+    };
+  });
+  assert(multiTipForestState.forestCount === '2 of 273 trees planted', 'Forest should expose the two-tree count');
+  assert(multiTipForestState.plantedCount === 2, 'Forest should mark exactly two planted trees');
+  assert(multiTipForestState.newestClass.includes('scale-125'), 'Second banked tip should become the newest-tree marker');
+  assert(multiTipForestState.newestGlow, 'Second banked tip should render the newest-tree glow circle');
+  assert(multiTipForestState.nextTreeCopy, 'Forest should keep the global next-tree prompt after out-of-order banking');
+  await page.clickByText('Team of 20');
+  await page.waitForText('285,000,000 scaled tokens saved');
+
+  await page.navigate(`${appUrl}/lessons/creating-skills`);
+  await page.waitForText('Your turn: replace a repeated review prompt');
+  await page.waitFor(() => Boolean(document.querySelector('#terminal-challenge-input')));
+  await submitTerminalCommand(page, '/review-pr');
+  await page.waitForText('The workflow loads once, then runs from the saved instructions.');
+  await page.waitForText('2,200 tokens saved');
+  await page.clickByText('Bank this tip');
+  await page.waitForText('tokens kept out of the next prompt loop');
+  const skillsProgress = await page.evaluate((key) => JSON.parse(localStorage.getItem(key) ?? '{}'), PROGRESS_KEY);
+  assert(skillsProgress?.bankedTips?.['creating-skills']?.includes('l4-reuse'), 'banking did not persist the creating-skills signature tip');
+
+  await page.navigate(appUrl);
+  await page.waitForText('3 / 273 tips banked');
+  await page.waitForText('7,900 raw tokens banked');
 
   await page.clickByLabel('⌘K, open command palette');
   await page.typeInto('[aria-label="Search lessons, features, and token habits"]', 'agent sdk');
