@@ -25,8 +25,8 @@ Coverage that is already represented in the tracks below:
 - Extension system: features overview, `.claude` directory, skills, subagents, hooks, MCP, plugins, plugin marketplaces, plugin dependencies, plugin hints.
 - Parallel and automation: agent view, agents, agent teams, goals, checkpointing, scheduled tasks, routines, desktop scheduled tasks.
 - Integrations: VS Code, JetBrains, Desktop, Chrome, computer use, web/cloud sessions, remote control, deep links, channels, GitHub Actions, GitLab CI/CD, Slack.
-- Programmatic and SDK: Agent SDK overview, agent loop, Claude Code features in SDK, permissions, sessions, slash commands, skills, subagents, hooks, MCP, tool search, custom tools, streaming, structured output, cost tracking, observability, session storage, hosting, secure deployment.
-- Team and enterprise: admin setup, analytics, monitoring, managed settings, managed MCP, Bedrock, Vertex AI, Microsoft Foundry, LLM gateways, legal/compliance, data usage, security, rollout kits.
+- Programmatic and SDK: Agent SDK overview, agent loop, Claude Code features in SDK, migration guide, permissions, sessions, slash commands, skills, plugins, subagents, todo tracking, hooks, MCP, tool search, custom tools, streaming, structured output, Python/TypeScript references, cost tracking, observability, session storage, hosting, secure deployment.
+- Team and enterprise: admin setup, analytics, monitoring, managed settings, managed MCP, Bedrock, Vertex AI, Microsoft Foundry, LLM gateways, legal/compliance, data usage, security, champion kit, communications kit, rollout kits.
 
 Coverage gaps to keep explicit during implementation:
 
@@ -34,7 +34,7 @@ Coverage gaps to keep explicit during implementation:
 - **Model and response behavior**: model config, fast mode, output styles, fullscreen rendering, status line, and terminal config belong together as "session ergonomics", not scattered as trivia.
 - **Evented workflows**: channels and deep links are distinct from chat integrations because they push external state into a running session or launch a correctly scoped one.
 - **Production SDK use**: hosting, session storage, observability, secure deployment, user input, and file checkpointing should not be hidden under a generic Agent SDK module.
-- **Rollout material**: champion kit and communications kit are not beginner lessons, but they are useful team modules for adoption without wasteful prompt patterns.
+- **Release notes**: changelog and `whats-new` pages should only become a module if the lesson teaches a durable habit for tracking changed Claude Code behavior.
 
 ## Track 1: Foundations
 
@@ -137,6 +137,14 @@ Coverage gaps to keep explicit during implementation:
 | Observability | OpenTelemetry traces, metrics, events | Find expensive loops from traces before rewriting prompts | Trace the waste |
 | Hosting and storage | Subprocess architecture, Docker/Kubernetes, session storage | Persist transcripts and isolate tenants outside the prompt | Host state outside context |
 | Secure deployment | Isolation, credential handling, network control | Enforce boundaries in infrastructure | Keep secrets out of context |
+| SDK agent loop | Message lifecycle, tool execution, compaction, and result messages | Inspect structured messages instead of pasting raw streams | Observe the loop |
+| SDK migration | Package rename, option types, system prompt defaults, setting sources | Migrate with fixtures before redesigning agent behavior | Migrate in small proofs |
+| SDK plugins | Local plugin paths, namespaces, init verification | Load only the plugin path needed for the run | Scope plugin context |
+| SDK skills | Skill discovery, skill filtering, SDK tool permissions | Filter skills and enforce tools in SDK options | Expose the right skill |
+| SDK slash commands | Init command discovery and non-interactive command dispatch | Send saved commands instead of repeated workflow prompts | Command once |
+| SDK subagents | Agent definitions, context isolation, scoped tools and effort | Return findings rather than subagent transcripts | Keep heavy context isolated |
+| SDK todo lists | TaskCreate and TaskUpdate state for host UIs | Render plan state so users do not ask for status recaps | Show state without prompts |
+| SDK Python reference | Typed options, message classes, tools, result handling | Put controls in code instead of prompt policy | Type the boundary |
 
 ## Track 9: Team And Enterprise
 
@@ -164,7 +172,7 @@ For each slice, update the command palette search index, dashboard grouping, For
 1. **MVP complete**: current beginner track, Impact System, command palette, type-it-yourself terminal for lessons 3, 4, and 5, checks, branded 404.
 2. **Feature modules**: Foundations, Core Session Workflow, Codebase Context, Tools and Permissions, Runtime Setup.
 3. **Power user modules**: Extensions, Parallel and Large Work, Integrations.
-4. **Team modules**: Programmatic Use, Team and Enterprise. Shipped as 24 Team modules.
+4. **Team modules**: Programmatic Use, Team and Enterprise. Shipped as 32 Team modules.
 
 ## Acceptance For New Modules
 

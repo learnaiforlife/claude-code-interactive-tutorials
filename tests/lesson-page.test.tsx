@@ -50,14 +50,21 @@ test('integration power-user lessons render their family and position', () => {
 test('team module lessons render their track and SDK family', () => {
   render(<LessonPane lesson={getLesson('agent-sdk-overview')!} />);
   expect(screen.getByText(/Team Modules · Programmatic Use \/ SDK/i)).toBeInTheDocument();
-  expect(screen.getByText('Lesson 1 of 24')).toBeInTheDocument();
+  expect(screen.getByText('Lesson 1 of 32')).toBeInTheDocument();
 });
 
 test('enterprise team lessons render their family and position', () => {
   render(<LessonPane lesson={getLesson('organization-setup')!} />);
   expect(screen.getByText(/Team Modules · Enterprise Operations/i)).toBeInTheDocument();
-  expect(screen.getByText('Lesson 13 of 24')).toBeInTheDocument();
+  expect(screen.getByText('Lesson 13 of 32')).toBeInTheDocument();
   expect(screen.getByText(/What should an organization decide/i)).toBeInTheDocument();
+});
+
+test('agent-sdk-internals lessons render their family and position', () => {
+  render(<LessonPane lesson={getLesson('sdk-agent-loop')!} />);
+  expect(screen.getByText(/Team Modules · Agent SDK Internals/i)).toBeInTheDocument();
+  expect(screen.getByText('Lesson 25 of 32')).toBeInTheDocument();
+  expect(screen.getByText(/What is the efficient way to debug an SDK run/i)).toBeInTheDocument();
 });
 
 test('banking the signature tip completes the lesson and confirms', async () => {

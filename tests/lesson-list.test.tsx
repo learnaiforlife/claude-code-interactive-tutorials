@@ -31,6 +31,9 @@ const SLUGS = [
   'managed-mcp', 'security-data-usage', 'network-gateways',
   'github-enterprise-server', 'amazon-bedrock-provider', 'google-vertex-ai-provider',
   'microsoft-foundry-provider', 'claude-platform-on-aws', 'rollout-kits',
+  'sdk-agent-loop', 'sdk-migration-guide', 'sdk-plugins', 'sdk-skills',
+  'sdk-slash-commands', 'sdk-subagents', 'sdk-todo-lists',
+  'sdk-python-reference',
 ];
 
 test('renders beginner, feature-module, power-user, and team rows grouped by track', () => {
