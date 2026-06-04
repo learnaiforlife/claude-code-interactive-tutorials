@@ -165,6 +165,8 @@ Authoritative source map: use the official Claude Code docs index (`https://code
 
 Each new module must have at least one concrete token-efficiency tip in the lesson data before it ships.
 
+Detailed expansion plan: `docs/plans/2026-06-04-claude-code-feature-curriculum.md`.
+
 ---
 
 ## 7. Interactive Elements

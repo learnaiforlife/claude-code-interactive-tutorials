@@ -15,7 +15,7 @@ export default async function LessonPage({ params }: { params: Promise<{ slug: s
   return (
     <main className="grid min-h-[calc(100vh-2.6rem)] grid-cols-1 md:grid-cols-[56fr_44fr]">
       <LessonPane lesson={lesson} />
-      <TerminalSession script={lesson.session} />
+      <TerminalSession script={lesson.session} challenge={lesson.challenge} />
     </main>
   );
 }

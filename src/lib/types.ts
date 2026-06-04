@@ -28,6 +28,15 @@ export interface SessionLine {
   note?: string;        // 'impact' only
 }
 
+export interface TerminalChallenge {
+  intro: string;
+  prompt: string;
+  accepted: string[];
+  hint: string;
+  incorrect: string;
+  success: SessionLine[];
+}
+
 export interface Lesson {
   slug: string;
   order: number;
@@ -38,6 +47,7 @@ export interface Lesson {
   context: string;        // 1–2 sentence lead-in
   concept: string;        // the core teaching, a few sentences
   session: SessionLine[]; // the animated Claude Code session for this lesson
+  challenge?: TerminalChallenge; // optional type-it-yourself exercise
   tips: Tip[];            // exactly 3, exactly one 'signature'
 }
 

@@ -26,6 +26,13 @@ test('tip ids are globally unique across all lessons', () => {
   expect(ids).toHaveLength(24);
 });
 
+test('lessons 3, 4 and 5 have type-it-yourself terminal challenges', () => {
+  expect(getLesson('bash-commands')?.challenge?.accepted.length).toBeGreaterThan(0);
+  expect(getLesson('creating-skills')?.challenge?.accepted.length).toBeGreaterThan(0);
+  expect(getLesson('creating-subagents')?.challenge?.accepted.length).toBeGreaterThan(0);
+  expect(getLesson('effective-prompting')?.challenge).toBeUndefined();
+});
+
 test('getAdjacent gives prev/next by order', () => {
   const adj = getAdjacent('bash-commands'); // order 3
   expect(adj.prev?.slug).toBe('effective-prompting');

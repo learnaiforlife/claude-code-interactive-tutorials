@@ -63,6 +63,23 @@ const LESSONS: Lesson[] = [
       { kind: 'good', text: 'Found it. ~240 tokens.' },
       { kind: 'impact', savedTokens: 9560, note: "Search, don't slurp. ~40x cheaper." },
     ],
+    challenge: {
+      intro: 'Your turn: find where auth errors are thrown without reading whole files.',
+      prompt: 'Type the efficient command',
+      accepted: [
+        'grep -rn "throw new AuthError" src/server',
+        'rg "throw new AuthError" src/server',
+        'grep -R "throw new AuthError" src/server',
+      ],
+      hint: 'Search for the exact error constructor inside src/server.',
+      incorrect: 'Close, but this exercise wants a search command that narrows the context before any file read.',
+      success: [
+        { kind: 'tool', text: 'rg "throw new AuthError" src/server' },
+        { kind: 'out', text: 'src/server/auth.ts:148: throw new AuthError("token expired")' },
+        { kind: 'good', text: 'Found the line without loading two full files.' },
+        { kind: 'impact', savedTokens: 3200, note: 'Search first, read second.' },
+      ],
+    },
     tips: [
       { id: 'l3-grep', kind: 'signature', savedTokens: 3200, title: "Search, don't slurp", detail: 'grep/glob to the 5 relevant lines instead of reading whole files.' },
       { id: 'l3-command', kind: 'inline', savedTokens: 2500, title: 'Let a command do deterministic work', detail: 'Rename/move/count/test = 0 model tokens.' },
@@ -84,6 +101,19 @@ const LESSONS: Lesson[] = [
       { kind: 'good', text: 'Workflow ready. ~300 tokens.' },
       { kind: 'impact', savedTokens: 2900, note: 'Teach the workflow once.' },
     ],
+    challenge: {
+      intro: 'Your turn: replace a repeated review prompt with the durable workflow command.',
+      prompt: 'Type the command Claude should run next',
+      accepted: ['/review-pr', 'review-pr'],
+      hint: 'Use the saved slash command from the efficient path.',
+      incorrect: 'That still sounds like re-explaining the workflow. Use the saved command instead.',
+      success: [
+        { kind: 'prompt', text: '/review-pr' },
+        { kind: 'tool', text: 'Loaded skill: review-pr' },
+        { kind: 'good', text: 'The workflow loads once, then runs from the saved instructions.' },
+        { kind: 'impact', savedTokens: 2200, note: 'A command replaces repeated setup text.' },
+      ],
+    },
     tips: [
       { id: 'l4-reuse', kind: 'signature', savedTokens: 2200, title: 'A skill replaces a re-explanation', detail: 'Encapsulate a repeated workflow once.' },
       { id: 'l4-claude-md', kind: 'inline', savedTokens: 1500, title: 'Put durable facts in CLAUDE.md', detail: 'Stable project context, prompt-cacheable, not re-derived.' },
@@ -105,6 +135,23 @@ const LESSONS: Lesson[] = [
       { kind: 'warn', text: 'Doing it inline would have loaded 18,000 lines into your context.' },
       { kind: 'impact', savedTokens: 17000, note: 'Let subagents hold the heavy context.' },
     ],
+    challenge: {
+      intro: 'Your turn: ask for a subagent result without pulling raw findings into the main context.',
+      prompt: 'Type the efficient instruction',
+      accepted: [
+        'return only the conclusion',
+        'have the subagent return only the conclusion',
+        'dispatch subagent and return only the conclusion',
+      ],
+      hint: 'The key phrase is about returning the answer, not the dump.',
+      incorrect: 'That would still bring too much raw context back. Ask for the conclusion only.',
+      success: [
+        { kind: 'tool', text: 'Dispatch subagent: inspect old logger imports' },
+        { kind: 'out', text: 'subagent returns: 6 files, no raw file dumps' },
+        { kind: 'good', text: 'Main context receives only the decision-ready answer.' },
+        { kind: 'impact', savedTokens: 5000, note: 'Heavy reading stays isolated.' },
+      ],
+    },
     tips: [
       { id: 'l5-context', kind: 'signature', savedTokens: 5000, title: 'Let subagents hold the heavy context', detail: 'They read/search a big surface and return only the conclusion.' },
       { id: 'l5-conclusions', kind: 'inline', savedTokens: 3000, title: 'Demand conclusions, not dumps', detail: 'Hand back the answer, not the files it read.' },

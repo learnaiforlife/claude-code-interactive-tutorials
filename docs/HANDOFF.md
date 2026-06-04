@@ -75,21 +75,22 @@ src/
     dashboard/LessonList.tsx    # progress meter + numbered rows + Done/Now/Locked; locked = non-navigable
     impact/                     # Impact math UI: Forest dashboard, Plant reward, cascade controls, metric formatting
     lesson/LessonPane.tsx       # editorial left pane: concept, signature + inline tip banking, Plant reward, prev/next
-    lesson/TerminalSession.tsx  # THE animated session player (autoplay + Replay, reduced-motion safe)
+    lesson/TerminalSession.tsx  # animated session player + optional type-it-yourself challenge
     ui/icons.tsx                # in-house Check/Lock/ArrowLeft/ArrowRight (no icon dep)
   lib/
-    types.ts            # Lesson, Tip, SessionLine, Progress, Track
+    types.ts            # Lesson, Tip, SessionLine, TerminalChallenge, Progress, Track
     lessons.ts          # 8 lessons: context + concept + scripted session + 3 tips each (1 signature)
     impact.ts           # exact cost, eco ranges, cascade factors, banked-tip totals
     progress.ts         # localStorage progress: bankTip + pure *In(progress,...) derivations + wrappers
     use-progress.ts     # useProgress() store (useSyncExternalStore) + bankTipNow()
     use-reduced-motion.ts # usePrefersReducedMotion() (useSyncExternalStore)
-tests/                  # 10 suites, 27 tests (setup.ts mocks next/font, next/link, localStorage, matchMedia)
+tests/                  # 10 suites, 29 tests (setup.ts mocks next/font, next/link, localStorage, matchMedia)
 ```
 
 Data model: each `Lesson` has `tips: Tip[]` (exactly 3, one `kind:'signature'`) and `session: SessionLine[]`.
 `SessionLine.kind` ∈ `prompt|reply|thinking|tool|out|good|warn|rule|impact`. The `impact` line carries
 `savedTokens` + `note`. `Tip.savedTokens` is an illustrative per-use estimate.
+Lessons 3, 4, and 5 also have `challenge?: TerminalChallenge` for type-it-yourself exercises.
 
 ---
 
@@ -102,8 +103,10 @@ Data model: each `Lesson` has `tips: Tip[]` (exactly 3, one `kind:'signature'`) 
 - **Live animated terminal sessions + real per-lesson content** (`8c6e3e3`): `TerminalSession` plays each lesson's scripted Claude Code session (prompts type out, tool/output lines stream, ends on a tokens-saved tally; autoplay + Replay; reduced-motion renders the full transcript instantly). Every lesson has a `concept` + a `session`.
 - **Impact System foundations** (`ad96ab1`): `impact.ts`, exact Sonnet input-token cost math, honest eco ranges, cascade controls, methodology page, Plant reward, and Forest dashboard.
 - **24-tip banking pass**: inline tips are visible and bankable in each lesson, the Forest tracks 24 trees, signature tips still drive lesson completion/unlock.
+- **Feature-module curriculum plan**: `docs/plans/2026-06-04-claude-code-feature-curriculum.md` maps Claude Code features to module tracks and efficiency hooks.
+- **Type-it-yourself terminal core**: lessons 3, 4, and 5 now include terminal challenges with `?` hints, `reset`, incorrect feedback, and scripted success output.
 
-**Verified:** 27/27 tests, lint clean, production build passes (`/`, `/how-we-calculate`, all 8 lessons prerender static). Browser screenshot tooling was blocked by an occupied Playwright profile during the latest pass; route HTML was verified via the running dev server on `:3001`.
+**Verified:** 29/29 tests, lint clean, production build passes (`/`, `/how-we-calculate`, all 8 lessons prerender static). Browser screenshot tooling was blocked by an occupied Playwright profile during the latest pass; route HTML was verified via the running dev server on `:3001`.
 
 ---
 
@@ -115,11 +118,14 @@ The Impact System is implemented, but still needs a real browser screenshot pass
 2. Reduced-motion browser QA: Plant final state, no count-up movement, terminal transcript still instant.
 3. Craft pass: newest-tree glow, Forest density, mobile wrapping, empty-state language, metric legibility.
 
-### P2 — Interactive terminal (type-it-yourself)
-Extend `TerminalSession` (or add a sibling) so lessons 3/4/5 let the user **type a command and get scripted output**, with `?`-for-hint and `reset`, plus correct/incorrect detection. Today it only autoplays/replays. Keep the same line-rendering + reduced-motion model.
+### P2 polish — Interactive terminal QA and expansion
+Core type-it-yourself challenges are implemented for lessons 3, 4, and 5. Remaining work:
+1. Browser QA once the Playwright profile lock clears: desktop, mobile, reduced motion, Replay after challenge.
+2. Consider moving the challenge intro from terminal-only into the left lesson pane for stronger instruction.
+3. Add type challenges to future feature modules as they are created.
 
 ### P2.5 — Feature-module expansion
-The master plan now has a **Feature-module curriculum expansion** section. Use the official Claude Code docs index (`https://code.claude.com/docs/llms.txt`) as the source map. Each new module must teach what the feature is, how it works, how to use it, and the token-efficiency habit attached to that feature.
+The master plan now has a **Feature-module curriculum expansion** section and detailed plan file. Use the official Claude Code docs index (`https://code.claude.com/docs/llms.txt`) as the source map. Each new module must teach what the feature is, how it works, how to use it, and the token-efficiency habit attached to that feature.
 
 ### P3 — Command palette (⌘K)
 Wire the `Chrome` ⌘K hint to a real palette: fuzzy search all lessons, show Done/Now/Locked inline, keyboard-first, navigate on select. Use native `<dialog>`/portal (avoid clipping). Replace the `<kbd>` hint with the real trigger.
@@ -135,7 +141,7 @@ Intermediate/advanced tracks, accounts/cloud sync, real shell integration, shari
 
 ## 7. Honest current gaps (don't represent these as done)
 - Latest Impact UI has not had a screenshot-based browser QA pass because the Playwright profile was locked.
-- The terminal **autoplays/replays**; you cannot type into it yet (P2).
+- The terminal now supports guided typing for lessons 3, 4, and 5, but it has not had screenshot-based browser QA.
 - ⌘K is a visual hint only (P3).
 - 404 is Next's default (P4).
 
