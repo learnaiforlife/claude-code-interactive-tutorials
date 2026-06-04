@@ -30,7 +30,7 @@ async function main() {
 
   console.log('Rendered QA passed');
   console.log(`- Production app: ${appUrl}`);
-  console.log('- Covered: multiple terminal challenges, Replay, multi-tip Forest state, Plant and Forest cascade scaling, newest-tree marker, palette locked/unlocked flows, desktop/mobile overflow, console/runtime errors');
+  console.log('- Covered: module briefs, multiple terminal challenges, Replay, multi-tip Forest state, Plant and Forest cascade scaling, newest-tree marker, palette locked/unlocked flows, desktop/mobile overflow, console/runtime errors');
 }
 
 async function runDesktopLearningFlow(browser) {
@@ -45,24 +45,34 @@ async function runDesktopLearningFlow(browser) {
 
   const lessonState = await page.evaluate(() => {
     const region = document.querySelector('[aria-labelledby="challenge-brief-heading"]');
+    const moduleBrief = document.querySelector('[aria-labelledby="module-brief-heading"]');
     const signature = Array.from(document.querySelectorAll('h2')).find((el) => el.textContent.includes("Search, don't slurp"));
     const regionBox = region?.getBoundingClientRect();
+    const moduleBriefBox = moduleBrief?.getBoundingClientRect();
     const signatureBox = signature?.getBoundingClientRect();
     return {
+      moduleBriefHeading: document.querySelector('#module-brief-heading')?.textContent,
+      moduleBriefCopy:
+        moduleBrief?.textContent.includes('Search and compute with shell tools before reading large files into context') &&
+        moduleBrief?.textContent.includes('Tools reference'),
       heading: document.querySelector('#challenge-brief-heading')?.textContent,
       promptCopy: region?.textContent.includes('After the transcript finishes, the terminal asks') ?? false,
       hintCopy: region?.textContent.includes('?') && region?.textContent.includes('reset'),
       noOverflow: document.documentElement.scrollWidth <= document.documentElement.clientWidth,
+      moduleBriefWithinViewport: moduleBriefBox ? moduleBriefBox.left >= 0 && moduleBriefBox.right <= window.innerWidth : false,
       cardWithinViewport: regionBox ? regionBox.left >= 0 && regionBox.right <= window.innerWidth : false,
       noOverlap: regionBox && signatureBox ? regionBox.bottom <= signatureBox.top : false,
       challengeReady: !document.querySelector('#terminal-challenge-input')?.disabled,
     };
   });
 
+  assertIncludes(lessonState.moduleBriefHeading, 'Module brief', 'module brief heading');
+  assert(lessonState.moduleBriefCopy, 'module brief should show the efficiency habit and official docs');
   assertIncludes(lessonState.heading, 'Your turn: find where auth errors are thrown', 'challenge brief heading');
   assert(lessonState.promptCopy, 'challenge brief prompt copy missing');
   assert(lessonState.hintCopy, 'challenge brief hint/reset copy missing');
   assert(lessonState.noOverflow, 'desktop lesson has horizontal overflow');
+  assert(lessonState.moduleBriefWithinViewport, 'module brief leaves desktop viewport');
   assert(lessonState.cardWithinViewport, 'challenge brief leaves desktop viewport');
   assert(lessonState.noOverlap, 'challenge brief overlaps signature tip');
   assert(lessonState.challengeReady, 'terminal challenge input should be ready under reduced motion');
@@ -202,6 +212,18 @@ async function runDesktopLearningFlow(browser) {
   await page.waitForText('Agent SDK: Claude Code as a library');
   await page.press('Enter');
   await page.waitFor(() => window.location.pathname === '/lessons/agent-sdk-overview');
+  await page.waitForText('Start with the smallest tool surface and load project features only when they replace repeated prompt setup');
+  const teamModuleBriefState = await page.evaluate(() => {
+    const moduleBrief = document.querySelector('[aria-labelledby="module-brief-heading"]');
+    return {
+      hasSdkDocs: Boolean(moduleBrief?.querySelector('a[href="https://code.claude.com/docs/en/agent-sdk/overview.md"]')),
+      hasFeature: moduleBrief?.textContent.includes('Programmatic Use / SDK') ?? false,
+      noOverflow: document.documentElement.scrollWidth <= document.documentElement.clientWidth,
+    };
+  });
+  assert(teamModuleBriefState.hasSdkDocs, 'team module brief should link the Agent SDK overview docs');
+  assert(teamModuleBriefState.hasFeature, 'team module brief should show the SDK feature family');
+  assert(teamModuleBriefState.noOverflow, 'team module brief introduced horizontal overflow');
 
   assertNoPageErrors(page);
   await page.close();
@@ -216,19 +238,27 @@ async function runMobileLayoutFlow(browser) {
 
   const mobileState = await page.evaluate(() => {
     const region = document.querySelector('[aria-labelledby="challenge-brief-heading"]');
+    const moduleBrief = document.querySelector('[aria-labelledby="module-brief-heading"]');
     const terminal = document.querySelector('#terminal-challenge-input');
     const regionBox = region?.getBoundingClientRect();
+    const moduleBriefBox = moduleBrief?.getBoundingClientRect();
     const terminalBox = terminal?.getBoundingClientRect();
     return {
       heading: document.querySelector('#challenge-brief-heading')?.textContent,
+      moduleBriefCopy:
+        moduleBrief?.textContent.includes('Efficient habit') &&
+        moduleBrief?.textContent.includes('Tools reference'),
       noOverflow: document.documentElement.scrollWidth <= document.documentElement.clientWidth,
+      moduleBriefWithinViewport: moduleBriefBox ? moduleBriefBox.left >= 0 && moduleBriefBox.right <= window.innerWidth : false,
       cardWithinViewport: regionBox ? regionBox.left >= 0 && regionBox.right <= window.innerWidth : false,
       terminalWithinViewport: terminalBox ? terminalBox.left >= 0 && terminalBox.right <= window.innerWidth : false,
     };
   });
 
   assertIncludes(mobileState.heading, 'Your turn: find where auth errors are thrown', 'mobile challenge heading');
+  assert(mobileState.moduleBriefCopy, 'mobile module brief should show the efficient habit and docs');
   assert(mobileState.noOverflow, 'mobile lesson has horizontal overflow');
+  assert(mobileState.moduleBriefWithinViewport, 'module brief leaves mobile viewport');
   assert(mobileState.cardWithinViewport, 'challenge brief leaves mobile viewport');
   assert(mobileState.terminalWithinViewport, 'terminal input leaves mobile viewport');
   assertNoPageErrors(page);

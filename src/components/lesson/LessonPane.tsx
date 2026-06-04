@@ -40,6 +40,8 @@ export default function LessonPane({ lesson }: { lesson: Lesson }) {
 
       <p className="mt-5 max-w-[58ch] text-[0.95rem] leading-relaxed text-ink">{lesson.context}</p>
 
+      <ModuleBrief lesson={lesson} />
+
       <div className="mt-6">
         <p className="font-mono text-xs font-semibold uppercase tracking-wide text-ink-soft">The idea</p>
         <p className="mt-2 max-w-[58ch] leading-relaxed text-ink-soft">{lesson.concept}</p>
@@ -129,6 +131,46 @@ export default function LessonPane({ lesson }: { lesson: Lesson }) {
           <span />
         )}
       </nav>
+    </section>
+  );
+}
+
+function ModuleBrief({ lesson }: { lesson: Lesson }) {
+  return (
+    <section aria-labelledby="module-brief-heading" className="mt-6 rounded-xl border border-line-soft bg-black/[0.018] p-5">
+      <div className="flex flex-col gap-1 sm:flex-row sm:items-baseline sm:justify-between">
+        <h2 id="module-brief-heading" className="font-mono text-xs font-semibold uppercase tracking-wide text-ink-soft">
+          Module brief
+        </h2>
+        <span className="font-mono text-xs text-ink-soft">{lesson.estimatedMinutes} min · {lesson.format}</span>
+      </div>
+
+      <dl className="mt-4 grid gap-4 text-sm md:grid-cols-[minmax(0,0.85fr)_minmax(0,1.35fr)]">
+        <div>
+          <dt className="font-mono text-[0.72rem] font-semibold uppercase tracking-wide text-info">Feature</dt>
+          <dd className="mt-1 font-medium leading-relaxed text-ink">{lesson.featureFamily}</dd>
+        </div>
+        <div>
+          <dt className="font-mono text-[0.72rem] font-semibold uppercase tracking-wide text-success">Efficient habit</dt>
+          <dd className="mt-1 leading-relaxed text-ink">{lesson.efficiencyHabit}</dd>
+        </div>
+        <div className="md:col-span-2">
+          <dt className="font-mono text-[0.72rem] font-semibold uppercase tracking-wide text-command">Docs</dt>
+          <dd className="mt-2 flex flex-wrap gap-2">
+            {lesson.docsRefs.map((ref) => (
+              <Link
+                key={ref.href}
+                href={ref.href}
+                target="_blank"
+                rel="noreferrer"
+                className="inline-flex max-w-full items-center rounded-lg border border-line-soft bg-paper px-2.5 py-1.5 font-mono text-xs font-semibold text-ink transition-colors hover:border-info/40 hover:text-info"
+              >
+                <span className="truncate">{ref.title}</span>
+              </Link>
+            ))}
+          </dd>
+        </div>
+      </dl>
     </section>
   );
 }

@@ -12,6 +12,15 @@ test('renders the lesson numeral, title and signature tip', () => {
   expect(screen.getByText(/Beginner Track · Tools, Permissions, And Safety/i)).toBeInTheDocument();
   expect(screen.getByText('03')).toBeInTheDocument();
   expect(screen.getByRole('heading', { level: 1, name: /bash commands/i })).toBeInTheDocument();
+  expect(screen.getByText('Module brief')).toBeInTheDocument();
+  expect(screen.getByText('Feature')).toBeInTheDocument();
+  expect(screen.getByText('Efficient habit')).toBeInTheDocument();
+  expect(screen.getByText('Docs')).toBeInTheDocument();
+  expect(screen.getByText(/Search and compute with shell tools before reading large files into context/i)).toBeInTheDocument();
+  expect(screen.getByRole('link', { name: /Tools reference/i })).toHaveAttribute(
+    'href',
+    'https://code.claude.com/docs/en/tools-reference.md',
+  );
   expect(screen.getByText(/Search, don't slurp/i)).toBeInTheDocument();
   expect(screen.getByText(/What is the efficient first move/i)).toBeInTheDocument();
 });
@@ -29,6 +38,11 @@ test('feature module lessons render their track and family', () => {
   render(<LessonPane lesson={getLesson('agent-loop')!} />);
   expect(screen.getByText(/Feature Modules · Core Session Workflow/i)).toBeInTheDocument();
   expect(screen.getByText('Lesson 1 of 24')).toBeInTheDocument();
+  expect(screen.getByText(/Approve narrow deterministic tool calls and challenge broad repo exploration/i)).toBeInTheDocument();
+  expect(screen.getByRole('link', { name: /Best practices for Claude Code/i })).toHaveAttribute(
+    'href',
+    'https://code.claude.com/docs/en/best-practices.md',
+  );
 });
 
 test('runtime setup feature lessons render their family and position', () => {
@@ -60,6 +74,11 @@ test('team module lessons render their track and SDK family', () => {
   render(<LessonPane lesson={getLesson('agent-sdk-overview')!} />);
   expect(screen.getByText(/Team Modules · Programmatic Use \/ SDK/i)).toBeInTheDocument();
   expect(screen.getByText('Lesson 1 of 33')).toBeInTheDocument();
+  expect(screen.getByText(/Start with the smallest tool surface and load project features only when they replace repeated prompt setup/i)).toBeInTheDocument();
+  expect(screen.getByRole('link', { name: /SDK overview/i })).toHaveAttribute(
+    'href',
+    'https://code.claude.com/docs/en/agent-sdk/overview.md',
+  );
 });
 
 test('enterprise team lessons render their family and position', () => {
