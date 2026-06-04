@@ -7,6 +7,7 @@ import { tipBankedIn } from '@/lib/progress';
 import { useProgress, bankTipNow } from '@/lib/use-progress';
 import { Check, ArrowLeft, ArrowRight } from '@/components/ui/icons';
 import PlantReward from '@/components/impact/PlantReward';
+import LessonCheck from './LessonCheck';
 
 export default function LessonPane({ lesson }: { lesson: Lesson }) {
   const sig = signatureTip(lesson);
@@ -102,6 +103,8 @@ export default function LessonPane({ lesson }: { lesson: Lesson }) {
       </div>
 
       {rewardTip ? <PlantReward key={rewardTip.id} tip={rewardTip} /> : null}
+
+      <LessonCheck check={lesson.check} />
 
       <nav className="mt-auto flex items-center justify-between pt-10 font-mono text-xs text-ink-soft">
         {prev ? (

@@ -85,7 +85,7 @@ src/
     progress.ts         # localStorage progress: bankTip + pure *In(progress,...) derivations + wrappers
     use-progress.ts     # useProgress() store (useSyncExternalStore) + bankTipNow()
     use-reduced-motion.ts # usePrefersReducedMotion() (useSyncExternalStore)
-tests/                  # 10 suites, 31 tests (setup.ts mocks next/font, next/link, localStorage, matchMedia)
+tests/                  # 11 suites, 33 tests (setup.ts mocks next/font, next/link, localStorage, matchMedia)
 ```
 
 Data model: each `Lesson` has `tips: Tip[]` (exactly 3, one `kind:'signature'`) and `session: SessionLine[]`.
@@ -107,8 +107,9 @@ Lessons 3, 4, and 5 also have `challenge?: TerminalChallenge` for type-it-yourse
 - **Feature-module curriculum plan**: `docs/plans/2026-06-04-claude-code-feature-curriculum.md` maps Claude Code features to module tracks and efficiency hooks.
 - **Type-it-yourself terminal core**: lessons 3, 4, and 5 now include terminal challenges with `?` hints, `reset`, incorrect feedback, and scripted success output.
 - **Command palette**: real `⌘K` palette searches lessons/features/tips, shows Done/Now/Locked states, and only exposes navigable links for unlocked lessons.
+- **Lesson checks + branded 404**: each lesson has a low-stakes check with explain-on-wrong feedback, and `/not-found` uses the dual-tone house style.
 
-**Verified:** 31/31 tests, lint clean, production build passes (`/`, `/how-we-calculate`, all 8 lessons prerender static). Browser screenshot tooling was blocked by an occupied Playwright profile during the latest pass; route HTML was verified via the running dev server on `:3001`.
+**Verified:** 33/33 tests, lint clean, production build passes (`/`, `/how-we-calculate`, all 8 lessons prerender static). Browser screenshot tooling was blocked by an occupied Playwright profile during the latest pass; route HTML was verified via the running dev server on `:3001`.
 
 ---
 
@@ -136,8 +137,7 @@ Core `⌘K` palette is implemented. Remaining work:
 3. Consider richer fuzzy ranking if the lesson count grows beyond the first tracks.
 
 ### P4 — Content & polish
-- **Lesson "Check"** (lesson anatomy step 4): a small MCQ / fill-in-the-blank per lesson with explain-on-wrong (not graded).
-- Branded **404**, Lighthouse/perf pass, full a11y audit on both surfaces, then **Vercel deploy**.
+- Lighthouse/perf pass, full a11y audit on both surfaces, then **Vercel deploy**.
 
 ### Backlog / Phase 3+ (from the master plan)
 Intermediate/advanced tracks, accounts/cloud sync, real shell integration, sharing. Out of MVP.
@@ -148,7 +148,7 @@ Intermediate/advanced tracks, accounts/cloud sync, real shell integration, shari
 - Latest Impact UI has not had a screenshot-based browser QA pass because the Playwright profile was locked.
 - The terminal now supports guided typing for lessons 3, 4, and 5, but it has not had screenshot-based browser QA.
 - The command palette has test coverage and build coverage, but not screenshot-based browser QA.
-- 404 is Next's default (P4).
+- The branded 404 has test and build coverage, but not screenshot-based browser QA.
 
 ---
 

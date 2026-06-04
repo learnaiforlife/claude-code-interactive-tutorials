@@ -16,6 +16,14 @@ const LESSONS: Lesson[] = [
       { kind: 'warn', text: 'Asking me to edit them one by one would have cost ~4,000 tokens.' },
       { kind: 'impact', savedTokens: 4000, note: 'Reach for the cheapest tool that works.' },
     ],
+    check: {
+      question: 'A user asks Claude to rename 14 files one by one. What should you do first?',
+      options: [
+        { id: 'command', text: 'Use a shell or editor rename command.', correct: true, explanation: 'Correct. Deterministic file moves do not need model reasoning.' },
+        { id: 'agent', text: 'Ask Claude to edit every file manually.', correct: false, explanation: 'That spends tokens on work the shell can do exactly.' },
+        { id: 'opus', text: 'Switch to the strongest model first.', correct: false, explanation: 'Model choice matters after you decide the task belongs in the model.' },
+      ],
+    },
     tips: [
       { id: 'l1-litmus', kind: 'signature', savedTokens: 2000, title: 'AI is not for everything: run the litmus', detail: 'Could a command, your editor, or your own memory do this for 0 tokens? If yes, do that.' },
       { id: 'l1-context-cost', kind: 'inline', savedTokens: 1200, title: "Context isn't free or one-time", detail: 'Claude re-reads the whole conversation every turn.' },
@@ -38,6 +46,14 @@ const LESSONS: Lesson[] = [
       { kind: 'good', text: 'Fixed applyDiscount() ordering. One pass, ~1,500 tokens.' },
       { kind: 'impact', savedTokens: 4500, note: 'Say it once, precisely.' },
     ],
+    check: {
+      question: 'Which prompt shape is cheapest for a known checkout bug?',
+      options: [
+        { id: 'vague', text: 'fix the bug', correct: false, explanation: 'That forces clarifying rounds, and every round re-sends context.' },
+        { id: 'precise', text: 'In checkout.ts, subtract coupon before tax and return just the diff.', correct: true, explanation: 'Correct. It names file, symptom, desired behavior, and output shape.' },
+        { id: 'browse', text: 'Look around the whole repo and improve checkout.', correct: false, explanation: 'That widens context before Claude knows what matters.' },
+      ],
+    },
     tips: [
       { id: 'l2-precise', kind: 'signature', savedTokens: 1800, title: 'One precise prompt beats five vague ones', detail: 'Each clarify-retry round re-sends the entire context.' },
       { id: 'l2-scope', kind: 'inline', savedTokens: 1000, title: 'Scope the context', detail: 'Name the files/dirs to touch instead of "look around the repo".' },
@@ -80,6 +96,14 @@ const LESSONS: Lesson[] = [
         { kind: 'impact', savedTokens: 3200, note: 'Search first, read second.' },
       ],
     },
+    check: {
+      question: 'You need the one line that throws AuthError. What is the efficient first move?',
+      options: [
+        { id: 'read', text: 'Read both likely files in full.', correct: false, explanation: 'That loads hundreds of irrelevant lines into context.' },
+        { id: 'search', text: 'Search for the exact throw pattern first.', correct: true, explanation: 'Correct. Search narrows the context before any file read.' },
+        { id: 'paste', text: 'Paste the full auth logs into the prompt.', correct: false, explanation: 'Large pasted logs become context that gets paid for again.' },
+      ],
+    },
     tips: [
       { id: 'l3-grep', kind: 'signature', savedTokens: 3200, title: "Search, don't slurp", detail: 'grep/glob to the 5 relevant lines instead of reading whole files.' },
       { id: 'l3-command', kind: 'inline', savedTokens: 2500, title: 'Let a command do deterministic work', detail: 'Rename/move/count/test = 0 model tokens.' },
@@ -112,6 +136,14 @@ const LESSONS: Lesson[] = [
         { kind: 'tool', text: 'Loaded skill: review-pr' },
         { kind: 'good', text: 'The workflow loads once, then runs from the saved instructions.' },
         { kind: 'impact', savedTokens: 2200, note: 'A command replaces repeated setup text.' },
+      ],
+    },
+    check: {
+      question: 'When you repeat the same PR review checklist every week, what should you do?',
+      options: [
+        { id: 'paste', text: 'Paste the full checklist into every session.', correct: false, explanation: 'That pays for the same instructions repeatedly.' },
+        { id: 'skill', text: 'Save the workflow as a tight skill or command.', correct: true, explanation: 'Correct. Durable workflow instructions should be loaded on demand.' },
+        { id: 'memory', text: 'Ask Claude to infer the checklist again.', correct: false, explanation: 'Inference is not durable. Store repeated workflow rules explicitly.' },
       ],
     },
     tips: [
@@ -152,6 +184,14 @@ const LESSONS: Lesson[] = [
         { kind: 'impact', savedTokens: 5000, note: 'Heavy reading stays isolated.' },
       ],
     },
+    check: {
+      question: 'A task needs scanning 60 files. What should the main session receive back?',
+      options: [
+        { id: 'dump', text: 'Every matching file and all raw snippets.', correct: false, explanation: 'That imports the heavy context into the main conversation.' },
+        { id: 'conclusion', text: 'A short conclusion with the exact files to edit.', correct: true, explanation: 'Correct. The subagent can hold the heavy scan and return only the answer.' },
+        { id: 'repeat', text: 'The full subagent transcript for audit.', correct: false, explanation: 'The transcript is usually too much. Ask for decision-ready evidence only.' },
+      ],
+    },
     tips: [
       { id: 'l5-context', kind: 'signature', savedTokens: 5000, title: 'Let subagents hold the heavy context', detail: 'They read/search a big surface and return only the conclusion.' },
       { id: 'l5-conclusions', kind: 'inline', savedTokens: 3000, title: 'Demand conclusions, not dumps', detail: 'Hand back the answer, not the files it read.' },
@@ -172,6 +212,14 @@ const LESSONS: Lesson[] = [
       { kind: 'good', text: 'Now you can see exactly what to trim.' },
       { kind: 'impact', savedTokens: 14000, note: "You can't trim what you can't see." },
     ],
+    check: {
+      question: 'Why should you inspect MCP servers before a new task?',
+      options: [
+        { id: 'schemas', text: 'Enabled tool schemas ride along in context.', correct: true, explanation: 'Correct. Tool definitions can become a context cost before you type.' },
+        { id: 'speed', text: 'It makes every server run faster.', correct: false, explanation: 'Inspection shows what is loaded. It does not speed the servers by itself.' },
+        { id: 'security', text: 'It automatically disables risky tools.', correct: false, explanation: 'Viewing is not trimming. You still choose what to disable or defer.' },
+      ],
+    },
     tips: [
       { id: 'l6-schema-cost', kind: 'signature', savedTokens: 900, title: "Every enabled tool's schema lives in your context", detail: 'Loaded every turn; seeing what is loaded is step one.' },
       { id: 'l6-sprawl', kind: 'inline', savedTokens: 1500, title: 'Spot tool sprawl', detail: 'A dozen servers can dominate the budget before you type.' },
@@ -191,6 +239,14 @@ const LESSONS: Lesson[] = [
       { kind: 'good', text: 'Trimmed. 99 tool schemas dropped.' },
       { kind: 'impact', savedTokens: 11900, note: 'Trim to what this project needs.' },
     ],
+    check: {
+      question: 'A repo does not use Playwright or trading data. What is the efficient MCP move?',
+      options: [
+        { id: 'global', text: 'Leave every global server enabled.', correct: false, explanation: 'Unused schemas still consume context on every turn.' },
+        { id: 'disable', text: 'Disable unused servers for this project.', correct: true, explanation: 'Correct. Project-scoped MCP keeps the tool budget aligned with the work.' },
+        { id: 'paste', text: 'Paste tool descriptions only when needed.', correct: false, explanation: 'That is worse than configuration. Let the tool system manage schemas.' },
+      ],
+    },
     tips: [
       { id: 'l7-disable', kind: 'signature', savedTokens: 2500, title: "Disable what this project doesn't use", detail: 'Unused servers stop riding along every turn.' },
       { id: 'l7-per-project', kind: 'inline', savedTokens: 1500, title: 'Enable per-project, not globally', detail: 'Scope connections to where they are needed.' },
@@ -211,6 +267,14 @@ const LESSONS: Lesson[] = [
       { kind: 'good', text: 'Fresh context. Next turn: ~800 tokens.' },
       { kind: 'impact', savedTokens: 21000, note: '/clear between unrelated tasks.' },
     ],
+    check: {
+      question: 'You finished a long debugging thread and want to start a new feature. What saves the most context?',
+      options: [
+        { id: 'continue', text: 'Continue in the same thread for convenience.', correct: false, explanation: 'The old debugging history will be re-sent into the new task.' },
+        { id: 'clear', text: 'Use /clear before the unrelated task.', correct: true, explanation: 'Correct. A fresh context drops stale history from the next turn.' },
+        { id: 'summarize', text: 'Ask Claude to reread everything first.', correct: false, explanation: 'That adds another costly turn before the new task even starts.' },
+      ],
+    },
     tips: [
       { id: 'l8-clear', kind: 'signature', savedTokens: 1500, title: '/clear between unrelated tasks', detail: 'Stale history is re-sent every turn.' },
       { id: 'l8-edit', kind: 'inline', savedTokens: 2000, title: "Edit, don't rewrite", detail: 'Pay only for the lines that change.' },

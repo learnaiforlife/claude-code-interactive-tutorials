@@ -37,6 +37,16 @@ export interface TerminalChallenge {
   success: SessionLine[];
 }
 
+export interface LessonCheck {
+  question: string;
+  options: Array<{
+    id: string;
+    text: string;
+    correct: boolean;
+    explanation: string;
+  }>;
+}
+
 export interface Lesson {
   slug: string;
   order: number;
@@ -48,6 +58,7 @@ export interface Lesson {
   concept: string;        // the core teaching, a few sentences
   session: SessionLine[]; // the animated Claude Code session for this lesson
   challenge?: TerminalChallenge; // optional type-it-yourself exercise
+  check: LessonCheck;     // low-stakes checkpoint with explain-on-wrong
   tips: Tip[];            // exactly 3, exactly one 'signature'
 }
 

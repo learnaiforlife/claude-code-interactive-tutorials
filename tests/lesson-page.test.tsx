@@ -12,6 +12,7 @@ test('renders the lesson numeral, title and signature tip', () => {
   expect(screen.getByText('03')).toBeInTheDocument();
   expect(screen.getByRole('heading', { level: 1, name: /bash commands/i })).toBeInTheDocument();
   expect(screen.getByText(/Search, don't slurp/i)).toBeInTheDocument();
+  expect(screen.getByText(/What is the efficient first move/i)).toBeInTheDocument();
 });
 
 test('banking the signature tip completes the lesson and confirms', async () => {
@@ -31,4 +32,13 @@ test('renders and banks inline tips without completing the lesson', async () => 
   expect(isTipBanked('bash-commands', 'l3-command')).toBe(true);
   expect(isLessonComplete('bash-commands')).toBe(false);
   expect(screen.getByText(/tokens kept out of the next prompt loop/i)).toBeInTheDocument();
+});
+
+test('lesson check explains wrong and correct answers', async () => {
+  const user = userEvent.setup();
+  render(<LessonPane lesson={getLesson('bash-commands')!} />);
+  await user.click(screen.getByRole('button', { name: /Read both likely files in full/i }));
+  expect(screen.getByText(/hundreds of irrelevant lines/i)).toBeInTheDocument();
+  await user.click(screen.getByRole('button', { name: /Search for the exact throw pattern first/i }));
+  expect(screen.getByText(/Search narrows the context/i)).toBeInTheDocument();
 });

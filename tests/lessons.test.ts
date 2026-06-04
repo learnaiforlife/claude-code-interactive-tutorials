@@ -17,6 +17,7 @@ test('every lesson has exactly 3 tips and exactly one signature tip', () => {
     expect(lesson.tips).toHaveLength(3);
     expect(lesson.tips.filter((t) => t.kind === 'signature')).toHaveLength(1);
     expect(signatureTip(lesson).kind).toBe('signature');
+    expect(lesson.check.options.filter((option) => option.correct)).toHaveLength(1);
   }
 });
 
