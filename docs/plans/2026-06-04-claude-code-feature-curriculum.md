@@ -1,6 +1,6 @@
 # Claude Code Feature Curriculum
 
-> Source map: official Claude Code docs index at `https://code.claude.com/docs/llms.txt`, re-checked June 4, 2026.
+> Source map: official Claude Code docs index at `https://code.claude.com/docs/llms.txt`, re-checked June 4, 2026 with `npm run audit:docs`.
 > Rule: every module teaches the feature first, then attaches one token-efficiency habit and an Impact reward.
 
 ## Curriculum Contract
@@ -35,7 +35,7 @@ Coverage gaps to keep explicit during implementation:
 - **Model and response behavior**: model config, fast mode, output styles, fullscreen rendering, status line, and terminal config belong together as "session ergonomics", not scattered as trivia.
 - **Evented workflows**: channels and deep links are distinct from chat integrations because they push external state into a running session or launch a correctly scoped one.
 - **Production SDK use**: hosting, session storage, observability, secure deployment, user input, and file checkpointing should not be hidden under a generic Agent SDK module.
-- **Live docs drift**: the June 4, 2026 live index is fully referenced by lessons, but future docs additions should be audited before claiming complete feature coverage.
+- **Live docs drift**: the June 4, 2026 live index is fully referenced by lessons. Run `npm run audit:docs` before claiming complete feature coverage after future docs changes.
 
 ## Track 1: Foundations
 
@@ -167,7 +167,7 @@ Coverage gaps to keep explicit during implementation:
 4. **Add integration modules**: IDE/Desktop/Chrome/GitHub/Slack/web. These should demonstrate choosing the surface where the context already lives.
 5. **Add SDK and team modules last**: they need a heavier conceptual model, plus clearer audience labeling so beginners do not mistake them for required setup.
 
-For each slice, update the command palette search index, dashboard grouping, Forest totals, tests, and `/how-we-calculate` copy if new impact assumptions are introduced.
+For each slice, run `npm run audit:docs`, then update the command palette search index, dashboard grouping, Forest totals, tests, and `/how-we-calculate` copy if new impact assumptions are introduced.
 
 ## Release Slices
 
