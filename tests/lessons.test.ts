@@ -1,9 +1,9 @@
 import { test, expect } from 'vitest';
 import { getAllLessons, getLesson, getLessonsByTrack, getAdjacent, signatureTip } from '@/lib/lessons';
 
-test('there are 8 beginner lessons, 11 feature modules, and 7 power-user modules in track order', () => {
+test('there are 8 beginner lessons, 11 feature modules, and 13 power-user modules in track order', () => {
   const all = getAllLessons();
-  expect(all).toHaveLength(26);
+  expect(all).toHaveLength(32);
   expect(getLessonsByTrack('beginner').map((l) => l.order)).toEqual([1, 2, 3, 4, 5, 6, 7, 8]);
   expect(getLessonsByTrack('feature-modules').map((l) => l.slug)).toEqual([
     'agent-loop',
@@ -26,6 +26,12 @@ test('there are 8 beginner lessons, 11 feature modules, and 7 power-user modules
     'mcp-tool-discovery',
     'plugins-workflows',
     'plugin-distribution',
+    'worktrees-isolation',
+    'agent-view',
+    'agent-teams',
+    'dynamic-workflows',
+    'goals-completion',
+    'scheduled-tasks-routines',
   ]);
 });
 
@@ -52,7 +58,7 @@ test('every lesson has exactly 3 tips and exactly one signature tip', () => {
 test('tip ids are globally unique across all lessons', () => {
   const ids = getAllLessons().flatMap((l) => l.tips.map((t) => t.id));
   expect(new Set(ids).size).toBe(ids.length);
-  expect(ids).toHaveLength(78);
+  expect(ids).toHaveLength(96);
 });
 
 test('beginner challenge lessons and extension modules have type-it-yourself terminal challenges', () => {
@@ -77,5 +83,6 @@ test('getAdjacent gives prev/next by order', () => {
   expect(getAdjacent('checkpointing').next).toBeNull();
   expect(getAdjacent('custom-slash-commands').prev).toBeNull();
   expect(getAdjacent('custom-slash-commands').next?.slug).toBe('skills-on-demand');
-  expect(getAdjacent('plugin-distribution').next).toBeNull();
+  expect(getAdjacent('plugin-distribution').next?.slug).toBe('worktrees-isolation');
+  expect(getAdjacent('scheduled-tasks-routines').next).toBeNull();
 });

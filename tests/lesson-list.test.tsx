@@ -13,6 +13,8 @@ const SLUGS = [
   'built-in-tools', 'bash-powershell', 'checkpointing',
   'custom-slash-commands', 'skills-on-demand', 'subagents-isolated-context',
   'hooks-automation', 'mcp-tool-discovery', 'plugins-workflows', 'plugin-distribution',
+  'worktrees-isolation', 'agent-view', 'agent-teams', 'dynamic-workflows',
+  'goals-completion', 'scheduled-tasks-routines',
 ];
 
 test('renders beginner, feature-module, and power-user rows grouped by track', () => {
